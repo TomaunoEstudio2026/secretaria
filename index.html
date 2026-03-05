@@ -151,6 +151,10 @@ header {
 .back-btn { background:white; border:2px solid var(--naranja-claro); border-radius:12px; padding:8px 16px; font-family:'Baloo 2'; font-weight:700; font-size:0.87rem; cursor:pointer; color:var(--naranja-oscuro); transition:all .2s; }
 .back-btn:hover { background:var(--naranja); color:white; border-color:var(--naranja); }
 .alumnos-title { font-family:'Baloo 2'; font-size:1.15rem; font-weight:800; color:var(--naranja-oscuro); flex:1; }
+.taller-filtros { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; padding-bottom:12px; border-bottom:2px solid var(--naranja-claro); }
+.filtro-btn { padding:7px 14px; border-radius:20px; border:2px solid var(--naranja-claro); background:white; font-family:'Baloo 2'; font-weight:700; font-size:0.82rem; cursor:pointer; color:#999; transition:all .18s; white-space:nowrap; }
+.filtro-btn:hover { border-color:var(--naranja); color:var(--naranja); }
+.filtro-btn.activo { background:var(--naranja); border-color:var(--naranja); color:white; box-shadow:0 2px 8px rgba(244,123,32,0.35); }
 .stats-bar { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
 .stat-chip { background:white; border-radius:12px; padding:8px 16px; box-shadow:var(--sombra); display:flex; align-items:center; gap:7px; font-family:'Baloo 2'; font-weight:700; font-size:0.85rem; }
 .stat-chip span { font-size:1.1rem; }
@@ -167,18 +171,21 @@ tr:hover td { background:#fff8f0; }
 .action-btns { display:flex; gap:5px; }
 
 /* CALENDARIO */
-.cal-header { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
-.cal-header h2 { font-family:'Baloo 2'; font-size:1.3rem; font-weight:800; color:var(--naranja-oscuro); flex:1; text-align:center; }
+.cal-header { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.cal-header h2 { font-family:'Baloo 2'; font-size:1.1rem; font-weight:800; color:var(--naranja-oscuro); flex:1; text-align:center; }
 .cal-nav { background:var(--naranja); color:white; border:none; border-radius:10px; width:34px; height:34px; font-size:1.1rem; cursor:pointer; font-family:'Baloo 2'; transition:background .2s; }
 .cal-nav:hover { background:var(--naranja-oscuro); }
-.cal-grid-header { display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-family:'Baloo 2'; font-weight:700; font-size:0.78rem; color:var(--naranja-oscuro); margin-bottom:5px; }
-.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
-.cal-day { aspect-ratio:1; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding-top:6px; font-weight:700; font-size:0.88rem; cursor:pointer; position:relative; background:white; border:2px solid transparent; transition:all .15s; min-height:48px; }
+.cal-grid-header { display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-family:'Baloo 2'; font-weight:700; font-size:0.72rem; color:var(--naranja-oscuro); margin-bottom:3px; }
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:8px; }
+.cal-day { border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:5px 2px 3px; font-weight:700; font-size:0.82rem; cursor:pointer; position:relative; background:white; border:2px solid transparent; transition:all .15s; min-height:0; height:52px; }
 .cal-day:hover { border-color:var(--naranja); background:#fff3e0; }
+.cal-day.has-event { background:#e8f5e9; border-color:#a5d6a7; }
+.cal-day.has-event:hover { background:#c8e6c9; }
+.cal-day.today.has-event { background:var(--naranja); border-color:var(--naranja-oscuro); }
 .cal-day.today { background:var(--naranja); color:white; }
 .cal-day.selected { border-color:var(--naranja-oscuro); background:#fff3e0; }
 .cal-day.other-month { opacity:.3; }
-.cal-day.has-event::after { content:''; width:5px; height:5px; background:var(--verde); border-radius:50%; margin-top:1px; }
+.cal-day.has-event::after { content:''; width:10px; height:10px; background:#43a047; border-radius:50%; margin-top:3px; box-shadow:0 0 0 3px rgba(67,160,71,0.3); }
 .cal-day.today.has-event::after { background:white; }
 .events-panel { margin-top:18px; background:white; border-radius:18px; padding:18px; box-shadow:var(--sombra); }
 .events-panel h3 { font-family:'Baloo 2'; font-weight:800; color:var(--naranja-oscuro); margin-bottom:12px; font-size:1rem; }
@@ -289,7 +296,304 @@ tr:hover td { background:#fff8f0; }
   .form-row { grid-template-columns:1fr; }
   .taller-grid { grid-template-columns:1fr 1fr; }
 }
-</style>
+
+/* ===== ASISTENCIA ===== */
+.asist-section-title { font-family:'Baloo 2'; font-size:1.2rem; font-weight:800; color:var(--naranja-oscuro); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+.asist-talleres-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:14px; margin-bottom:20px; }
+.asist-taller-card { background:white; border-radius:18px; padding:20px; box-shadow:var(--sombra); border-left:5px solid var(--naranja); cursor:pointer; transition:transform .15s, box-shadow .15s; }
+.asist-taller-card:hover { transform:translateY(-3px); box-shadow:0 8px 28px rgba(196,90,0,0.2); }
+.asist-taller-card h3 { font-family:'Baloo 2'; font-size:1rem; font-weight:800; color:var(--naranja-oscuro); margin-bottom:6px; }
+.asist-taller-card p { font-size:0.82rem; color:#666; margin-bottom:4px; }
+.asist-taller-card .asist-dias { display:inline-block; background:var(--naranja-claro); color:var(--naranja-oscuro); border-radius:20px; padding:3px 10px; font-size:0.75rem; font-weight:700; margin-top:6px; }
+
+/* Panel de toma de asistencia */
+.asist-panel { background:white; border-radius:18px; padding:18px; box-shadow:var(--sombra); }
+.asist-panel-header { display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+.asist-panel-header h3 { font-family:'Baloo 2'; font-size:1.1rem; font-weight:800; color:var(--naranja-oscuro); flex:1; }
+.asist-fecha-info { background:var(--crema); border-radius:12px; padding:8px 14px; font-size:0.85rem; font-weight:700; color:var(--naranja-oscuro); }
+.asist-alumno-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:14px; margin-bottom:8px; background:var(--crema); border:2px solid transparent; cursor:pointer; transition:all .2s; user-select:none; -webkit-tap-highlight-color:transparent; }
+.asist-alumno-row:active { transform:scale(0.98); }
+.asist-alumno-row.presente { background:#e8f5e9; border-color:var(--verde-claro); }
+.asist-alumno-row.ausente { background:#fce4ec; border-color:#f48fb1; }
+.asist-alumno-row.alerta { background:#fff8e1; border-color:#ffe082; }
+.asist-estado-badge { width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; background:white; border:2px solid #ddd; transition:all .2s; }
+.asist-alumno-row.presente .asist-estado-badge { background:#e8f5e9; border-color:var(--verde); }
+.asist-alumno-row.ausente .asist-estado-badge { background:#fce4ec; border-color:#e57373; }
+.asist-alumno-info { flex:1; }
+.asist-alumno-nombre { font-family:'Baloo 2'; font-weight:700; font-size:0.95rem; }
+.asist-alumno-pct { font-size:0.75rem; color:#888; margin-top:2px; }
+.asist-alumno-pct.malo { color:#c62828; font-weight:700; }
+.asist-alumno-num { width:28px; height:28px; background:var(--naranja-claro); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:'Baloo 2'; font-weight:800; font-size:0.8rem; color:var(--naranja-oscuro); flex-shrink:0; }
+
+/* Barra de resumen */
+.asist-resumen-bar { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
+.asist-chip { background:white; border-radius:12px; padding:8px 16px; box-shadow:var(--sombra); font-family:'Baloo 2'; font-weight:700; font-size:0.85rem; display:flex; align-items:center; gap:6px; }
+.asist-chip.verde { background:#e8f5e9; color:var(--verde-oscuro); }
+.asist-chip.rojo { background:#fce4ec; color:#c62828; }
+.asist-chip.gris { background:#f5f5f5; color:#757575; }
+
+/* Botones de acción asistencia */
+.asist-acciones { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.asist-btn { padding:9px 16px; border-radius:12px; border:none; font-family:'Baloo 2'; font-weight:700; font-size:0.85rem; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background .2s; }
+.asist-btn.verde { background:var(--verde); color:white; }
+.asist-btn.verde:hover { background:var(--verde-oscuro); }
+.asist-btn.naranja { background:var(--naranja); color:white; }
+.asist-btn.naranja:hover { background:var(--naranja-oscuro); }
+.asist-btn.gris { background:#e0e0e0; color:#444; }
+.asist-btn.gris:hover { background:#bdbdbd; }
+.asist-btn.azul { background:#1976d2; color:white; }
+.asist-btn.azul:hover { background:#1565c0; }
+.asist-btn.rojo { background:#d32f2f; color:white; }
+.asist-btn.rojo:hover { background:#b71c1c; }
+
+/* Planilla mensual institucional */
+.planilla-wrap { overflow-x:auto; margin-top:16px; }
+
+/* Encabezado institucional para pantalla */
+.planilla-header-inst {
+  background:linear-gradient(135deg, var(--naranja-oscuro) 0%, var(--naranja) 60%, #f9a84d 100%);
+  border-radius:16px 16px 0 0; padding:18px 22px; color:white; display:flex;
+  align-items:center; gap:16px; margin-bottom:0;
+}
+.planilla-header-inst .phi-logo {
+  width:52px; height:52px; background:white; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  box-shadow:0 2px 10px rgba(0,0,0,0.2); overflow:hidden;
+}
+.planilla-header-inst .phi-logo img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+.planilla-header-inst .phi-texto { flex:1; }
+.planilla-header-inst .phi-inst { font-family:'Baloo 2'; font-size:1rem; font-weight:800; letter-spacing:.3px; }
+.planilla-header-inst .phi-sub { font-size:0.75rem; opacity:.85; margin-top:1px; }
+.planilla-header-inst .phi-taller { font-family:'Baloo 2'; font-size:1.2rem; font-weight:900; margin-top:4px; }
+.planilla-header-inst .phi-mes { background:rgba(255,255,255,0.18); border-radius:20px; padding:4px 14px; font-family:'Baloo 2'; font-weight:700; font-size:0.82rem; margin-top:6px; display:inline-block; }
+
+/* Tabla institucional */
+.planilla-table {
+  border-collapse:collapse; width:100%; min-width:500px;
+  border:2px solid #e0d6cc; border-top:none;
+}
+.planilla-table thead tr.thead-dias th {
+  background:var(--naranja-oscuro); color:white;
+  padding:8px 6px; font-family:'Baloo 2'; font-weight:700; font-size:0.75rem;
+  text-align:center; white-space:nowrap; border:1px solid rgba(255,255,255,0.2);
+}
+.planilla-table thead tr.thead-dias th.nombre-col {
+  text-align:left; min-width:160px; padding-left:12px; font-size:0.8rem;
+}
+.planilla-table thead tr.thead-dias th.col-stats {
+  background:var(--naranja); min-width:40px;
+}
+/* Fila de días de semana debajo del encabezado */
+.planilla-table thead tr.thead-semana th {
+  background:#fff3e0; color:var(--naranja-oscuro);
+  padding:4px 6px; font-family:'Baloo 2'; font-weight:700; font-size:0.68rem;
+  text-align:center; border:1px solid #f0ece6; letter-spacing:.3px; text-transform:uppercase;
+}
+.planilla-table thead tr.thead-semana th.nombre-col { text-align:left; padding-left:12px; }
+
+/* Filas de alumno */
+.planilla-table tbody tr { border-bottom:1px solid #f0e8e0; }
+.planilla-table tbody tr:nth-child(even) td { background:#fdf8f4; }
+.planilla-table tbody tr:hover td { background:#fff3e0 !important; }
+.planilla-table tbody tr.fila-alerta td { background:#fff8e1 !important; }
+.planilla-table tbody tr.fila-perfecto td { background:#f0fff4 !important; }
+.planilla-table td {
+  padding:7px 6px; font-size:0.82rem; text-align:center;
+  border-right:1px solid #f0e8e0;
+}
+.planilla-table td.nombre-td {
+  text-align:left; font-weight:700; font-size:0.87rem;
+  padding-left:12px; white-space:nowrap; border-right:2px solid #e0d6cc;
+}
+.planilla-table td.nombre-td .num-orden {
+  display:inline-block; width:20px; height:20px; background:var(--naranja-claro);
+  border-radius:6px; text-align:center; line-height:20px; font-size:0.72rem;
+  font-weight:800; color:var(--naranja-oscuro); margin-right:6px; flex-shrink:0;
+}
+
+/* Celdas de asistencia */
+.celda-p {
+  display:inline-block; width:24px; height:20px; background:#c8e6c9;
+  border:1.5px solid #81c784; border-radius:4px;
+  color:#1b5e20; font-weight:800; font-size:0.72rem;
+  line-height:20px; text-align:center;
+}
+.celda-a {
+  display:inline-block; width:24px; height:20px; background:#ffcdd2;
+  border:1.5px solid #ef9a9a; border-radius:4px;
+  color:#b71c1c; font-weight:800; font-size:0.72rem;
+  line-height:20px; text-align:center;
+}
+.celda-vacia {
+  display:inline-block; width:24px; height:20px; background:#f5f5f5;
+  border:1px solid #e0e0e0; border-radius:4px;
+  color:#ccc; font-size:0.65rem; line-height:20px; text-align:center;
+}
+
+/* Columnas de estadísticas */
+.planilla-table td.col-stats { border-left:2px solid #e0d6cc; }
+.pct-badge { display:inline-block; padding:2px 7px; border-radius:20px; font-weight:800; font-size:0.75rem; font-family:'Baloo 2'; }
+.pct-ok { background:#e8f5e9; color:var(--verde-oscuro); }
+.pct-malo { background:#fce4ec; color:#c62828; }
+.pct-perfecto { background:#1b5e20; color:white; }
+
+/* Iconos especiales */
+.icono-estrella { font-size:1rem; margin-right:3px; }
+.icono-alerta { font-size:0.85rem; margin-right:2px; }
+
+/* Fila de totales */
+.planilla-table tfoot td {
+  background:var(--naranja-oscuro) !important; color:white;
+  font-family:'Baloo 2'; font-weight:700; font-size:0.78rem;
+  padding:7px 6px; text-align:center; border:1px solid rgba(255,255,255,0.2);
+}
+.planilla-table tfoot td.nombre-td { text-align:left; padding-left:12px; }
+.tot-p { color:#a5d6a7; font-weight:800; }
+.tot-a { color:#ef9a9a; font-weight:800; }
+
+/* Leyenda */
+.planilla-leyenda {
+  display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+  background:white; border:2px solid #e0d6cc; border-top:none;
+  border-radius:0 0 14px 14px; padding:10px 16px; font-size:0.78rem; font-weight:700;
+}
+.planilla-leyenda span { display:flex; align-items:center; gap:5px; }
+
+/* Alertas resumen */
+.planilla-alertas { margin-bottom:14px; display:flex; gap:10px; flex-wrap:wrap; }
+.planilla-alerta-chip {
+  border-radius:10px; padding:8px 14px; font-weight:700; font-size:0.82rem;
+  font-family:'Baloo 2'; display:flex; align-items:center; gap:6px;
+}
+.planilla-alerta-chip.amarillo { background:#fff8e1; color:#c62828; border:1.5px solid #ffe082; }
+.planilla-alerta-chip.verde { background:#e8f5e9; color:var(--verde-oscuro); border:1.5px solid #a5d6a7; }
+
+/* Impresión */
+@media print {
+  .nav-tabs, header, .asist-panel-header, .asist-acciones, .asist-mes-selector,
+  .planilla-alertas, .planilla-leyenda-screen, .asist-btn, .back-btn { display:none !important; }
+  .planilla-header-inst { border-radius:0; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .planilla-table { font-size:9pt; }
+  .section { display:block !important; }
+  body { background:white; }
+}
+
+/* Selector de mes */
+.asist-mes-selector { display:flex; align-items:center; gap:10px; background:white; border-radius:14px; padding:10px 16px; box-shadow:var(--sombra); margin-bottom:16px; }
+.asist-mes-selector label { font-family:'Baloo 2'; font-weight:700; font-size:0.87rem; color:var(--naranja-oscuro); }
+.asist-mes-selector select, .asist-mes-selector input[type=month] { padding:7px 12px; border-radius:10px; border:2px solid var(--naranja-claro); font-family:'Nunito'; font-size:0.87rem; outline:none; background:var(--crema); transition:border .2s; }
+.asist-mes-selector select:focus, .asist-mes-selector input:focus { border-color:var(--naranja); }
+
+/* Modo lista celular */
+@media(max-width:600px){
+  .asist-talleres-grid { grid-template-columns:1fr; }
+  .asist-alumno-row { padding:14px 12px; }
+  .asist-alumno-nombre { font-size:1rem; }
+  .asist-estado-badge { width:48px; height:48px; font-size:1.6rem; }
+  .asist-btn { padding:11px 14px; font-size:0.9rem; }
+}
+
+/* Alerta de inasistencia en lista */
+.asist-alumno-row .alerta-icon { display:none; }
+.asist-alumno-row.alerta-falta .alerta-icon { display:inline; font-size:1rem; }
+
+/* ===== PLANILLA TÁCTIL GRILLA ===== */
+.planilla-tactil-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:4px; }
+.grilla-tactil { border-collapse:collapse; width:max-content; min-width:100%; }
+
+/* Encabezado de columnas */
+.grilla-tactil thead th { background:var(--naranja-oscuro); color:white; padding:6px 4px; text-align:center; white-space:nowrap; border:1px solid rgba(255,255,255,0.2); font-family:'Baloo 2'; }
+.grilla-th-nombre { text-align:left !important; min-width:130px; max-width:180px; padding-left:10px !important; font-size:0.8rem; position:sticky; left:0; z-index:2; background:var(--naranja-oscuro) !important; }
+.grilla-th-fecha { min-width:42px; max-width:52px; padding:4px 2px !important; }
+.grilla-th-pct { min-width:46px; background:var(--naranja) !important; }
+.grilla-dia-num { font-size:0.9rem; font-weight:900; line-height:1; }
+.grilla-dia-sem { font-size:0.62rem; font-weight:700; opacity:0.85; letter-spacing:.3px; }
+
+/* Filas */
+.grilla-fila { border-bottom:1px solid #f0e8e0; }
+.grilla-fila:nth-child(even) td { background:#fdf8f4; }
+.grilla-fila:hover td { background:#fff3e0 !important; }
+.grilla-fila.fila-alerta td { background:#fffde7 !important; }
+.grilla-fila.fila-perfecto td { background:#f0fff4 !important; }
+
+/* Columna nombre (sticky) */
+.grilla-td-nombre {
+  position:sticky; left:0; z-index:1;
+  background:white; border-right:2px solid #e0d6cc;
+  padding:8px 6px 8px 8px; text-align:left;
+  min-width:130px; max-width:180px;
+  font-size:0.83rem;
+}
+.grilla-fila:nth-child(even) .grilla-td-nombre { background:#fdf8f4; }
+.grilla-fila.fila-alerta .grilla-td-nombre { background:#fffde7 !important; }
+.grilla-fila.fila-perfecto .grilla-td-nombre { background:#f0fff4 !important; }
+.grilla-fila:hover .grilla-td-nombre { background:#fff3e0 !important; }
+
+.grilla-num { display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; background:var(--naranja-claro); border-radius:5px; font-size:0.68rem; font-weight:800; color:var(--naranja-oscuro); margin-right:5px; flex-shrink:0; }
+.grilla-nombre-txt { font-weight:700; }
+
+/* Celdas de asistencia - el corazón de la planilla táctil */
+.grilla-celda {
+  text-align:center; vertical-align:middle;
+  cursor:pointer; padding:0; height:36px; width:42px;
+  font-weight:800; font-size:0.82rem;
+  border:1px solid #f0e8e0;
+  transition:background .12s, transform .08s;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+.grilla-celda:active { transform:scale(0.88); }
+.gc-vacia { background:white; color:#ddd; }
+.gc-vacia:hover { background:#fff3e0; }
+.gc-p { background:#c8e6c9; color:#1b5e20; border-color:#81c784; }
+.gc-p:hover { background:#a5d6a7; }
+.gc-a { background:#ffcdd2; color:#b71c1c; border-color:#ef9a9a; }
+.gc-a:hover { background:#ef9a9a; }
+
+/* Columna % */
+.grilla-td-pct { text-align:center; border-left:2px solid #e0d6cc; padding:4px 6px; }
+
+/* Fila totales */
+.grilla-tactil tfoot td { background:var(--naranja-oscuro) !important; color:white; text-align:center; padding:5px 3px; font-family:'Baloo 2'; font-size:0.75rem; border:1px solid rgba(255,255,255,0.2); }
+.grilla-td-tot .tot-p { color:#a5d6a7; font-weight:800; font-size:0.78rem; }
+.grilla-td-tot .tot-a { color:#ef9a9a; font-weight:800; font-size:0.78rem; }
+.grilla-tot-label { text-align:left !important; padding-left:10px !important; font-weight:800; font-size:0.8rem; position:sticky; left:0; }
+
+
+
+/* Mobile: celdas más grandes para el dedo */
+@media(max-width:600px){
+  .grilla-celda { height:44px; width:38px; font-size:0.88rem; }
+  .grilla-td-nombre { min-width:110px; max-width:150px; font-size:0.78rem; }
+  .grilla-th-nombre { min-width:110px; }
+}
+
+/* Botones grandes Presente / Ausente */
+.asist-botones-pa { display:flex; gap:8px; flex-shrink:0; }
+.asist-btn-pa { padding:10px 16px; border-radius:12px; border:2.5px solid transparent; font-family:'Baloo 2'; font-weight:700; font-size:0.88rem; cursor:pointer; transition:all .18s; opacity:0.45; display:flex; align-items:center; gap:4px; }
+.asist-btn-pa.presente { background:#e8f5e9; border-color:#a5d6a7; color:var(--verde-oscuro); }
+.asist-btn-pa.presente.activo { background:var(--verde); border-color:var(--verde-oscuro); color:white; opacity:1; box-shadow:0 3px 10px rgba(46,125,50,0.3); }
+.asist-btn-pa.presente:hover { opacity:0.8; }
+.asist-btn-pa.ausente { background:#fce4ec; border-color:#f48fb1; color:#c62828; }
+.asist-btn-pa.ausente.activo { background:#d32f2f; border-color:#b71c1c; color:white; opacity:1; box-shadow:0 3px 10px rgba(211,47,47,0.3); }
+.asist-btn-pa.ausente:hover { opacity:0.8; }
+
+/* Responsive botones PA */
+@media(max-width:600px){
+  .asist-alumno-row { flex-wrap:wrap; gap:10px; }
+  .asist-alumno-info { min-width:0; flex:1 1 100%; order:1; }
+  .asist-alumno-num { order:0; }
+  .asist-botones-pa { order:2; flex:1; justify-content:stretch; }
+  .asist-btn-pa { flex:1; justify-content:center; padding:13px 8px; font-size:0.95rem; border-radius:14px; opacity:0.55; }
+  .asist-btn-pa.activo { opacity:1; }
+  .btn-pa-label { display:inline; }
+}
+@media(min-width:601px){
+  .asist-alumno-row { align-items:center; }
+  .asist-botones-pa { flex-shrink:0; }
+  .btn-pa-label { display:inline; }
+  .asist-btn-pa { padding:9px 18px; font-size:0.88rem; }
+}</style>
 </head>
 <body>
 
@@ -316,6 +620,8 @@ tr:hover td { background:#fff8f0; }
   <button class="nav-tab" onclick="showSection('alumnos')" id="tab-alumnos"><span>👥</span> Alumnos</button>
   <button class="nav-tab" onclick="showSection('calendario')" id="tab-calendario"><span>📅</span> Calendario</button>
   <button class="nav-tab" onclick="showSection('tareas')" id="tab-tareas"><span>✅</span> Tareas</button>
+  <button class="nav-tab" onclick="showSection('profes')" id="tab-profes"><span>📖</span> Profes</button>
+  <button class="nav-tab" onclick="showSection('asistencia')" id="tab-asistencia"><span>📊</span> Asistencia</button>
 </nav>
 
 <div class="copy-toast" id="copyToast">✅ ¡Copiado!</div>
@@ -362,6 +668,7 @@ tr:hover td { background:#fff8f0; }
     <div class="search-bar">
       <input type="text" id="searchAlumnos" placeholder="🔍 Buscar por nombre, DNI, taller..." oninput="filterAlumnos()">
     </div>
+    <div class="taller-filtros" id="tallerFiltros"></div>
     <div class="stats-bar" id="statsBar"></div>
     <div class="alumnos-table-wrap">
       <table>
@@ -382,7 +689,7 @@ tr:hover td { background:#fff8f0; }
   </div>
 
   <!-- CALENDARIO -->
-  <div class="section" id="section-calendario">
+  <div class="section" id="section-calendario" style="max-width:680px;margin:0 auto">
     <div id="notifBanner" class="notif-banner" style="display:none">
       <span>📢 <strong id="notifText"></strong></span>
       <span class="nbadge" id="notifCount">0</span>
@@ -444,9 +751,147 @@ tr:hover td { background:#fff8f0; }
     </div>
   </div>
 
+  <!-- ASISTENCIA -->
+  <!-- NOTAS PROFES -->
+  <div class="section" id="section-profes">
+    <div class="search-bar">
+      <input type="text" id="searchProfes" placeholder="🔍 Buscar mensajes..." oninput="filterProfes()">
+    </div>
+    <div class="section-header" style="margin-bottom:16px">
+      <h2>📖 Notas para Profes</h2>
+      <button class="btn-add" onclick="openProfesModal()">＋ Nuevo Mensaje</button>
+    </div>
+    <div class="notes-grid" id="profesGrid"><div class="loading"><div>⏳</div><p>Cargando...</p></div></div>
+  </div>
+
+  <div class="section" id="section-asistencia">
+    <!-- Vista 1: Selección de taller -->
+    <div id="asist-view-talleres">
+      <div class="section-header" style="margin-bottom:16px">
+        <h2 class="asist-section-title">📊 Control de Asistencia</h2>
+      </div>
+      <div class="asist-mes-selector">
+        <label>📅 Mes:</label>
+        <input type="month" id="asistMesGlobal" onchange="asistCambiarMes()">
+      </div>
+      <p style="font-size:0.85rem;color:#888;margin-bottom:14px">Seleccioná un taller para tomar asistencia o ver la planilla del mes.</p>
+      <div class="asist-talleres-grid" id="asistTalleresGrid">
+        <div class="loading"><div>⏳</div><p>Cargando talleres...</p></div>
+      </div>
+    </div>
+
+    <!-- Vista 2: Planilla táctil interactiva (grilla mes completo) -->
+    <div id="asist-view-lista" style="display:none">
+      <!-- Header fijo con título y botones -->
+      <div class="asist-panel-header" style="margin-bottom:10px">
+        <button class="back-btn" onclick="asistVolverATalleres()">← Talleres</button>
+        <div style="flex:1;min-width:0">
+          <h3 id="asistTallerNombre" style="font-family:'Baloo 2';font-size:1rem;font-weight:800;color:var(--naranja-oscuro);margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></h3>
+          <div id="asistMesLabel" style="font-size:0.75rem;color:#888;font-weight:700"></div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <button class="asist-btn naranja" style="padding:7px 12px;font-size:0.8rem" onclick="asistGuardar()">💾 Guardar todo</button>
+          <button class="asist-btn azul" style="padding:7px 12px;font-size:0.8rem" onclick="asistVerPlanilla()">📋 Exportar</button>
+        </div>
+      </div>
+
+      <!-- Selector de mes -->
+      <div class="asist-mes-selector" style="padding:8px 14px;margin-bottom:8px">
+        <label>📅 Mes:</label>
+        <input type="month" id="asistMesGrilla" onchange="asistCambiarMesGrilla()">
+        
+      </div>
+
+      <!-- Chips resumen compactos -->
+      <div class="asist-resumen-bar" id="asistResumenBar" style="margin-bottom:8px"></div>
+
+      <!-- PLANILLA TÁCTIL GRILLA -->
+      <div class="planilla-tactil-wrap">
+        <div id="planillaTactilTabla"></div>
+      </div>
+
+      <div style="margin-top:10px;font-size:0.72rem;color:#aaa;text-align:center">
+        💡 Tocá una celda para marcar <b>Presente</b> / <b>Ausente</b> / vacío. Girá el celular para mejor vista.
+      </div>
+    </div>
+
+    <!-- Vista 3: Planilla mensual -->
+    <div id="asist-view-planilla" style="display:none">
+      <div class="asist-panel-header" style="margin-bottom:14px">
+        <button class="back-btn" onclick="asistVolverALista()">← Volver a Lista</button>
+        <h3 id="asistPlanillaTitulo" style="font-family:'Baloo 2';font-size:1.05rem;font-weight:800;color:var(--naranja-oscuro);flex:1;margin:0"></h3>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="asist-btn naranja" onclick="asistExportarPDF()">📄 PDF</button>
+          <button class="asist-btn azul" onclick="asistExportarExcel()">📊 Excel</button>
+          <button class="asist-btn gris" onclick="window.print()">🖨️ Imprimir</button>
+        </div>
+      </div>
+
+      <!-- Leyenda de colores -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;font-size:0.78rem;font-weight:700;font-family:'Baloo 2'">
+        <span><span class="celda-p">P</span> Presente</span>
+        <span><span class="celda-a">A</span> Ausente</span>
+        <span><span class="celda-vacia">—</span> Sin clase</span>
+        <span style="background:#fff8e1;border-radius:8px;padding:2px 8px;color:#c62828">⚠️ Más de 20% faltas</span>
+      </div>
+
+      <div class="planilla-wrap" id="asistPlanillaWrap">
+        <div class="loading"><div>⏳</div><p>Generando planilla...</p></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- fin .main -->
+<!-- MODAL CONFIRMACION -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal" style="max-width:340px;text-align:center;padding:28px 24px">
+    <div id="confirmIcon" style="font-size:2.5rem;margin-bottom:10px">🗑️</div>
+    <div id="confirmMsg" style="font-family:'Baloo 2';font-weight:700;font-size:1.05rem;margin-bottom:20px;color:#444"></div>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button id="confirmOkBtn" style="background:var(--naranja-oscuro);color:white;border:none;border-radius:12px;padding:10px 24px;font-family:'Baloo 2';font-weight:700;font-size:0.95rem;cursor:pointer">Eliminar</button>
+      <button onclick="closeConfirm()" style="background:#f0e8e0;color:#666;border:none;border-radius:12px;padding:10px 24px;font-family:'Baloo 2';font-weight:700;font-size:0.95rem;cursor:pointer">Cancelar</button>
+    </div>
+  </div>
 </div>
 
-<!-- MODAL NOTA -->
+<!-- MODAL LECTURA NOTA PROFE -->
+<div class="modal-overlay" id="profesLeerModal" onclick="if(event.target===this)closeProfesLeerModal()">
+  <div class="modal" style="max-width:600px;width:95%;max-height:90vh;overflow-y:auto;border-radius:20px;padding:0;display:flex;flex-direction:column">
+    <div id="profesLeerHeader" style="padding:18px 20px 14px;border-radius:20px 20px 0 0;background:var(--naranja);color:white;display:flex;align-items:flex-start;gap:12px">
+      <div style="flex:1;min-width:0">
+        <div id="profesLeerTag" style="font-size:0.78rem;font-weight:700;opacity:0.85;margin-bottom:4px"></div>
+        <div id="profesLeerTitulo" style="font-family:'Baloo 2';font-size:1.2rem;font-weight:800;line-height:1.3;word-break:break-word"></div>
+      </div>
+      <button onclick="closeProfesLeerModal()" style="background:rgba(255,255,255,0.25);border:none;color:white;width:34px;height:34px;border-radius:50%;font-size:1.2rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <div id="profesLeerCuerpo" style="padding:20px;font-size:1.05rem;line-height:1.7;white-space:pre-wrap;word-break:break-word;flex:1;color:#333"></div>
+    <div id="profesLeerFooter" style="padding:10px 20px 16px;font-size:0.78rem;color:#aaa;border-top:1px solid #f0e8e0"></div>
+  </div>
+</div>
+
+<!-- MODAL NOTAS PROFES -->
+<div class="modal-overlay" id="profesModal">
+  <div class="modal">
+    <h3 id="profesModalTitle">📖 Nuevo Mensaje para Profes</h3>
+    <label>Título *</label>
+    <input type="text" id="profesTitle" placeholder="Ej: Reunión de equipo, Nuevo reglamento...">
+    <label>Etiqueta</label>
+    <select id="profesTag">
+      <option value="aviso">📢 Aviso</option>
+      <option value="reunion">📅 Reunión</option>
+      <option value="tarea">✅ Tarea</option>
+      <option value="recurso">🔗 Recurso / Link</option>
+      <option value="urgente">🚨 Urgente</option>
+    </select>
+    <label>Mensaje</label>
+    <textarea id="profesBody" style="min-height:80px" placeholder="Escribí el mensaje o pegá un link web aquí..."></textarea>
+    <div style="display:flex;gap:10px;margin-top:14px">
+      <button class="btn-save" onclick="saveProfe()">💾 Guardar</button>
+      <button class="btn-cancel" onclick="closeProfesModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="noteModal">
   <div class="modal">
     <h3 id="noteModalTitle">📝 Nueva Nota</h3>
@@ -490,13 +935,22 @@ tr:hover td { background:#fff8f0; }
     <input type="text" id="tDocente" placeholder="Nombre del docente">
     <div class="form-row">
       <div>
-        <label>Días y Horario</label>
+        <label>Días y Horario <small style="color:#aaa;font-weight:400">(texto libre)</small></label>
         <input type="text" id="tHorario" placeholder="Ej: Lun y Mié 18–20 hs">
       </div>
       <div>
         <label>Costo / Cuota</label>
         <input type="text" id="tCosto" placeholder="Ej: $8.000/mes">
       </div>
+    </div>
+    <label>Días de clase <small style="color:#aaa;font-weight:400">(para generar planilla automática)</small></label>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px" id="tDiasWrap">
+      <label style="display:flex;align-items:center;gap:4px;font-weight:700;font-size:0.85rem;cursor:pointer"><input type="checkbox" value="1" id="tDia1"> Lun</label>
+      <label style="display:flex;align-items:center;gap:4px;font-weight:700;font-size:0.85rem;cursor:pointer"><input type="checkbox" value="2" id="tDia2"> Mar</label>
+      <label style="display:flex;align-items:center;gap:4px;font-weight:700;font-size:0.85rem;cursor:pointer"><input type="checkbox" value="3" id="tDia3"> Mié</label>
+      <label style="display:flex;align-items:center;gap:4px;font-weight:700;font-size:0.85rem;cursor:pointer"><input type="checkbox" value="4" id="tDia4"> Jue</label>
+      <label style="display:flex;align-items:center;gap:4px;font-weight:700;font-size:0.85rem;cursor:pointer"><input type="checkbox" value="5" id="tDia5"> Vie</label>
+      <label style="display:flex;align-items:center;gap:4px;font-weight:700;font-size:0.85rem;cursor:pointer"><input type="checkbox" value="6" id="tDia6"> Sáb</label>
     </div>
     <div class="form-row">
       <div>
@@ -613,7 +1067,7 @@ tr:hover td { background:#fff8f0; }
 let notes=[], talleres=[], alumnos=[], events=[];
 let editingNoteId=null, editingTallerId=null, editingAlumnoId=null;
 let currentMonth=new Date().getMonth(), currentYear=new Date().getFullYear();
-let currentTallerId=null, selectedCalDay=null;
+let currentTallerId=null, selectedCalDay=null, filtroTallerId=null;
 let db=null, fns=null;
 const LOGO = 'data:image/png;base64,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';
 
@@ -640,14 +1094,26 @@ async function loadAll(){
 
 // ===== FIRESTORE HELPERS =====
 async function fbGet(col){
-  const snap = await fns.getDocs(fns.collection(db, col));
-  return snap.docs.map(d=>({id:d.id,...d.data()}));
+  const f = fns || window._fns;
+  const d = db || window._db;
+  const snap = await f.getDocs(f.collection(d, col));
+  return snap.docs.map(doc=>({id:doc.id,...doc.data()}));
 }
 async function fbSet(col,id,data){
-  await fns.setDoc(fns.doc(db,col,id),data);
+  const f = fns || window._fns;
+  const d = db || window._db;
+  await f.setDoc(f.doc(d,col,id),data);
 }
 async function fbDel(col,id){
-  await fns.deleteDoc(fns.doc(db,col,id));
+  const f = fns || window._fns;
+  const d = db || window._db;
+  if (!f || !d) { alert('Error: Firebase no está listo. Recargá la página.'); return; }
+  try {
+    await f.deleteDoc(f.doc(d, col, id));
+  } catch(e) {
+    alert('Error al eliminar: ' + e.message);
+    throw e;
+  }
 }
 
 // ===== NOTES =====
@@ -663,6 +1129,13 @@ async function loadTalleres(){
 }
 async function loadAlumnos(){
   alumnos = await fbGet('alumnos');
+  renderFiltrosTaller(); // actualizar contadores
+  // Cargar Notas Profes
+  window._fns.onSnapshot(window._fns.collection(window._db,'profes'), snap => {
+    profes = snap.docs.map(d=>({id:d.id,...d.data()}));
+    profes.sort((a,b) => (b.ts||0)-(a.ts||0));
+    renderProfes();
+  });
   alumnos.sort((a,b)=>((a.apellido||'')+(a.nombre||'')).localeCompare((b.apellido||'')+(b.nombre||'')));
   renderAlumnos();
 }
@@ -671,22 +1144,32 @@ async function loadEvents(){
 }
 
 function setupListeners(){
+  const f = fns || window._fns;
+  const d = db || window._db;
+  if (!f || !d) return;
   // realtime updates
-  fns.onSnapshot(fns.collection(db,'notes'),()=>loadNotes());
-  fns.onSnapshot(fns.collection(db,'talleres'),()=>{loadTalleres();loadAlumnos();});
-  fns.onSnapshot(fns.collection(db,'alumnos'),()=>loadAlumnos());
-  fns.onSnapshot(fns.collection(db,'events'),()=>{loadEvents();});
-  fns.onSnapshot(fns.collection(db,'tareas'),()=>loadTareas());
+  f.onSnapshot(f.collection(d,'notes'),()=>loadNotes());
+  f.onSnapshot(f.collection(d,'talleres'),()=>{loadTalleres();loadAlumnos();});
+  f.onSnapshot(f.collection(d,'alumnos'),()=>loadAlumnos());
+  f.onSnapshot(f.collection(d,'events'),()=>{loadEvents();});
+  f.onSnapshot(f.collection(d,'tareas'),()=>loadTareas());
+  f.onSnapshot(f.collection(d,'profes'), snap => {
+    profes = snap.docs.map(dd=>({id:dd.id,...dd.data()}));
+    profes.sort((a,b)=>(b.ts||0)-(a.ts||0));
+    renderProfes();
+  });
 }
 
 // ===== NAV =====
 function showSection(name){
+  if(name==='profes') renderProfes(document.getElementById('searchProfes')?.value||'');
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('section-'+name).classList.add('active');
   document.getElementById('tab-'+name).classList.add('active');
   if(name==='calendario') renderCalendar();
-  if(name==='alumnos'){ currentTallerId=null; document.getElementById('backBtn').style.display='none'; document.getElementById('alumnosTitle').textContent='👥 Todos los Alumnos'; renderAlumnos(); }
+  if(name==='alumnos'){ filtroTallerId=null; currentTallerId=null; document.getElementById('backBtn').style.display='none'; document.getElementById('alumnosTitle').textContent='👥 Todos los Alumnos'; renderFiltrosTaller(); renderAlumnos(); }
+  if(name==='asistencia'){ asistInicializar(); }
 }
 
 // ===== NOTAS RENDER =====
@@ -735,7 +1218,13 @@ async function saveNote(){
   await fbSet('notes',id,data);
   closeNoteModal();
 }
-async function delNote(id){if(!confirm('¿Eliminar nota?'))return;await fbDel('notes',id);}
+async function delNote(id){
+  showConfirm('¿Eliminar esta nota?', async () => {
+    await fbDel('notes', id);
+    notes = notes.filter(n => n.id !== id);
+    renderNotes();
+  });
+}
 
 // ===== TALLERES RENDER =====
 function renderTalleres(filter=''){
@@ -779,6 +1268,11 @@ function openTallerModal(id=null){
   document.getElementById('tCupo').value=t?.cupo||'';
   document.getElementById('tInicio').value=t?.inicio||'';
   document.getElementById('tMensaje').value=t?.mensaje||'';
+  // Cargar días de clase
+  [1,2,3,4,5,6].forEach(d => {
+    const cb = document.getElementById('tDia'+d);
+    if (cb) cb.checked = (t?.diasClase||[]).includes(d);
+  });
   document.getElementById('tallerModal').classList.add('open');
 }
 function closeTallerModal(){document.getElementById('tallerModal').classList.remove('open');}
@@ -818,10 +1312,11 @@ async function saveTaller(){
   const id=editingTallerId||Date.now().toString();
   let mensaje=document.getElementById('tMensaje').value.trim();
   if(!mensaje) mensaje=buildMensaje(nombre,document.getElementById('tDocente').value,document.getElementById('tHorario').value,document.getElementById('tCosto').value,document.getElementById('tCupo').value,document.getElementById('tInicio').value);
-  await fbSet('talleres',id,{nombre,docente:document.getElementById('tDocente').value.trim(),horario:document.getElementById('tHorario').value.trim(),costo:document.getElementById('tCosto').value.trim(),cupo:document.getElementById('tCupo').value.trim(),inicio:document.getElementById('tInicio').value.trim(),mensaje});
+  const diasClase = [1,2,3,4,5,6].filter(d => document.getElementById('tDia'+d)?.checked);
+  await fbSet('talleres',id,{nombre,docente:document.getElementById('tDocente').value.trim(),horario:document.getElementById('tHorario').value.trim(),costo:document.getElementById('tCosto').value.trim(),cupo:document.getElementById('tCupo').value.trim(),inicio:document.getElementById('tInicio').value.trim(),mensaje,diasClase});
   closeTallerModal();
 }
-async function delTaller(id){if(!confirm('¿Eliminar taller?'))return;await fbDel('talleres',id);}
+async function delTaller(id){ showConfirm('¿Eliminar este taller y sus datos?', () => fbDel('talleres', id)); }
 
 // ===== ALUMNOS =====
 function verAlumnosTaller(tid,tnombre){
@@ -831,6 +1326,36 @@ function verAlumnosTaller(tid,tnombre){
   showSection('alumnos');
 }
 function backToTalleres(){showSection('talleres');}
+
+function renderFiltrosTaller() {
+  const wrap = document.getElementById('tallerFiltros');
+  if (!wrap) return;
+  const btns = [
+    `<button class="filtro-btn ${filtroTallerId===null?'activo':''}" onclick="setFiltroTaller(null)">👥 Todos</button>`
+  ];
+  talleres.forEach(t => {
+    const cant = alumnos.filter(a => a.tallerId === t.id).length;
+    btns.push(`<button class="filtro-btn ${filtroTallerId===t.id?'activo':''}" onclick="setFiltroTaller('${t.id}')">${esc(t.nombre)} <span style="opacity:.7;font-size:.78rem">(${cant})</span></button>`);
+  });
+  wrap.innerHTML = btns.join('');
+}
+
+function setFiltroTaller(tid) {
+  filtroTallerId = tid;
+  currentTallerId = tid; // mantener compatibilidad con código existente
+  // Actualizar título
+  const titulo = document.getElementById('alumnosTitle');
+  if (titulo) {
+    if (tid) {
+      const t = talleres.find(x => x.id === tid);
+      titulo.textContent = '👥 ' + (t?.nombre || 'Taller');
+    } else {
+      titulo.textContent = '👥 Todos los Alumnos';
+    }
+  }
+  renderFiltrosTaller();
+  renderAlumnos(document.getElementById('searchAlumnos')?.value || '');
+}
 
 function renderAlumnos(filter=''){
   const list=(currentTallerId?alumnos.filter(a=>a.tallerId===currentTallerId):alumnos).filter(a=>{
@@ -905,7 +1430,7 @@ async function saveAlumno(){
   await fbSet('alumnos',id,{nombre,apellido,dni:document.getElementById('aDni').value.trim(),fechaNac:document.getElementById('aFechaNac').value,tel:document.getElementById('aTel').value.trim(),email:document.getElementById('aEmail').value.trim(),tallerId,tallerNombre,pago:document.getElementById('aPago').value,fechaInsc:document.getElementById('aFechaInsc').value,obs:document.getElementById('aObs').value.trim(),ts:Date.now()});
   closeAlumnoModal();
 }
-async function delAlumno(id){if(!confirm('¿Eliminar alumno?'))return;await fbDel('alumnos',id);}
+async function delAlumno(id){ showConfirm('¿Eliminar este alumno?', () => fbDel('alumnos', id)); }
 
 // ===== CALENDARIO =====
 const months=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
@@ -960,7 +1485,17 @@ function checkNotifs(){
   if(tod.length){document.getElementById('notifText').textContent=`Hoy tenés ${tod.length} evento${tod.length>1?'s':''}: ${tod.map(e=>e.title).join(', ')}`;document.getElementById('notifCount').textContent=tod.length;b.style.display='flex';}
   else b.style.display='none';
 }
-function openEventModal(){document.getElementById('eventModal').classList.add('open');}
+function openEventModal(fechaPredef=null){
+  // Si hay día seleccionado en el calendario, pre-completar la fecha
+  if (fechaPredef) {
+    document.getElementById('evDate').value = fechaPredef;
+  } else if (selectedCalDay) {
+    const mm = String(currentMonth+1).padStart(2,'0');
+    const dd = String(selectedCalDay).padStart(2,'0');
+    document.getElementById('evDate').value = currentYear+'-'+mm+'-'+dd;
+  }
+  document.getElementById('eventModal').classList.add('open');
+}
 function closeEventModal(){document.getElementById('eventModal').classList.remove('open');}
 async function saveEvent(){
   const title=document.getElementById('evTitle').value.trim();
@@ -1213,17 +1748,16 @@ async function toggleTarea(id){
 }
 
 async function delTarea(id){
-  if(!confirm('¿Eliminar esta tarea?')) return;
-  await fbDel('tareas', id);
-  await loadTareas();
+  showConfirm('¿Eliminar esta tarea?', async () => { await fbDel('tareas', id); await loadTareas(); });
 }
 
 async function limpiarHechas(){
   const hechas = tareas.filter(t=>t.hecha);
   if(!hechas.length) return;
-  if(!confirm(`¿Eliminar las ${hechas.length} tareas completadas?`)) return;
-  await Promise.all(hechas.map(t=>fbDel('tareas',t.id)));
-  await loadTareas();
+  showConfirm(`¿Eliminar las ${hechas.length} tareas completadas?`, async () => {
+    await Promise.all(hechas.map(t=>fbDel('tareas',t.id)));
+    await loadTareas();
+  }, '🧹');
 }
 
 
@@ -1266,8 +1800,986 @@ async function saveEditTarea(){
 
 // ===== UTILS =====
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+// Normalizar texto para jsPDF (eliminar tildes y caracteres no soportados por Helvetica)
+function pdfTxt(s){
+  // Normalizar texto para jsPDF/Helvetica usando solo codepoints numericos
+  const rep={
+    0xE1:'a',0xE0:'a',0xE4:'a',0xE2:'a',
+    0xC1:'A',0xC0:'A',0xC4:'A',0xC2:'A',
+    0xE9:'e',0xE8:'e',0xEB:'e',0xEA:'e',
+    0xC9:'E',0xC8:'E',0xCB:'E',0xCA:'E',
+    0xED:'i',0xEC:'i',0xEF:'i',0xEE:'i',
+    0xCD:'I',0xCC:'I',0xCF:'I',0xCE:'I',
+    0xF3:'o',0xF2:'o',0xF6:'o',0xF4:'o',
+    0xD3:'O',0xD2:'O',0xD6:'O',0xD4:'O',
+    0xFA:'u',0xF9:'u',0xFC:'u',0xFB:'u',
+    0xDA:'U',0xD9:'U',0xDC:'U',0xDB:'U',
+    0xF1:'n',0xD1:'N',
+    0x2014:'-',0x2013:'-',0x2018:"'",0x2019:"'",
+    0x2605:'*',0x2B50:'*',0x26A0:'!'
+  };
+  return Array.from(String(s||'')).map(c=>{
+    const cp=c.codePointAt(0);
+    return rep[cp]||(cp<256?c:'?');
+  }).join('');
+}
 function escJs(s){return String(s||'').replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');}
 function copyText(text){navigator.clipboard.writeText(text).then(()=>{const t=document.getElementById('copyToast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);});}
+
+// ===== ASISTENCIA =====
+let asistTallerActual = null;
+let asistAlumnos = [];
+let asistRegistro = {}; // { 'YYYY-MM-DD': { alumnoId: 'P'|'A' } }
+let asistMesActual = '';
+let asistFechaActual = '';
+
+const DIAS_SEMANA = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+
+// Inicializar mes al cargar
+function asistInicializar() {
+  const hoy = new Date();
+  const mesStr = hoy.toISOString().slice(0,7);
+  document.getElementById('asistMesGlobal').value = mesStr;
+  asistMesActual = mesStr;
+  asistRenderTalleres();
+}
+
+function asistCambiarMes() {
+  asistMesActual = document.getElementById('asistMesGlobal').value;
+}
+
+function asistRenderTalleres() {
+  const grid = document.getElementById('asistTalleresGrid');
+  if (!talleres.length) {
+    grid.innerHTML = '<div class="empty-state"><div>🔧</div><p>No hay talleres cargados todavía.</p></div>';
+    return;
+  }
+  grid.innerHTML = talleres.map(t => {
+    const alumnosTaller = alumnos.filter(a => a.tallerId === t.id);
+    return `<div class="asist-taller-card" onclick="asistAbrirTaller('${t.id}')">
+      <h3>🔧 ${esc(t.nombre)}</h3>
+      <p>👨‍🏫 ${esc(t.docente || 'Sin docente')}</p>
+      <p>👥 ${alumnosTaller.length} alumno${alumnosTaller.length !== 1 ? 's' : ''} inscripto${alumnosTaller.length !== 1 ? 's' : ''}</p>
+      <span class="asist-dias">📅 ${esc(t.horario || 'Días no definidos')}</span>
+    </div>`;
+  }).join('');
+}
+
+async function asistAbrirTaller(tallerId) {
+  try {
+    asistTallerActual = talleres.find(t => t.id === tallerId);
+    if (!asistTallerActual) return;
+
+    asistAlumnos = alumnos.filter(a => a.tallerId === tallerId)
+      .sort((a,b) => ((a.apellido||'')+(a.nombre||'')).localeCompare((b.apellido||'')+(b.nombre||'')));
+
+    // Fecha hoy y mes actual
+    const hoy = new Date();
+    asistFechaActual = hoy.toISOString().slice(0,10);
+    asistMesActual = asistFechaActual.slice(0,7);
+
+    // Cargar registros desde Firebase (con manejo de error)
+    try { await asistCargarRegistros(); } catch(e) { console.warn('asistCargarRegistros:', e); }
+
+    // Actualizar UI
+    const tn = document.getElementById('asistTallerNombre');
+    if (tn) tn.textContent = '🔧 ' + asistTallerActual.nombre;
+    const ml = document.getElementById('asistMesLabel');
+    if (ml) ml.textContent = '📅 ' + asistNombreMes(asistMesActual);
+    const mg = document.getElementById('asistMesGrilla');
+    if (mg) mg.value = asistMesActual;
+
+    asistRenderGrilla();
+
+    document.getElementById('asist-view-talleres').style.display = 'none';
+    document.getElementById('asist-view-planilla').style.display = 'none';
+    document.getElementById('asist-view-lista').style.display = 'block';
+  } catch(e) {
+    console.error('asistAbrirTaller error:', e);
+    alert('Error al abrir el taller: ' + e.message);
+  }
+}
+
+async function asistCargarRegistros() {
+  if (!window._db) return;
+  const { getDocs, collection } = window._fns;
+  const snap = await getDocs(collection(window._db, 'asistencia'));
+  asistRegistro = {};
+  snap.docs.forEach(d => {
+    const data = d.data();
+    if (data.tallerId === asistTallerActual.id) {
+      if (!asistRegistro[data.fecha]) asistRegistro[data.fecha] = {};
+      asistRegistro[data.fecha][data.alumnoId] = data.estado;
+    }
+  });
+}
+
+// asistCambiarFecha y asistActualizarDiaSemana obsoletas (reemplazadas por planilla táctil)
+
+// asistRenderLista eliminada (reemplazada por asistRenderGrilla)
+function asistCalcularPctMes(alumnoId) {
+  const mesPrefix = asistFechaActual ? asistFechaActual.slice(0,7) : asistMesActual;
+  let presentes = 0, ausentes = 0;
+  Object.keys(asistRegistro).forEach(fecha => {
+    if (fecha.startsWith(mesPrefix)) {
+      const estado = asistRegistro[fecha][alumnoId];
+      if (estado === 'P') presentes++;
+      else if (estado === 'A') ausentes++;
+    }
+  });
+  const total = presentes + ausentes;
+  return { pct: total > 0 ? Math.round((presentes/total)*100) : null, presentes, ausentes };
+}
+
+function asistMarcar(alumnoId, nuevoEstado) {
+  if (!asistFechaActual) { alert('Seleccioná una fecha primero.'); return; }
+  if (!asistRegistro[asistFechaActual]) asistRegistro[asistFechaActual] = {};
+  const actual = asistRegistro[asistFechaActual][alumnoId] || '';
+  if (actual === nuevoEstado) {
+    delete asistRegistro[asistFechaActual][alumnoId];
+  } else {
+    asistRegistro[asistFechaActual][alumnoId] = nuevoEstado;
+  }
+  asistActualizarFila(alumnoId);
+  asistActualizarResumen();
+}
+
+function asistActualizarFila(alumnoId) {
+  const row = document.getElementById('asist-row-'+alumnoId);
+  const btnP = document.getElementById('asist-btn-p-'+alumnoId);
+  const btnA = document.getElementById('asist-btn-a-'+alumnoId);
+  if (!row) return;
+  const estado = (asistRegistro[asistFechaActual]||{})[alumnoId] || '';
+  row.className = 'asist-alumno-row ' + (estado==='P'?'presente':estado==='A'?'ausente':'');
+  if (btnP) btnP.className = 'asist-btn-pa presente ' + (estado==='P'?'activo':'');
+  if (btnA) btnA.className = 'asist-btn-pa ausente ' + (estado==='A'?'activo':'');
+  const pctInfo = asistCalcularPctMes(alumnoId);
+  const alertaFalta = pctInfo.pct !== null && pctInfo.pct < 80;
+  if (alertaFalta) row.classList.add('alerta-falta');
+  const pctEl = document.getElementById('asist-pct-'+alumnoId);
+  if (pctEl) {
+    pctEl.className = 'asist-alumno-pct ' + (alertaFalta?'malo':'');
+    pctEl.innerHTML = pctInfo.pct !== null
+      ? 'Mes: '+pctInfo.pct+'% &nbsp;('+pctInfo.presentes+'✅ / '+pctInfo.ausentes+'❌)'+(alertaFalta?' &nbsp;⚠️ Menos del 80%':'')
+      : 'Sin registros este mes';
+  }
+}
+
+function asistActualizarResumen() {
+  const bar = document.getElementById('asistResumenBar');
+  if (!bar) return;
+  // Contar totales del mes completo en la grilla
+  const mes = asistMesActual;
+  const fechas = asistObtenerFechasConClase(mes);
+  let presentes=0, ausentes=0, sinMarcar=0;
+  asistAlumnos.forEach(al => {
+    fechas.forEach(f => {
+      const e = (asistRegistro[f]||{})[al.id];
+      if (e==='P') presentes++;
+      else if (e==='A') ausentes++;
+      else sinMarcar++;
+    });
+  });
+  bar.innerHTML =
+    '<div class="asist-chip verde">✅ Pres.: '+presentes+'</div>' +
+    '<div class="asist-chip rojo">❌ Aus.: '+ausentes+'</div>' +
+    '<div class="asist-chip">👥 '+asistAlumnos.length+' alumnos</div>';
+}
+
+function asistMarcarTodos(estado) {
+  if (!asistFechaActual) { alert('Seleccioná una fecha primero.'); return; }
+  if (!asistRegistro[asistFechaActual]) asistRegistro[asistFechaActual] = {};
+  asistAlumnos.forEach(al => {
+    asistRegistro[asistFechaActual][al.id] = estado;
+  });
+  asistRenderGrilla();
+}
+
+async function asistGuardar() {
+  if (!asistFechaActual || !asistTallerActual) { alert('Seleccioná una fecha primero.'); return; }
+  if (!window._db) { alert('No hay conexión con la base de datos.'); return; }
+  const { setDoc, doc, deleteDoc } = window._fns;
+  // Guardar todos los días del mes en la grilla
+  const mesActual = asistMesActual;
+  const fechasConDatos = Object.keys(asistRegistro).filter(f => f.startsWith(mesActual));
+  const btn = event.currentTarget;
+  btn.textContent = '⏳ Guardando...';
+  btn.disabled = true;
+  try {
+    const promises = [];
+    fechasConDatos.forEach(fecha => {
+      asistAlumnos.forEach(al => {
+        const docId = asistTallerActual.id+'_'+fecha+'_'+al.id;
+        const estado = (asistRegistro[fecha]||{})[al.id];
+        if (estado) {
+          promises.push(setDoc(doc(window._db, 'asistencia', docId), {
+            tallerId: asistTallerActual.id,
+            tallerNombre: asistTallerActual.nombre,
+            alumnoId: al.id,
+            alumnoNombre: (al.apellido||'') + ' ' + (al.nombre||''),
+            fecha, estado, ts: Date.now()
+          }));
+        } else {
+          promises.push(deleteDoc(doc(window._db, 'asistencia', docId)).catch(()=>{}));
+        }
+      });
+    });
+    await Promise.all(promises);
+    const toast = document.getElementById('copyToast');
+    toast.textContent = '✅ Asistencia guardada';
+    toast.classList.add('show');
+    setTimeout(()=>{ toast.classList.remove('show'); toast.textContent='✅ ¡Copiado!'; }, 2500);
+  } catch(e) {
+    alert('Error al guardar: ' + e.message);
+  }
+  btn.textContent = '💾 Guardar';
+  btn.disabled = false;
+}
+
+function asistVolverATalleres() {
+  document.getElementById('asist-view-lista').style.display = 'none';
+  document.getElementById('asist-view-planilla').style.display = 'none';
+  document.getElementById('asist-view-talleres').style.display = 'block';
+  asistRenderTalleres();
+}
+
+function asistVolverALista() {
+  document.getElementById('asist-view-planilla').style.display = 'none';
+  document.getElementById('asist-view-lista').style.display = 'block';
+}
+
+// ===== PLANILLA MENSUAL =====
+async function asistVerPlanilla() {
+  if (!asistTallerActual) return;
+  await asistCargarRegistros();
+  document.getElementById('asist-view-lista').style.display = 'none';
+  document.getElementById('asist-view-planilla').style.display = 'block';
+  const mes = asistFechaActual ? asistFechaActual.slice(0,7) : asistMesActual;
+  document.getElementById('asistPlanillaTitulo').textContent =
+    '\u{1F4CB} ' + asistTallerActual.nombre + ' \u2014 ' + asistNombreMes(mes);
+  asistGenerarPlanilla(mes);
+}
+
+function asistNombreMes(mesStr) {
+  const [y,m] = mesStr.split('-');
+  const nombres = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  return nombres[parseInt(m)-1] + ' ' + y;
+}
+
+function asistObtenerFechasConClase(mes) {
+  const diasSemana = (asistTallerActual?.diasClase || []).map(Number);
+
+  if (diasSemana.length > 0) {
+    // Generar SOLO los días del mes que coincidan con diasClase
+    // Ignorar cualquier registro en Firebase que no sea un día de clase del taller
+    const resultado = new Set();
+    const [anio, mesNum] = mes.split('-').map(Number);
+    const diasEnMes = new Date(anio, mesNum, 0).getDate();
+    for (let d = 1; d <= diasEnMes; d++) {
+      const fecha = new Date(anio, mesNum - 1, d);
+      if (diasSemana.includes(fecha.getDay())) {
+        resultado.add(mes + '-' + String(d).padStart(2, '0'));
+      }
+    }
+    return [...resultado].sort();
+  }
+
+  // Sin diasClase configurados: mostrar solo fechas con registros existentes
+  return [...new Set(Object.keys(asistRegistro).filter(f => f.startsWith(mes)))].sort();
+}
+
+function asistGenerarPlanilla(mes) {
+  const wrap = document.getElementById('asistPlanillaWrap');
+  const fechas = asistObtenerFechasConClase(mes);
+
+  if (!asistAlumnos.length) {
+    wrap.innerHTML = '<div class="empty-state"><div>\u{1F465}</div><p>No hay alumnos en este taller.</p></div>';
+    return;
+  }
+
+  // Calcular stats por alumno
+  let alertaCount = 0, perfectoCount = 0;
+  let totPresentes = new Array(fechas.length).fill(0);
+  let totAusentes  = new Array(fechas.length).fill(0);
+
+  const statsAlumnos = asistAlumnos.map((al, idx) => {
+    let presentes = 0, ausentes = 0;
+    const celdas = fechas.map((f, fi) => {
+      const e = (asistRegistro[f]||{})[al.id];
+      if (e === 'P') { presentes++; totPresentes[fi]++; }
+      else if (e === 'A') { ausentes++; totAusentes[fi]++; }
+      return e || '';
+    });
+    const total = presentes + ausentes;
+    const pct = total > 0 ? Math.round((presentes/total)*100) : null;
+    const alerta   = pct !== null && pct < 80;
+    const perfecto = total > 0 && ausentes === 0;
+    if (alerta)   alertaCount++;
+    if (perfecto) perfectoCount++;
+    return { al, celdas, presentes, ausentes, pct, alerta, perfecto, total };
+  });
+
+  // --- ENCABEZADO INSTITUCIONAL ---
+  const logoSrc = typeof LOGO !== 'undefined' ? LOGO : '';
+  const headerInst = `
+    <div class="planilla-header-inst">
+      <div class="phi-logo"><img src="${logoSrc}" alt="Logo"></div>
+      <div class="phi-texto">
+        <div class="phi-inst">Centro Educativo Integral San Jorge</div>
+        <div class="phi-sub">Planilla de Asistencia Mensual</div>
+        <div class="phi-taller">\u{1F527} ${esc(asistTallerActual.nombre)}</div>
+        <div>
+          <span class="phi-mes">\u{1F4C5} ${asistNombreMes(mes)}</span>
+          ${asistTallerActual.docente ? `<span class="phi-mes" style="margin-left:6px">\u{1F468}\u200D\u{1F3EB} ${esc(asistTallerActual.docente)}</span>` : ''}
+          ${asistTallerActual.horario ? `<span class="phi-mes" style="margin-left:6px">\u23F0 ${esc(asistTallerActual.horario)}</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+
+  // --- ENCABEZADO DE COLUMNAS ---
+  // Fila 1: números de día
+  const thFechas = fechas.length
+    ? fechas.map((f, fi) => {
+        const parts = f.split('-');
+        return `<th class="col-stats" title="${f}">${parts[2]}</th>`;
+      }).join('')
+    : '<th class="col-stats" style="color:#aaa;font-style:italic;min-width:80px">Sin clases registradas</th>';
+
+  // Fila 2: día de semana
+  const thSemana = fechas.length
+    ? fechas.map(f => {
+        const parts = f.split('-');
+        const d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+        return `<th>${DIAS_SEMANA[d.getDay()].slice(0,3).toUpperCase()}</th>`;
+      }).join('')
+    : '<th></th>';
+
+  // --- FILAS DE ALUMNOS ---
+  const rows = statsAlumnos.map(({ al, celdas, presentes, ausentes, pct, alerta, perfecto, total }, idx) => {
+    const filaClass = perfecto ? 'fila-perfecto' : alerta ? 'fila-alerta' : '';
+
+    const icono = perfecto
+      ? '<span class="icono-estrella" title="Asistencia perfecta">\u2B50</span>'
+      : alerta
+        ? '<span class="icono-alerta" title="Menos del 80%">\u26A0\uFE0F</span>'
+        : '';
+
+    const celdaTDs = celdas.map(e =>
+      e === 'P' ? `<td><span class="celda-p">P</span></td>`
+      : e === 'A' ? `<td><span class="celda-a">A</span></td>`
+      : `<td><span class="celda-vacia">&mdash;</span></td>`
+    ).join('');
+
+    const pctBadge = pct !== null
+      ? `<span class="pct-badge ${perfecto ? 'pct-perfecto' : alerta ? 'pct-malo' : 'pct-ok'}">${pct}%</span>`
+      : '<span style="color:#ccc">—</span>';
+
+    return `<tr class="${filaClass}">
+      <td class="nombre-td">
+        <span class="num-orden">${idx+1}</span>
+        ${icono}${esc(al.apellido||'')}${al.nombre ? ', '+esc(al.nombre) : ''}
+      </td>
+      ${celdaTDs}
+      <td class="col-stats" style="font-weight:800;color:var(--verde-oscuro)">${presentes}</td>
+      <td class="col-stats" style="font-weight:800;color:#c62828">${ausentes}</td>
+      <td class="col-stats">${pctBadge}</td>
+    </tr>`;
+  }).join('');
+
+  // --- FILA DE TOTALES ---
+  const totCeldas = fechas.map((_, fi) =>
+    `<td><span class="tot-p">${totPresentes[fi]}</span><br><span class="tot-a">${totAusentes[fi]}</span></td>`
+  ).join('');
+
+  const totGenP = statsAlumnos.reduce((s,x)=>s+x.presentes,0);
+  const totGenA = statsAlumnos.reduce((s,x)=>s+x.ausentes,0);
+  const totPct  = ((totGenP+totGenA)>0 ? Math.round((totGenP/(totGenP+totGenA))*100)+'%' : '--');
+
+  // --- CHIPS DE ALERTA ---
+  const chips = [
+    alertaCount > 0
+      ? `<div class="planilla-alerta-chip amarillo">\u26A0\uFE0F ${alertaCount} alumno${alertaCount>1?'s':''} con menos del 80% de asistencia</div>`
+      : '',
+    perfectoCount > 0
+      ? `<div class="planilla-alerta-chip verde">\u2B50 ${perfectoCount} alumno${perfectoCount>1?'s':''} con asistencia perfecta</div>`
+      : ''
+  ].filter(Boolean).join('');
+
+  wrap.innerHTML = `
+    ${chips ? `<div class="planilla-alertas">${chips}</div>` : ''}
+    ${headerInst}
+    <div style="overflow-x:auto">
+      <table class="planilla-table" id="planillaTabla">
+        <thead>
+          <tr class="thead-dias">
+            <th class="nombre-col">Alumno / a</th>
+            ${thFechas}
+            <th class="col-stats">\u2705 P</th>
+            <th class="col-stats">\u274C A</th>
+            <th class="col-stats">%</th>
+          </tr>
+          <tr class="thead-semana">
+            <th class="nombre-col">Apellido y Nombre</th>
+            ${thSemana}
+            <th>Tot.</th>
+            <th>Tot.</th>
+            <th>Asist.</th>
+          </tr>
+        </thead>
+        <tbody>${rows || '<tr><td colspan="99" style="text-align:center;padding:20px;color:#bbb">Sin registros para este mes</td></tr>'}</tbody>
+        ${fechas.length ? `<tfoot><tr>
+          <td class="nombre-td">TOTALES DEL MES</td>
+          ${totCeldas}
+          <td style="font-weight:900">${totGenP}</td>
+          <td style="font-weight:900">${totGenA}</td>
+          <td>${totPct}</td>
+        </tr></tfoot>` : ''}
+      </table>
+    </div>
+    <div class="planilla-leyenda">
+      <span><span class="celda-p">P</span> Presente</span>
+      <span><span class="celda-a">A</span> Ausente</span>
+      <span><span class="celda-vacia">&mdash;</span> Sin clase</span>
+      <span>\u2B50 Asistencia perfecta (0 faltas)</span>
+      <span>\u26A0\uFE0F Menos del 80% de asistencia</span>
+    </div>`;
+}
+
+// ===== EXPORTAR PDF INSTITUCIONAL =====
+async function asistExportarPDF() {
+  const mes = asistFechaActual ? asistFechaActual.slice(0,7) : asistMesActual;
+  const fechas = asistObtenerFechasConClase(mes);
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation:'landscape', unit:'mm', format:'a4' });
+  const pageW = doc.internal.pageSize.getWidth();
+
+  // --- Encabezado con franja naranja ---
+  doc.setFillColor(196, 90, 0);
+  doc.rect(0, 0, pageW, 22, 'F');
+  doc.setFillColor(244, 123, 32);
+  doc.rect(0, 22, pageW, 6, 'F');
+
+  // Texto encabezado
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(13);
+  doc.text('Centro Educativo Integral San Jorge', 14, 10);
+  doc.setFontSize(9);
+  doc.setFont('helvetica','normal');
+  doc.text('Planilla de Asistencia Mensual', 14, 16);
+  doc.setFontSize(11);
+  doc.setFont('helvetica','bold');
+  doc.text(pdfTxt(asistTallerActual.nombre), pageW/2, 10, {align:'center'});
+  doc.setFontSize(9);
+  doc.setFont('helvetica','normal');
+  const info = [
+    'Mes: ' + asistNombreMes(mes),
+    asistTallerActual.docente ? 'Docente: ' + pdfTxt(asistTallerActual.docente) : '',
+    asistTallerActual.horario ? 'Horario: ' + pdfTxt(asistTallerActual.horario) : ''
+  ].filter(Boolean).join('   |   ');
+  doc.text(info, pageW/2, 16, {align:'center'});
+
+  // Fecha de emisión
+  doc.text('Emitida: ' + new Date().toLocaleDateString('es-AR'), pageW-14, 10, {align:'right'});
+  doc.setTextColor(0,0,0);
+
+  // --- Tabla ---
+  const headLabels = fechas.map(f => {
+    const parts = f.split('-');
+    const d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+    return DIAS_SEMANA[d.getDay()].slice(0,3) + '\n' + parts[2];
+  });
+
+  const head = [['#', 'Apellido y Nombre', ...headLabels, 'Pres.', 'Aus.', '%']];
+
+  const body = asistAlumnos.map((al, idx) => {
+    let presentes=0, ausentes=0;
+    const celdas = fechas.map(f => {
+      const e = (asistRegistro[f]||{})[al.id];
+      if(e==='P'){presentes++;return 'P';}
+      if(e==='A'){ausentes++;return 'A';}
+      return '';
+    });
+    const total = presentes + ausentes;
+    const pct = total > 0 ? Math.round((presentes/total)*100)+'%' : '—';
+    const perfecto = total > 0 && ausentes === 0;
+    const nombre = pdfTxt((al.apellido||'') + (al.nombre ? ', '+al.nombre : '') + (perfecto ? ' *' : ''));
+    return [String(idx+1), nombre, ...celdas, presentes, ausentes, pct];
+  });
+
+  // Fila totales
+  const footRow = ['', 'TOTALES'];
+  fechas.forEach((_, fi) => {
+    let p=0, a=0;
+    asistAlumnos.forEach(al => { const e=(asistRegistro[fechas[fi]]||{})[al.id]; if(e==='P')p++;else if(e==='A')a++; });
+    footRow.push(p+'P\n'+a+'A');
+  });
+  const totP = asistAlumnos.reduce((s,al)=>{ let p=0; fechas.forEach(f=>{if((asistRegistro[f]||{})[al.id]==='P')p++;}); return s+p; }, 0);
+  const totA = asistAlumnos.reduce((s,al)=>{ let a=0; fechas.forEach(f=>{if((asistRegistro[f]||{})[al.id]==='A')a++;}); return s+a; }, 0);
+  footRow.push(totP, totA, ((totP+totA)>0 ? Math.round((totP/(totP+totA))*100)+'%' : '--'));
+
+  doc.autoTable({
+    head,
+    body,
+    foot: [footRow],
+    startY: 30,
+    styles: { fontSize:7.5, cellPadding:2.5, halign:'center', valign:'middle', lineColor:[220,210,200], lineWidth:0.3 },
+    columnStyles: {
+      0: { cellWidth:8, halign:'center' },
+      1: { halign:'left', cellWidth:42, fontStyle:'bold' }
+    },
+    headStyles: { fillColor:[196,90,0], textColor:255, fontStyle:'bold', fontSize:7.5 },
+    alternateRowStyles: { fillColor:[253,248,244] },
+    footStyles: { fillColor:[196,90,0], textColor:255, fontStyle:'bold' },
+    didParseCell: function(data) {
+      if (data.section==='body') {
+        if (data.cell.raw==='P') {
+          data.cell.styles.fillColor=[200,230,201];
+          data.cell.styles.textColor=[27,94,32];
+          data.cell.styles.fontStyle='bold';
+        } else if (data.cell.raw==='A') {
+          data.cell.styles.fillColor=[255,205,210];
+          data.cell.styles.textColor=[183,28,28];
+          data.cell.styles.fontStyle='bold';
+        }
+        // Columna % — resaltar si < 80
+        const lastColIdx = fechas.length + 4;
+        if (data.column.index === lastColIdx) {
+          const v = parseInt(data.cell.raw);
+          if (!isNaN(v) && v < 80) { data.cell.styles.textColor=[183,28,28]; data.cell.styles.fontStyle='bold'; }
+          if (!isNaN(v) && v===100) { data.cell.styles.textColor=[27,94,32]; data.cell.styles.fontStyle='bold'; }
+        }
+      }
+    },
+    margin: { left:10, right:10 }
+  });
+
+  // Leyenda al pie
+  const finalY = doc.lastAutoTable.finalY + 5;
+  doc.setFontSize(7.5);
+  doc.setTextColor(100,100,100);
+  doc.text('P = Presente   A = Ausente   * = Asistencia perfecta   ! = Menos del 80%', 10, finalY);
+  doc.text('CEI San Jorge - Generado el ' + new Date().toLocaleDateString('es-AR'), pageW-10, finalY, {align:'right'});
+
+  doc.save('Asistencia_' + asistTallerActual.nombre.replace(/\s+/g,'_') + '_' + mes + '.pdf');
+}
+
+// ===== EXPORTAR EXCEL (CSV con BOM) =====
+function asistExportarExcel() {
+  const mes = asistFechaActual ? asistFechaActual.slice(0,7) : asistMesActual;
+  const fechas = asistObtenerFechasConClase(mes);
+
+  // Encabezados descriptivos
+  const colFechas = fechas.map(f => {
+    const parts = f.split('-');
+    const d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+    return DIAS_SEMANA[d.getDay()].slice(0,3) + ' ' + parts[2];
+  });
+
+  const encabezado = ['N°','Apellido','Nombre', ...colFechas, 'Presentes','Ausentes','% Asistencia','Obs.'];
+  const filas = asistAlumnos.map((al, idx) => {
+    let presentes=0, ausentes=0;
+    const celdas = fechas.map(f => {
+      const e = (asistRegistro[f]||{})[al.id];
+      if(e==='P'){presentes++;return 'P';}
+      if(e==='A'){ausentes++;return 'A';}
+      return '';
+    });
+    const total = presentes+ausentes;
+    const pct = total>0 ? Math.round((presentes/total)*100)+'%' : '';
+    const obs = total>0 && ausentes===0 ? '\u2B50 Asistencia perfecta' : (pct && parseInt(pct)<80 ? '\u26A0 Menos del 80%' : '');
+    return [idx+1, al.apellido||'', al.nombre||'', ...celdas, presentes, ausentes, pct, obs];
+  });
+
+  // Fila de totales
+  const totRow = ['','TOTALES',''];
+  fechas.forEach((_,fi) => {
+    let p=0,a=0;
+    asistAlumnos.forEach(al=>{const e=(asistRegistro[fechas[fi]]||{})[al.id];if(e==='P')p++;else if(e==='A')a++;});
+    totRow.push(p+'P / '+a+'A');
+  });
+  const totP = filas.reduce((s,r)=>s+(parseInt(r[r.length-4])||0),0);
+  const totA = filas.reduce((s,r)=>s+(parseInt(r[r.length-3])||0),0);
+  totRow.push(totP, totA, ((totP+totA)>0 ? Math.round((totP/(totP+totA))*100)+'%' : '--'), '');
+
+  // Meta-encabezado institucional
+  const meta = [
+    ['Centro Educativo Integral San Jorge'],
+    ['Planilla de Asistencia — ' + asistTallerActual.nombre + ' — ' + asistNombreMes(mes)],
+    ['Docente: ' + (asistTallerActual.docente||'-') + '   Horario: ' + (asistTallerActual.horario||'-')],
+    ['Generado: ' + new Date().toLocaleDateString('es-AR')],
+    []
+  ];
+
+  const todasFilas = [...meta, encabezado, ...filas, totRow];
+  const csv = todasFilas
+    .map(row => row.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(','))
+    .join('\r\n');
+
+  const bom = '\uFEFF';
+  const blob = new Blob([bom+csv], {type:'text/csv;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Asistencia_' + asistTallerActual.nombre.replace(/\s+/g,'_') + '_' + mes + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ============================================================
+// MÓDULO: NOTAS PROFES
+// ============================================================
+let profes = [];
+let editingProfeId = null;
+
+const profTagLabels = {aviso:'📢 Aviso', reunion:'📅 Reunión', tarea:'✅ Tarea', recurso:'🔗 Recurso', urgente:'🚨 Urgente'};
+const profTagColors = {aviso:'tag-general', reunion:'tag-taller', tarea:'tag-inscripcion', recurso:'tag-whatsapp', urgente:'tag-urgente'};
+
+function renderProfes(filter='') {
+  const grid = document.getElementById('profesGrid');
+  if (!grid) return;
+  const list = profes.filter(n => {
+    if (!filter) return true;
+    const q = filter.toLowerCase();
+    return (n.title||'').toLowerCase().includes(q) || (n.body||'').toLowerCase().includes(q);
+  });
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div>📖</div><p>${filter ? 'Sin resultados' : 'Sin mensajes para profes aún.'}</p></div>`;
+    return;
+  }
+  // Función para convertir URLs en links clicables (con o sin https://)
+  function linkify(text) {
+    const escaped = esc(text);
+    // Primero URLs completas con protocolo
+    const r1 = escaped.replace(/(https?:\/\/[^\s<>"'&]+)/g,
+      url => `<a href="${url}" target="_blank" rel="noopener" style="color:var(--naranja-oscuro);word-break:break-all;text-decoration:underline">${url}</a>`);
+    // Luego www. sin protocolo (que no vengan ya dentro de un href)
+    const r2 = r1.replace(/(?<![=">])(www\.[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,}(?:\/[^\s<>"'&]*)?)/g,
+      url => `<a href="https://${url}" target="_blank" rel="noopener" style="color:var(--naranja-oscuro);word-break:break-all;text-decoration:underline">${url}</a>`);
+    return r2;
+  }
+  grid.innerHTML = list.map(n => `
+    <div class="note-card ${n.color||'color-2'}" onclick="openProfesLeer('${n.id}')" style="cursor:pointer;position:relative">
+      <div class="note-actions" onclick="event.stopPropagation()">
+        <button class="note-btn edit" onclick="openProfesModal('${n.id}')" title="Editar">✏️</button>
+        <button class="note-btn del" onclick="delProfe('${n.id}')" title="Eliminar">🗑️</button>
+      </div>
+      <span class="note-tag ${profTagColors[n.tag]||''}">${profTagLabels[n.tag]||n.tag||'Aviso'}</span>
+      <div class="note-title">${esc(n.title)}</div>
+      <div class="note-body" style="white-space:pre-wrap;max-height:80px;overflow:hidden;mask-image:linear-gradient(to bottom,black 60%,transparent)">${linkify(n.body||'')}</div>
+      <div class="note-footer" style="margin-top:6px">✏️ ${n.date||''} &nbsp;·&nbsp; <span style="color:var(--naranja-oscuro);font-weight:700">Leer más →</span></div>
+    </div>`).join('');
+}
+
+function openProfesLeer(id) {
+  const n = profes.find(x => x.id === id);
+  if (!n) return;
+  document.getElementById('profesLeerTag').textContent = profTagLabels[n.tag] || n.tag || '';
+  document.getElementById('profesLeerTitulo').textContent = n.title || '';
+  document.getElementById('profesLeerFooter').textContent = '✏️ ' + (n.date || '');
+
+  // Cuerpo con links clicables
+  function linkify2(text) {
+    const e = esc(text);
+    const r1 = e.replace(/(https?:\/\/[^\s<>"'&]+)/g,
+      u => `<a href="${u}" target="_blank" rel="noopener" style="color:var(--naranja-oscuro);word-break:break-all;font-weight:700;text-decoration:underline">${u}</a>`);
+    const r2 = r1.replace(/(?<![="'>])(www\.[a-zA-Z0-9\-.]+\.[a-zA-Z]{2,}(?:\/[^\s<>"'&]*)?)/g,
+      u => `<a href="https://${u}" target="_blank" rel="noopener" style="color:var(--naranja-oscuro);word-break:break-all;font-weight:700;text-decoration:underline">${u}</a>`);
+    return r2;
+  }
+  document.getElementById('profesLeerCuerpo').innerHTML = linkify2(n.body || '(Sin contenido)');
+
+  // Color del header según tag
+  const tagColorMap = {aviso:'#c45a00', reunion:'#1565c0', tarea:'#2e7d32', recurso:'#6a1b9a', urgente:'#b71c1c'};
+  document.getElementById('profesLeerHeader').style.background = tagColorMap[n.tag] || 'var(--naranja)';
+
+  document.getElementById('profesLeerModal').classList.add('open');
+}
+
+function closeProfesLeerModal() {
+  document.getElementById('profesLeerModal').classList.remove('open');
+}
+
+function filterProfes() {
+  renderProfes(document.getElementById('searchProfes').value);
+}
+
+function openProfesModal(id=null) {
+  editingProfeId = id;
+  document.getElementById('profesModalTitle').textContent = id ? '✏️ Editar Mensaje' : '📖 Nuevo Mensaje para Profes';
+  const n = id ? profes.find(x => x.id===id) : null;
+  document.getElementById('profesTitle').value = n?.title || '';
+  document.getElementById('profesTag').value = n?.tag || 'aviso';
+  document.getElementById('profesBody').value = n?.body || '';
+  document.getElementById('profesModal').classList.add('open');
+  setTimeout(() => document.getElementById('profesTitle').focus(), 100);
+}
+
+function closeProfesModal() {
+  document.getElementById('profesModal').classList.remove('open');
+  editingProfeId = null;
+}
+
+async function saveProfe() {
+  const title = document.getElementById('profesTitle').value.trim();
+  const body = document.getElementById('profesBody').value.trim();
+  if (!title) { alert('Ingresá un título'); return; }
+  const id = editingProfeId || Date.now().toString();
+  const data = {
+    title, body,
+    tag: document.getElementById('profesTag').value,
+    color: 'color-' + (Math.floor(Math.random()*5)+1),
+    date: new Date().toLocaleDateString('es-AR'),
+    ts: Date.now()
+  };
+  await fbSet('profes', id, data);
+  closeProfesModal();
+}
+
+async function delProfe(id) {
+  showConfirm('¿Eliminar este mensaje?', async () => {
+    await fbDel('profes', id);
+    profes = profes.filter(p => p.id !== id);
+    renderProfes();
+  });
+}
+
+// ============================================================
+// MÓDULO: PLANILLA TÁCTIL (grilla mes completo)
+// ============================================================
+
+// Renderizar la grilla táctil del mes
+function asistRenderGrilla() {
+  const container = document.getElementById('planillaTactilTabla');
+  if (!container) return;
+
+  const mes = asistMesActual;
+  const fechas = asistObtenerFechasConClase(mes);
+
+  if (!asistAlumnos.length) {
+    container.innerHTML = '<div class="empty-state"><div>👥</div><p>No hay alumnos inscriptos en este taller.</p></div>';
+    asistActualizarResumen();
+    return;
+  }
+
+  if (!fechas.length) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:30px;color:#999">
+        <div style="font-size:2.5rem">📅</div>
+        <p style="font-weight:700">No hay días de clase para este mes.</p>
+        <p style="font-size:0.82rem">Configurá los días del taller en <b>Talleres → editar → Días de clase</b>, o usá <b>＋ Clase extra</b> para agregar fechas manualmente.</p>
+      </div>`;
+    asistActualizarResumen();
+    return;
+  }
+
+  // Construir tabla táctil
+  // Encabezado de columnas: nombre | día1 | día2 | ... | %
+  const thFechas = fechas.map(f => {
+    const parts = f.split('-');
+    const d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+    return `<th class="grilla-th-fecha" data-fecha="${f}">
+      <div class="grilla-dia-num">${parts[2]}</div>
+      <div class="grilla-dia-sem">${DIAS_SEMANA[d.getDay()].slice(0,3).toUpperCase()}</div>
+    </th>`;
+  }).join('');
+
+  // Filas de alumnos
+  const rows = asistAlumnos.map((al, idx) => {
+    let presentes=0, ausentes=0;
+    const celdas = fechas.map(f => {
+      const e = (asistRegistro[f]||{})[al.id] || '';
+      if (e==='P') presentes++;
+      else if (e==='A') ausentes++;
+      const cls = e==='P' ? 'gc-p' : e==='A' ? 'gc-a' : 'gc-vacia';
+      const txt = e==='P' ? 'P' : e==='A' ? 'A' : '';
+      return `<td class="grilla-celda ${cls}" onclick="grillaCiclar('${al.id}','${f}')" id="gc-${al.id}-${f}">${txt}</td>`;
+    }).join('');
+
+    const total = presentes+ausentes;
+    const pct = total > 0 ? Math.round((presentes/total)*100) : null;
+    const alerta = pct !== null && pct < 80;
+    const perfecto = total > 0 && ausentes === 0;
+    const pctTxt = pct !== null ? pct+'%' : '--';
+    const pctCls = perfecto ? 'pct-perfecto' : alerta ? 'pct-malo' : 'pct-ok';
+    const icono = perfecto ? ' ⭐' : alerta ? ' ⚠️' : '';
+
+    return `<tr class="grilla-fila ${alerta?'fila-alerta':''} ${perfecto?'fila-perfecto':''}" id="gf-${al.id}">
+      <td class="grilla-td-nombre">
+        <span class="grilla-num">${idx+1}</span>
+        <span class="grilla-nombre-txt">${esc(al.apellido||'')}${al.nombre?', '+esc(al.nombre):''}${icono}</span>
+      </td>
+      ${celdas}
+      <td class="grilla-td-pct"><span class="pct-badge ${pctCls}" id="gpct-${al.id}">${pctTxt}</span></td>
+    </tr>`;
+  }).join('');
+
+  // Fila de totales
+  const totCols = fechas.map(f => {
+    let p=0, a=0;
+    asistAlumnos.forEach(al => {
+      const e = (asistRegistro[f]||{})[al.id];
+      if (e==='P') p++; else if (e==='A') a++;
+    });
+    return `<td class="grilla-td-tot"><span class="tot-p">${p}P</span><br><span class="tot-a">${a}A</span></td>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+      <table class="grilla-tactil" id="grillaTactilTable">
+        <thead>
+          <tr>
+            <th class="grilla-th-nombre">Alumno / a</th>
+            ${thFechas}
+            <th class="grilla-th-pct">%</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+        <tfoot>
+          <tr>
+            <td class="grilla-td-nombre grilla-tot-label">TOTALES</td>
+            ${totCols}
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>`;
+
+  asistActualizarResumen();
+}
+
+// Ciclar estado: vacío → P → A → vacío
+function grillaCiclar(alumnoId, fecha) {
+  if (!asistRegistro[fecha]) asistRegistro[fecha] = {};
+  const actual = asistRegistro[fecha][alumnoId] || '';
+  const siguiente = actual === '' ? 'P' : actual === 'P' ? 'A' : '';
+  if (siguiente === '') {
+    delete asistRegistro[fecha][alumnoId];
+  } else {
+    asistRegistro[fecha][alumnoId] = siguiente;
+  }
+  // Auto-guardar en Firebase silenciosamente
+  asistGuardarFecha(fecha, alumnoId, siguiente);
+
+  // Actualizar celda
+  const celda = document.getElementById(`gc-${alumnoId}-${fecha}`);
+  if (celda) {
+    celda.className = 'grilla-celda ' + (siguiente==='P' ? 'gc-p' : siguiente==='A' ? 'gc-a' : 'gc-vacia');
+    celda.textContent = siguiente;
+  }
+  // Actualizar % del alumno
+  asistActualizarPctGrilla(alumnoId);
+  // Actualizar total de la columna
+  asistActualizarTotColumna(fecha);
+  asistActualizarResumen();
+}
+
+// Guardar automáticamente un registro individual
+async function asistGuardarFecha(fecha, alumnoId, estado) {
+  try {
+    const f = fns || window._fns;
+    const d = db || window._db;
+    if (!f || !d) return;
+    const al = asistAlumnos.find(a => a.id === alumnoId);
+    const docId = asistTallerActual.id + '_' + fecha + '_' + alumnoId;
+    if (estado) {
+      await f.setDoc(f.doc(d, 'asistencia', docId), {
+        tallerId: asistTallerActual.id,
+        tallerNombre: asistTallerActual.nombre,
+        alumnoId, fecha, estado,
+        alumnoNombre: (al?.apellido||'') + ' ' + (al?.nombre||''),
+        ts: Date.now()
+      });
+    } else {
+      await f.deleteDoc(f.doc(d, 'asistencia', docId)).catch(()=>{});
+    }
+  } catch(e) { console.warn('Auto-guardar falló:', e); }
+}
+
+function asistActualizarPctGrilla(alumnoId) {
+  const mes = asistMesActual;
+  let p=0, a=0;
+  Object.keys(asistRegistro).forEach(f => {
+    if (f.startsWith(mes)) {
+      const e = asistRegistro[f][alumnoId];
+      if (e==='P') p++; else if (e==='A') a++;
+    }
+  });
+  const total = p+a;
+  const pct = total > 0 ? Math.round((p/total)*100) : null;
+  const alerta = pct !== null && pct < 80;
+  const perfecto = total > 0 && a === 0;
+  const pctEl = document.getElementById('gpct-'+alumnoId);
+  if (pctEl) {
+    pctEl.className = 'pct-badge ' + (perfecto ? 'pct-perfecto' : alerta ? 'pct-malo' : 'pct-ok');
+    pctEl.textContent = pct !== null ? pct+'%' : '--';
+  }
+  const fila = document.getElementById('gf-'+alumnoId);
+  if (fila) {
+    fila.classList.toggle('fila-alerta', !!alerta);
+    fila.classList.toggle('fila-perfecto', !!perfecto);
+    // Actualizar icono en nombre
+    const nombreEl = fila.querySelector('.grilla-nombre-txt');
+    if (nombreEl) {
+      const al = asistAlumnos.find(x=>x.id===alumnoId);
+      if (al) {
+        const icono = perfecto ? ' ⭐' : alerta ? ' ⚠️' : '';
+        nombreEl.textContent = (al.apellido||'') + (al.nombre?', '+al.nombre:'') + icono;
+      }
+    }
+  }
+}
+
+function asistActualizarTotColumna(fecha) {
+  let p=0, a=0;
+  asistAlumnos.forEach(al => {
+    const e = (asistRegistro[fecha]||{})[al.id];
+    if (e==='P') p++; else if (e==='A') a++;
+  });
+  // Encontrar la celda de totales de esa columna
+  const table = document.getElementById('grillaTactilTable');
+  if (!table) return;
+  const tfoot = table.querySelector('tfoot tr');
+  if (!tfoot) return;
+  // Encontrar la columna correcta
+  const headers = table.querySelectorAll('thead th');
+  let colIdx = -1;
+  headers.forEach((th, i) => { if (th.dataset.fecha === fecha) colIdx = i; });
+  if (colIdx >= 0 && tfoot.cells[colIdx]) {
+    tfoot.cells[colIdx].innerHTML = `<span class="tot-p">${p}P</span><br><span class="tot-a">${a}A</span>`;
+  }
+}
+
+
+function asistCambiarMesGrilla() {
+  const val = document.getElementById('asistMesGrilla').value;
+  if (val) {
+    asistMesActual = val;
+    asistFechaActual = val + '-01';
+    document.getElementById('asistMesLabel').textContent = '📅 ' + asistNombreMes(val);
+    asistCargarRegistros().then(() => asistRenderGrilla());
+  }
+}
+
+// ===== CONFIRM MODAL PERSONALIZADO =====
+let _confirmCallback = null;
+function showConfirm(msg, callback, icon='🗑️') {
+  _confirmCallback = callback;
+  document.getElementById('confirmMsg').textContent = msg;
+  document.getElementById('confirmIcon').textContent = icon;
+  document.getElementById('confirmOkBtn').onclick = () => {
+    const fn = _confirmCallback; // guardar referencia ANTES de limpiar
+    document.getElementById('confirmModal').classList.remove('open');
+    _confirmCallback = null;
+    if (fn) fn();                // ejecutar DESPUÉS de cerrar
+  };
+  document.getElementById('confirmModal').classList.add('open');
+}
+function closeConfirm() {
+  document.getElementById('confirmModal').classList.remove('open');
+  _confirmCallback = null;
+}
+
 </script>
 
 <!-- MODAL EDITAR TAREA -->
