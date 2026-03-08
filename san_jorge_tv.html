@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEI San Jorge — Pantalla</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --naranja: #ff914d;
+  --naranja-osc: #e06a20;
+  --bordo: #ba1209;
+  --bordo-osc: #8a0d07;
+  --crema: #fff3e8;
+  --azul: #1565c0;
+  --violeta: #6a1b9a;
+  --verde: #2e7d32;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #0a0a0a;
+  font-family: 'Nunito', sans-serif;
+  color: white;
+}
+
+/* ── PANTALLA PRINCIPAL ── */
+#pantalla {
+  width: 100vw; height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HEADER FIJO ── */
+#header {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(135deg, var(--bordo) 0%, var(--bordo-osc) 100%);
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  gap: 20px;
+  z-index: 10;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+#logo-wrap {
+  width: 56px; height: 56px;
+  background: var(--naranja);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  color: white;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+#titulo-inst {
+  flex: 1;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  line-height: 1.2;
+}
+#titulo-inst span {
+  display: block;
+  font-size: 0.7em;
+  font-weight: 600;
+  color: #ffddbb;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+#reloj-wrap {
+  text-align: right;
+  flex-shrink: 0;
+}
+#reloj {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 800;
+  color: white;
+  line-height: 1;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+#fecha {
+  font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+  color: #ffddbb;
+  text-transform: capitalize;
+  letter-spacing: 0.04em;
+}
+
+/* ── ZONA SLIDES ── */
+#slide-zona {
+  position: absolute;
+  top: 80px; left: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ── SLIDE ── */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 60px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.slide.activo { opacity: 1; }
+
+/* Fondos por tipo */
+.slide-mensaje    { background: radial-gradient(ellipse at 30% 40%, #1a1a2e 0%, #0a0a0a 70%); }
+.slide-evento     { background: radial-gradient(ellipse at 60% 30%, #1a0a2e 0%, #0a0a0a 70%); }
+.slide-taller     { background: radial-gradient(ellipse at 20% 60%, #0a1628 0%, #0a0a0a 70%); }
+.slide-placa      { background: #0a0a0a; }
+.slide-foto       { background: #000; }
+
+/* Decoración geométrica de fondo */
+.slide::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,255,255,0.5) 60px, rgba(255,255,255,0.5) 61px),
+    repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.5) 60px, rgba(255,255,255,0.5) 61px);
+}
+
+/* ── CONTENIDO SLIDES ── */
+.slide-contenido {
+  text-align: center;
+  max-width: 80%;
+  position: relative;
+  z-index: 1;
+}
+
+.slide-badge {
+  display: inline-block;
+  padding: 6px 20px;
+  border-radius: 30px;
+  font-size: clamp(0.75rem, 1.2vw, 0.95rem);
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.slide-texto-grande {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: white;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  white-space: pre-wrap;
+}
+
+.slide-subtexto {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  color: rgba(255,255,255,0.7);
+  margin-top: 16px;
+  line-height: 1.4;
+}
+
+/* ── PLACA TALLERES ── */
+#placa-talleres {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 40px;
+}
+#placa-titulo {
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  color: var(--naranja);
+  text-align: center;
+  margin-bottom: 6px;
+}
+#placa-subtitulo {
+  font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+  color: #ffddbb;
+  text-align: center;
+  margin-bottom: 16px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+#placa-tabla {
+  flex: 1;
+  width: 100%;
+  border-collapse: collapse;
+}
+#placa-tabla thead tr {
+  background: var(--bordo);
+}
+#placa-tabla th {
+  padding: 10px 16px;
+  text-align: left;
+  font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+#placa-tabla tbody tr {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: background 0.2s;
+}
+#placa-tabla tbody tr:nth-child(odd)  { background: rgba(255,255,255,0.03); }
+#placa-tabla tbody tr:nth-child(even) { background: rgba(255,255,255,0.06); }
+#placa-tabla td {
+  padding: 9px 16px;
+  font-size: clamp(0.75rem, 1.3vw, 1rem);
+  color: white;
+}
+#placa-tabla td:first-child { font-weight: 700; color: white; }
+#placa-tabla td:nth-child(2) { color: #ffddbb; }
+#placa-tabla td:nth-child(3) { color: #90caf9; }
+
+/* ── FOTO ── */
+#foto-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* ── BARRA PROGRESO ── */
+#barra-progreso {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 4px;
+  background: var(--naranja);
+  width: 0%;
+  transition: none;
+  z-index: 20;
+}
+
+
+
+/* ── PANTALLA DE CARGA ── */
+#cargando {
+  position: fixed;
+  inset: 0;
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  z-index: 100;
+}
+#cargando .logo-grande {
+  width: 100px; height: 100px;
+  background: var(--bordo);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem;
+  animation: pulso 1.5s ease-in-out infinite;
+}
+@keyframes pulso {
+  0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(186,18,9,0.4); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(186,18,9,0); }
+}
+#cargando p {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.5);
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- Pantalla de carga -->
+<div id="cargando">
+  <div class="logo-grande">🏫</div>
+  <p>Cargando contenido…</p>
+</div>
+
+<!-- Input fotos oculto (se activa desde sistema principal si se necesita) -->
+<input type="file" id="input-fotos" webkitdirectory multiple accept="image/*" style="display:none"
+  onchange="fotosSeleccionadas(this.files)">
+
+<!-- Pantalla principal -->
+<div id="pantalla">
+
+  <!-- Header -->
+  <div id="header">
+    <div id="logo-wrap">CEI</div>
+    <div id="titulo-inst">
+      Centro Educativo Integral San Jorge
+      <span>Formación Profesional</span>
+    </div>
+    <div id="reloj-wrap">
+      <div id="reloj">00:00</div>
+      <div id="fecha"></div>
+    </div>
+  </div>
+
+  <!-- Zona de slides -->
+  <div id="slide-zona">
+    <!-- slides se generan por JS -->
+  </div>
+
+  <!-- Barra de progreso -->
+  <div id="barra-progreso"></div>
+
+
+
+
+
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, getDocs, onSnapshot }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyArAoHB7sLqD24Ka3Tk5xBy7Esishwm5vE",
+  authDomain: "ceisanjorge-566e1.firebaseapp.com",
+  projectId: "ceisanjorge-566e1",
+  storageBucket: "ceisanjorge-566e1.firebasestorage.app",
+  messagingSenderId: "910494560835",
+  appId: "1:910494560835:web:518f5aec11a0740fc91af6"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// ── Extraer ID de YouTube ──
+function extraerYouTubeId(url) {
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([-\w]{11})/);
+  return m ? m[1] : null;
+}
+
+// ── Estado global ──
+let slides       = [];
+let slideIdx     = 0;
+let slideTimer   = null;
+let fotosFiles   = [];
+let talleres     = [];
+let carteleria   = [];
+let calendario   = [];
+
+// ── Reloj ──
+function actualizarReloj() {
+  const ahora = new Date();
+  document.getElementById('reloj').textContent =
+    ahora.toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit' });
+  document.getElementById('fecha').textContent =
+    ahora.toLocaleDateString('es-AR', { weekday:'long', day:'numeric', month:'long' });
+}
+actualizarReloj();
+setInterval(actualizarReloj, 1000);
+
+// ── Escape HTML ──
+function esc(t) {
+  return String(t||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Cargar Firebase ──
+async function cargarDatos() {
+  try {
+    // Talleres
+    const snapT = await getDocs(collection(db, 'talleres'));
+    talleres = snapT.docs.map(d => ({ id:d.id, ...d.data() }))
+      .sort((a,b) => (a.nombre||'').localeCompare(b.nombre||''));
+
+    // Calendario
+    const snapC = await getDocs(collection(db, 'calendario'));
+    const hoy = new Date().toISOString().slice(0,10);
+    calendario = snapC.docs.map(d => ({ id:d.id, ...d.data() }))
+      .filter(e => e.type === 'pantalla' && e.date >= hoy)
+      .sort((a,b) => a.date.localeCompare(b.date))
+      .slice(0, 10);
+
+    // Cartelería — escucha en tiempo real
+    onSnapshot(collection(db, 'carteleria'), snap => {
+      carteleria = snap.docs.map(d => ({ id:d.id, ...d.data() }))
+        .filter(m => m.activo)
+        .sort((a,b) => (a.orden||0) - (b.orden||0));
+      construirSlides();
+    });
+
+  } catch(e) {
+    console.error('Error Firebase:', e);
+    document.getElementById('cargando').querySelector('p').textContent =
+      'Error al conectar. Verificá la conexión.';
+  }
+}
+
+// ── Construir slides ──
+function construirSlides() {
+  slides = [];
+
+  carteleria.forEach(m => {
+    if (m.tipo === 'calendario') {
+      calendario.forEach(ev => slides.push({
+        tipo: 'evento',
+        titulo: ev.title,
+        desc: ev.desc || '',
+        fecha: ev.date,
+        segundos: m.segundos || 8,
+      }));
+
+    } else if (m.tipo === 'talleres_individual') {
+      if (talleres.length) {
+        talleres.forEach(t => slides.push({
+          tipo: 'taller',
+          nombre: t.nombre || '',
+          docente: t.docente || '',
+          horario: t.horario || '',
+          segundos: m.segundos || 8,
+        }));
+      }
+
+    } else if (m.tipo === 'talleres_placa') {
+      slides.push({ tipo: 'placa', segundos: m.segundos || 15 });
+
+    } else if (m.tipo === 'fotos') {
+      if (fotosFiles.length) {
+        const mezcladas = fotosFiles.slice().sort(() => Math.random() - 0.5);
+        mezcladas.forEach(f => slides.push({
+          tipo: 'foto',
+          file: f,
+          segundos: m.segundos || 6,
+        }));
+      }
+
+    } else if (m.tipo === 'video' && m.texto) {
+      const vid = extraerYouTubeId(m.texto);
+      if (vid) slides.push({ tipo: 'video', vid, segundos: m.segundos || 60 });
+
+    } else if (m.texto) {
+      slides.push({
+        tipo: 'mensaje',
+        texto: m.texto,
+        tipoMsg: m.tipo,
+        segundos: m.segundos || 10,
+      });
+    }
+  });
+
+  // Ocultar cargando
+  document.getElementById('cargando').style.display = 'none';
+
+  if (!slides.length) {
+    mostrarVacio();
+    return;
+  }
+
+  if (slideIdx >= slides.length) slideIdx = 0;
+  mostrarSlide(slideIdx);
+}
+
+// ── Mostrar slide ──
+function mostrarSlide(idx) {
+  const zona = document.getElementById('slide-zona');
+  const slide = slides[idx];
+  if (!slide) return;
+
+  const secs = slide.segundos || 10;
+
+  // Limpiar timer
+  if (slideTimer) clearTimeout(slideTimer);
+
+  // Crear elemento slide
+  const el = document.createElement('div');
+  el.className = 'slide slide-' + tipoClase(slide.tipo);
+
+  if (slide.tipo === 'video') {
+    el.style.padding = '0';
+    const vid = slide.vid;
+    el.innerHTML = `
+      <iframe
+        src="https://www.youtube.com/embed/${vid}?autoplay=1&mute=0&controls=1&modestbranding=1&rel=0&enablejsapi=1"
+        style="width:100%;height:100%;border:none"
+        allow="autoplay; fullscreen"
+        id="yt-iframe">
+      </iframe>`;
+    // Escuchar fin del video via postMessage
+    const onMsg = (e) => {
+      try {
+        const d = JSON.parse(e.data);
+        if (d.event === 'onStateChange' && d.info === 0) {
+          window.removeEventListener('message', onMsg);
+          if (!pausado) { slideIdx = (slideIdx+1)%slides.length; mostrarSlide(slideIdx); }
+        }
+      } catch(err) {}
+    };
+    window.addEventListener('message', onMsg);
+    if (!pausado) {
+      slideTimer = setTimeout(() => {
+        window.removeEventListener('message', onMsg);
+        slideIdx = (slideIdx+1)%slides.length;
+        mostrarSlide(slideIdx);
+      }, (slide.segundos||120)*1000);
+    }
+    return;
+
+  } else if (slide.tipo === 'foto') {
+    const url = URL.createObjectURL(slide.file);
+    el.innerHTML = `<img id="foto-img" src="${url}" alt="foto">`;
+
+  } else if (slide.tipo === 'placa') {
+    document.getElementById('header').style.display = 'none';
+    // Placa: sin header TV, letra más grande, ocupa toda la pantalla
+    el.style.padding = '0';
+    const filas = talleres.map(t => `
+      <tr>
+        <td style="padding:11px 20px;font-weight:700;color:white;font-size:clamp(0.95rem,1.6vw,1.2rem)">${esc(t.nombre)}</td>
+        <td style="padding:11px 20px;color:#ffddbb;font-size:clamp(0.88rem,1.4vw,1.1rem)">${esc(t.docente||'')}</td>
+        <td style="padding:11px 20px;color:#90caf9;font-size:clamp(0.88rem,1.4vw,1.1rem)">${esc(t.horario||'')}</td>
+      </tr>`).join('');
+    el.innerHTML = `
+      <div style="width:100%;height:100%;display:flex;flex-direction:column;padding:30px 40px;box-sizing:border-box;background:#0a0a0a">
+        <div style="text-align:center;margin-bottom:18px">
+          <div style="color:var(--naranja);font-family:'Baloo 2';font-weight:800;font-size:clamp(1.1rem,2.2vw,1.6rem)">
+            Talleres de Formación Profesional ${new Date().getFullYear()}
+          </div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;flex:1">
+          <thead>
+            <tr style="background:var(--bordo)">
+              <th style="padding:11px 20px;color:white;text-align:left;font-size:clamp(0.85rem,1.4vw,1.05rem);text-transform:uppercase;letter-spacing:0.05em">Taller</th>
+              <th style="padding:11px 20px;color:white;text-align:left;font-size:clamp(0.85rem,1.4vw,1.05rem);text-transform:uppercase;letter-spacing:0.05em">Docente</th>
+              <th style="padding:11px 20px;color:white;text-align:left;font-size:clamp(0.85rem,1.4vw,1.05rem);text-transform:uppercase;letter-spacing:0.05em">Horario</th>
+            </tr>
+          </thead>
+          <tbody>${filas}</tbody>
+        </table>
+      </div>`;
+
+  } else if (slide.tipo === 'taller') {
+    el.innerHTML = `
+      <div class="slide-contenido">
+        <div class="slide-badge" style="background:#1565c020;border:1.5px solid #1565c0;color:#90caf9">
+          🔧 Taller
+        </div>
+        <div class="slide-texto-grande">${esc(slide.nombre)}</div>
+        ${slide.docente ? `<div class="slide-subtexto">👤 ${esc(slide.docente)}</div>` : ''}
+        ${slide.horario ? `<div class="slide-subtexto" style="color:#90caf9">🕐 ${esc(slide.horario)}</div>` : ''}
+      </div>`;
+
+  } else if (slide.tipo === 'evento') {
+    const fecha = slide.fecha
+      ? new Date(slide.fecha+'T12:00:00').toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'})
+      : '';
+    el.innerHTML = `
+      <div class="slide-contenido">
+        <div class="slide-badge" style="background:#6a1b9a20;border:1.5px solid #6a1b9a;color:#ce93d8">
+          📅 Próximo evento
+        </div>
+        ${fecha ? `<div class="slide-subtexto" style="color:#ce93d8;margin-bottom:8px;text-transform:capitalize">${fecha}</div>` : ''}
+        <div class="slide-texto-grande">${esc(slide.titulo)}</div>
+        ${slide.desc ? `<div class="slide-subtexto">${esc(slide.desc)}</div>` : ''}
+      </div>`;
+
+  } else {
+    // Mensaje de texto — sin badge, solo texto grande
+    el.innerHTML = `
+      <div class="slide-contenido">
+        <div class="slide-texto-grande">${esc(slide.texto||'')}</div>
+      </div>`;
+  }
+
+  // Restaurar header si estaba oculto
+  document.getElementById('header').style.display = 'flex';
+  // Limpiar TODOS los slides existentes primero
+  const anteriores = zona.querySelectorAll('.slide');
+  anteriores.forEach(a => {
+    a.classList.remove('activo');
+    setTimeout(() => { if (a.parentNode) a.remove(); }, 650);
+  });
+  zona.appendChild(el);
+  setTimeout(() => el.classList.add('activo'), 50);
+
+  // Barra de progreso
+  const barra = document.getElementById('barra-progreso');
+  barra.style.transition = 'none';
+  barra.style.width = '0%';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      barra.style.transition = `width ${secs}s linear`;
+      barra.style.width = '100%';
+    });
+  });
+
+  // Avance automático
+  if (!pausado) {
+    slideTimer = setTimeout(() => {
+      slideIdx = (slideIdx + 1) % slides.length;
+      mostrarSlide(slideIdx);
+    }, secs * 1000);
+  }
+}
+
+function tipoClase(tipo) {
+  const map = { mensaje:'mensaje', evento:'evento', taller:'taller', placa:'placa', foto:'foto' };
+  return map[tipo] || 'mensaje';
+}
+
+function mostrarVacio() {
+  const zona = document.getElementById('slide-zona');
+  zona.innerHTML = `
+    <div class="slide slide-mensaje activo">
+      <div class="slide-contenido">
+        <div style="font-size:4rem;margin-bottom:20px">📺</div>
+        <div class="slide-texto-grande" style="font-size:clamp(1.2rem,2.5vw,2rem);color:rgba(255,255,255,0.4)">
+          Sin mensajes activos
+        </div>
+        <div class="slide-subtexto">Activá mensajes en la cartelería del sistema</div>
+      </div>
+    </div>`;
+}
+
+// ── Fotos (se pueden cargar desde el input oculto si se necesita) ──
+function fotosSeleccionadas(files) {
+  const imgs = Array.from(files).filter(f => f.type.startsWith('image/'));
+  if (imgs.length) {
+    fotosFiles = imgs;
+    construirSlides();
+  }
+}
+window.fotosSeleccionadas = fotosSeleccionadas;
+
+
+
+// ── Pausa con clic ──
+let pausado = false;
+document.addEventListener('click', () => {
+  pausado = !pausado;
+  if (pausado) {
+    if (slideTimer) clearTimeout(slideTimer);
+    // Pausar barra de progreso
+    const barra = document.getElementById('barra-progreso');
+    const computed = getComputedStyle(barra).width;
+    const pxTotal = barra.parentElement.offsetWidth;
+    const pct = (parseFloat(computed) / pxTotal * 100).toFixed(1);
+    barra.style.transition = 'none';
+    barra.style.width = pct + '%';
+
+  } else {
+
+    // Avanzar al siguiente slide
+    slideIdx = (slideIdx + 1) % slides.length;
+    mostrarSlide(slideIdx);
+  }
+});
+
+// ── Iniciar ──
+async function iniciar() {
+  await cargarDatos();
+}
+
+iniciar();
+</script>
+</body>
+</html>
