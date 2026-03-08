@@ -25,6 +25,25 @@
   window._fns = { collection, doc, setDoc, getDoc, getDocs, deleteDoc, onSnapshot, query, orderBy };
   window._fbReady = true;
   document.dispatchEvent(new Event('firebase-ready'));
+
+// ── Ayuda / Manual ──
+function abrirAyuda() {
+  document.getElementById('modalAyuda').style.display = 'block';
+}
+function cerrarAyuda() {
+  document.getElementById('modalAyuda').style.display = 'none';
+}
+// Cerrar con Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    cerrarAyuda();
+  }
+});
+// Cerrar clickeando fuera del modal
+document.getElementById('modalAyuda').addEventListener('click', function(e) {
+  if (e.target === this) cerrarAyuda();
+});
+
 </script>
 <!-- jsPDF for PDF generation -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -672,7 +691,16 @@ tr:hover td { background:#fff8f0; }
     <div class="header-time">
       <div class="clock" id="clock">--:--</div>
       <div class="date-str" id="dateStr">--</div>
+      <div style="font-size:0.62rem;color:rgba(255,255,255,0.45);margin-top:3px;text-align:right;letter-spacing:0.01em">
+        Realizado por Javier Móttola ®
+      </div>
     </div>
+    <button onclick="abrirAyuda()" title="Manual de uso"
+      style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;
+        color:rgba(255,255,255,0.75);font-size:0.75rem;padding:4px 12px;cursor:pointer;
+        font-family:'Baloo 2';font-weight:700;margin-left:10px;white-space:nowrap">
+      ❓ Ayuda
+    </button>
   </div>
 </header>
 
@@ -1059,7 +1087,16 @@ tr:hover td { background:#fff8f0; }
 <!-- CARTELERÍA DIGITAL -->
 <div class="section" id="section-carteleria">
   <div class="section-header">
-    <h2>📺 Cartelería Digital</h2>
+    <h2 style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <span>📺 Cartelería Digital</span>
+      <button onclick="abrirTV()"
+        style="background:var(--bordo);color:white;border:none;border-radius:20px;
+          padding:8px 20px;font-family:'Baloo 2';font-weight:700;font-size:0.9rem;
+          cursor:pointer;display:flex;align-items:center;gap:8px;
+          box-shadow:0 3px 12px rgba(186,18,9,0.35)">
+        ▶ Comenzar transmisión
+      </button>
+    </h2>
   </div>
   <p style="font-size:0.88rem;color:#aaa;margin:-8px 0 14px 0">
     Escribí los mensajes, ordenalos arrastrando y marcá los que se muestran hoy en pantalla.
@@ -1090,6 +1127,10 @@ tr:hover td { background:#fff8f0; }
     <button onclick="cartInsertarSlotFotos()"
       style="border-radius:20px;padding:6px 16px;border:2px solid #2e7d32;background:white;color:#2e7d32;font-weight:700;cursor:pointer;font-size:0.83rem">
       🖼️ Fotos carpeta
+    </button>
+    <button onclick="cartAgregarVideo()"
+      style="border-radius:20px;padding:6px 16px;border:2px solid #c62828;background:white;color:#c62828;font-weight:700;cursor:pointer;font-size:0.83rem">
+      ▶️ Video YouTube
     </button>
     <button onclick="cartPrevisualizar()"
       style="border-radius:20px;padding:6px 16px;border:2px solid var(--bordo);background:var(--bordo);color:white;font-weight:700;cursor:pointer;font-size:0.83rem">
@@ -2527,7 +2568,7 @@ let cartPrevSlides = [];
 let cartDragSrc = null;
 
 const CART_TIPOS = {
-  aviso:      { label:'📢 Aviso',      color:'#ba1209' },
+  aviso:      { label:'📢 Mensaje',      color:'#ba1209' },
   horario:    { label:'🕐 Horario',    color:'#e07535' },
   evento:     { label:'📅 Evento',     color:'#1565c0' },
   bienvenida: { label:'👋 Bienvenida', color:'#2e7d32' },
@@ -2535,7 +2576,34 @@ const CART_TIPOS = {
   calendario:         { label:'📅 Calendario',      color:'#6a1b9a' },
   talleres_individual:{ label:'🔧 Talleres x taller',color:'#1565c0' },
   talleres_placa:     { label:'📋 Placa talleres',   color:'#1565c0' },
+  fotos:              { label:'🖼️ Fotos carpeta',    color:'#2e7d32' },
+  video:              { label:'▶️ Video YouTube',    color:'#c62828' },
 };
+
+function cartAgregarVideo() {
+  // Agrega un renglón de tipo video con campo editable para URL
+  const id = 'video_' + Date.now();
+  const nuevo = { id, texto: '', tipo: 'video', activo: true, segundos: 0, orden: cartMensajes.length };
+  fbSet('carteleria', id, nuevo);
+  cartMensajes.push(nuevo);
+  renderCarteleria();
+  // Foco en el campo URL del nuevo renglón
+  setTimeout(() => {
+    const el = document.querySelector(`[data-id="${id}"] .cart-url-input`);
+    if (el) el.focus();
+  }, 100);
+}
+
+function cartGuardarUrl(id, url) {
+  const m = cartMensajes.find(m => m.id === id);
+  if (!m) return;
+  m.texto = url.trim();
+  fbSet('carteleria', id, m);
+}
+
+function abrirTV() {
+  window.open('san_jorge_tv.html', '_blank', 'width=1280,height=720');
+}
 
 async function loadCarteleria() {
   const docs = await fbGet('carteleria');
@@ -2578,7 +2646,9 @@ function renderCarteleria() {
       ondrop="cartDrop(event)" ondragend="cartDragEnd(event)"
       style="background:white;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;
         box-shadow:0 2px 6px rgba(0,0,0,0.06);border-left:4px solid ${t.color};
-        ${esCalendario?'background:#f3e5f5;border-style:dashed;':''} cursor:default">
+        ${['calendario','talleres_individual','talleres_placa','fotos'].includes(m.tipo)
+          ? 'background:'+t.color+'15;border-left:4px solid '+t.color+';outline:1.5px dashed '+t.color+'55;outline-offset:-2px;'
+          : ''} cursor:default">
       <!-- Drag handle -->
       <span style="cursor:grab;color:#ccc;font-size:1.1rem;flex-shrink:0" title="Arrastrar para reordenar">⠿</span>
       <!-- Checkbox activo -->
@@ -2600,9 +2670,24 @@ function renderCarteleria() {
         ? `<span style="flex:1;font-size:0.88rem;color:#1565c0;font-style:italic">
             Placa con la lista completa de talleres CEI ${new Date().getFullYear()}
            </span>`
+        : m.tipo === 'video'
+        ? `<span style="flex:1;display:flex;align-items:center;gap:8px">
+            <input type="url" class="cart-url-input" placeholder="Pegá el link de YouTube…"
+              value="${esc(m.texto||'')}"
+              onblur="cartGuardarUrl('${m.id}', this.value)"
+              onkeydown="if(event.key==='Enter')this.blur()"
+              style="flex:1;border:1.5px solid #c62828;border-radius:8px;padding:5px 10px;
+                font-size:0.85rem;color:#333;outline:none;min-width:0">
+            ${m.texto ? '<span style=\"color:#c62828;font-size:0.8rem;font-weight:700\">✓ URL guardada</span>' : ''}
+           </span>`
         : m.tipo === 'fotos'
-        ? `<span style="flex:1;font-size:0.88rem;color:#2e7d32;font-style:italic">
-            ${m.texto || 'Sin fotos cargadas — presioná 🖼️ Fotos carpeta para cargar'}
+        ? `<span style="flex:1;font-size:0.88rem;color:#2e7d32;font-style:italic;display:flex;align-items:center;gap:10px">
+            <span>${cartFotosArchivos.length ? m.texto || '' : 'Sin fotos — recargá la carpeta'}</span>
+            <button onclick="document.getElementById('inputCarpetaFotos').click()"
+              style="background:#2e7d3218;border:1px solid #2e7d3266;border-radius:8px;padding:3px 10px;
+                font-size:0.78rem;color:#2e7d32;font-weight:700;cursor:pointer;white-space:nowrap">
+              ${cartFotosArchivos.length ? '🔄 Reconectar' : '📂 Cargar carpeta'}
+            </button>
            </span>`
         : `<!-- Texto editable inline -->
            <span contenteditable="true" data-id="${m.id}"
@@ -3279,6 +3364,31 @@ async function copiarImagenHorarios() {
 // ===== CARTELERÍA DIGITAL v2 =====
 
 
+function cartAgregarVideo() {
+  // Agrega un renglón de tipo video con campo editable para URL
+  const id = 'video_' + Date.now();
+  const nuevo = { id, texto: '', tipo: 'video', activo: true, segundos: 0, orden: cartMensajes.length };
+  fbSet('carteleria', id, nuevo);
+  cartMensajes.push(nuevo);
+  renderCarteleria();
+  // Foco en el campo URL del nuevo renglón
+  setTimeout(() => {
+    const el = document.querySelector(`[data-id="${id}"] .cart-url-input`);
+    if (el) el.focus();
+  }, 100);
+}
+
+function cartGuardarUrl(id, url) {
+  const m = cartMensajes.find(m => m.id === id);
+  if (!m) return;
+  m.texto = url.trim();
+  fbSet('carteleria', id, m);
+}
+
+function abrirTV() {
+  window.open('san_jorge_tv.html', '_blank', 'width=1280,height=720');
+}
+
 async function loadCarteleria() {
   const docs = await fbGet('carteleria');
   cartMensajes = docs.sort((a,b) => (a.orden||0)-(b.orden||0));
@@ -3320,7 +3430,9 @@ function renderCarteleria() {
       ondrop="cartDrop(event)" ondragend="cartDragEnd(event)"
       style="background:white;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;
         box-shadow:0 2px 6px rgba(0,0,0,0.06);border-left:4px solid ${t.color};
-        ${esCalendario?'background:#f3e5f5;border-style:dashed;':''} cursor:default">
+        ${['calendario','talleres_individual','talleres_placa','fotos'].includes(m.tipo)
+          ? 'background:'+t.color+'15;border-left:4px solid '+t.color+';outline:1.5px dashed '+t.color+'55;outline-offset:-2px;'
+          : ''} cursor:default">
       <!-- Drag handle -->
       <span style="cursor:grab;color:#ccc;font-size:1.1rem;flex-shrink:0" title="Arrastrar para reordenar">⠿</span>
       <!-- Checkbox activo -->
@@ -3342,9 +3454,24 @@ function renderCarteleria() {
         ? `<span style="flex:1;font-size:0.88rem;color:#1565c0;font-style:italic">
             Placa con la lista completa de talleres CEI ${new Date().getFullYear()}
            </span>`
+        : m.tipo === 'video'
+        ? `<span style="flex:1;display:flex;align-items:center;gap:8px">
+            <input type="url" class="cart-url-input" placeholder="Pegá el link de YouTube…"
+              value="${esc(m.texto||'')}"
+              onblur="cartGuardarUrl('${m.id}', this.value)"
+              onkeydown="if(event.key==='Enter')this.blur()"
+              style="flex:1;border:1.5px solid #c62828;border-radius:8px;padding:5px 10px;
+                font-size:0.85rem;color:#333;outline:none;min-width:0">
+            ${m.texto ? '<span style=\"color:#c62828;font-size:0.8rem;font-weight:700\">✓ URL guardada</span>' : ''}
+           </span>`
         : m.tipo === 'fotos'
-        ? `<span style="flex:1;font-size:0.88rem;color:#2e7d32;font-style:italic">
-            ${m.texto || 'Sin fotos cargadas — presioná 🖼️ Fotos carpeta para cargar'}
+        ? `<span style="flex:1;font-size:0.88rem;color:#2e7d32;font-style:italic;display:flex;align-items:center;gap:10px">
+            <span>${cartFotosArchivos.length ? m.texto || '' : 'Sin fotos — recargá la carpeta'}</span>
+            <button onclick="document.getElementById('inputCarpetaFotos').click()"
+              style="background:#2e7d3218;border:1px solid #2e7d3266;border-radius:8px;padding:3px 10px;
+                font-size:0.78rem;color:#2e7d32;font-weight:700;cursor:pointer;white-space:nowrap">
+              ${cartFotosArchivos.length ? '🔄 Reconectar' : '📂 Cargar carpeta'}
+            </button>
            </span>`
         : `<!-- Texto editable inline -->
            <span contenteditable="true" data-id="${m.id}"
@@ -5136,6 +5263,25 @@ function closeConfirm() {
   _confirmCallback = null;
 }
 
+
+// ── Ayuda / Manual ──
+function abrirAyuda() {
+  document.getElementById('modalAyuda').style.display = 'block';
+}
+function cerrarAyuda() {
+  document.getElementById('modalAyuda').style.display = 'none';
+}
+// Cerrar con Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    cerrarAyuda();
+  }
+});
+// Cerrar clickeando fuera del modal
+document.getElementById('modalAyuda').addEventListener('click', function(e) {
+  if (e.target === this) cerrarAyuda();
+});
+
 </script>
 
 <!-- MODAL EDITAR TAREA -->
@@ -5169,6 +5315,119 @@ function closeConfirm() {
     </div>
   </div>
 </div>
+
+
+<!-- ══════════════ MODAL AYUDA / MANUAL ══════════════ -->
+<div id="modalAyuda" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);
+  z-index:9999;overflow-y:auto;padding:20px">
+  <div style="background:white;border-radius:20px;max-width:760px;margin:20px auto;
+    padding:36px 40px;box-shadow:0 8px 40px rgba(0,0,0,0.25);position:relative">
+
+    <!-- Cerrar -->
+    <button onclick="cerrarAyuda()"
+      style="position:absolute;top:16px;right:16px;background:#f5e6d8;border:none;
+        border-radius:50%;width:36px;height:36px;font-size:1.2rem;cursor:pointer;
+        font-family:'Baloo 2'">✕</button>
+
+    <!-- Título -->
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:28px;border-bottom:2px solid #f5e6d8;padding-bottom:16px">
+      <div style="font-size:2.2rem">📖</div>
+      <div>
+        <div style="font-family:'Baloo 2';font-weight:800;font-size:1.4rem;color:#ba1209">
+          Manual de Uso — CEI San Jorge
+        </div>
+        <div style="color:#888;font-size:0.85rem">Centro Educativo Integral · Panel de Secretaría</div>
+      </div>
+    </div>
+
+    <!-- Secciones -->
+    <div id="ayudaContenido" style="font-family:'Nunito',sans-serif;font-size:0.92rem;color:#444;line-height:1.7">
+
+      <!-- ACCESO -->
+      <div class="ayuda-sec">
+        <div class="ayuda-titulo">🔐 Acceso al sistema</div>
+        <p>Para ingresar, escribí la contraseña de acceso cuando el sistema lo solicite. El sistema se bloquea automáticamente por inactividad. La contraseña de <strong>eliminación</strong> (para borrar talleres o desbloquear tareas) es diferente y más segura.</p>
+      </div>
+
+      <!-- NOTAS -->
+      <div class="ayuda-sec">
+        <div class="ayuda-titulo">📋 Notas y Tareas</div>
+        <p>La pestaña <strong>Notas</strong> permite registrar tareas pendientes del día. Cada tarea tiene un estado (pendiente / hecha) y puede bloquearse para protegerla de eliminaciones accidentales. Las notas se sincronizan en tiempo real con Firebase y están disponibles desde cualquier dispositivo.</p>
+      </div>
+
+      <!-- TALLERES -->
+      <div class="ayuda-sec">
+        <div class="ayuda-titulo">🔧 Talleres</div>
+        <p>Registrá cada taller con nombre, docente, horario, días de clase y cupo máximo. Desde la lista podés ver los alumnos inscriptos, editar los datos del taller o eliminarlo (requiere contraseña si tiene alumnos). También podés generar imágenes de los horarios en dos formatos:</p>
+        <ul>
+          <li><strong>🖥️ Imagen TV</strong> — horizontal 1280px, ideal para pantallas o WhatsApp</li>
+          <li><strong>📱 Historia IG</strong> — vertical 1080×1920px, lista para publicar en Instagram</li>
+        </ul>
+      </div>
+
+      <!-- ALUMNOS -->
+      <div class="ayuda-sec">
+        <div class="ayuda-titulo">👥 Alumnos</div>
+        <p>Buscá alumnos por nombre, DNI o taller. Podés ver todos los talleres en los que está inscripto cada alumno, editar sus datos o darlo de baja. La inscripción se realiza desde la ficha del taller correspondiente.</p>
+      </div>
+
+      <!-- ASISTENCIA -->
+      <div class="ayuda-sec">
+        <div class="ayuda-titulo">✅ Asistencia</div>
+        <p>Registrá la asistencia diaria por taller. El sistema guarda el historial completo. Podés ver el porcentaje de asistencia de cada alumno y exportar los datos si necesitás un informe.</p>
+      </div>
+
+      <!-- CALENDARIO -->
+      <div class="ayuda-sec">
+        <div class="ayuda-titulo">📅 Calendario</div>
+        <p>Agendá eventos institucionales: actos, reuniones, feriados, capacitaciones. Cada evento tiene fecha, hora opcional y descripción. Los eventos marcados como <strong>📺 Pantalla</strong> se muestran automáticamente en la Cartelería Digital sin necesidad de configurarlos dos veces.</p>
+      </div>
+
+      <!-- CARTELERÍA -->
+      <div class="ayuda-sec">
+        <div class="ayuda-titulo">📺 Cartelería Digital</div>
+        <p>Armá la lista de mensajes que se proyectan en la pantalla del centro. Cada renglón es un mensaje o slot especial. Podés:</p>
+        <ul>
+          <li>Ordenar los mensajes arrastrando con ⠿</li>
+          <li>Activar o desactivar cada mensaje con el ✓</li>
+          <li>Configurar cuántos segundos se muestra cada uno</li>
+          <li><strong>📅 Eventos calendario</strong> — inserta automáticamente los próximos eventos tipo Pantalla</li>
+          <li><strong>🔧 Talleres x taller</strong> — una slide por cada taller con nombre, docente y horario</li>
+          <li><strong>📋 Placa talleres</strong> — tabla completa de todos los talleres en una sola slide</li>
+          <li><strong>🖼️ Fotos carpeta</strong> — seleccioná una carpeta local con imágenes o flyers; se rotan al azar</li>
+          <li><strong>▶ Previsualizar</strong> — vista previa simulando la pantalla TV antes de proyectar</li>
+        </ul>
+        <p style="margin-top:8px;padding:10px 14px;background:#fff3e8;border-radius:8px;border-left:3px solid #ff914d;font-size:0.85rem">
+          💡 Las fotos de la carpeta se cargan solo en esa sesión. Si cerrás el navegador, tenés que volver a seleccionar la carpeta la próxima vez.
+        </p>
+      </div>
+
+      <!-- SINCRONIZACIÓN -->
+      <div class="ayuda-sec">
+        <div class="ayuda-titulo">🔄 Sincronización</div>
+        <p>El punto de color en la esquina superior derecha indica el estado de conexión: <span style="color:#2e7d32">●</span> verde = conectado, <span style="color:#ba1209">●</span> rojo = sin conexión. Todos los cambios se guardan en la nube (Firebase) y están disponibles desde cualquier dispositivo con acceso al sistema.</p>
+      </div>
+
+    </div><!-- fin contenido -->
+
+    <!-- Pie del modal -->
+    <div style="margin-top:28px;padding-top:16px;border-top:1px solid #f0e0d0;
+      text-align:right;color:#bbb;font-size:0.75rem">
+      Realizado por Javier Móttola ® · CEI San Jorge 2026
+    </div>
+
+  </div>
+</div>
+
+<style>
+.ayuda-sec { margin-bottom:22px; }
+.ayuda-titulo {
+  font-family:'Baloo 2';font-weight:800;font-size:1rem;color:#ba1209;
+  margin-bottom:6px;display:flex;align-items:center;gap:6px;
+}
+.ayuda-sec ul { margin:6px 0 0 18px; }
+.ayuda-sec li { margin-bottom:4px; }
+</style>
 
 </body>
 </html>
