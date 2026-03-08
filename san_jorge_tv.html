@@ -392,7 +392,7 @@ async function cargarDatos() {
       .sort((a,b) => (a.nombre||'').localeCompare(b.nombre||''));
 
     // Calendario
-    const snapC = await getDocs(collection(db, 'calendario'));
+    const snapC = await getDocs(collection(db, 'events'));
     const hoy = new Date().toISOString().slice(0,10);
     calendario = snapC.docs.map(d => ({ id:d.id, ...d.data() }))
       .filter(e => e.type === 'pantalla' && e.date >= hoy)
@@ -669,6 +669,21 @@ document.addEventListener('click', () => {
 
     // Avanzar al siguiente slide
     slideIdx = (slideIdx + 1) % slides.length;
+    mostrarSlide(slideIdx);
+  }
+});
+
+// ── Teclas cursor ──
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight') {
+    if (slideTimer) clearTimeout(slideTimer);
+    slideIdx = (slideIdx + 1) % slides.length;
+    pausado = false;
+    mostrarSlide(slideIdx);
+  } else if (e.key === 'ArrowLeft') {
+    if (slideTimer) clearTimeout(slideTimer);
+    slideIdx = (slideIdx - 1 + slides.length) % slides.length;
+    pausado = false;
     mostrarSlide(slideIdx);
   }
 });
