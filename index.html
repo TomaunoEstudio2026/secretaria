@@ -201,23 +201,34 @@ header {
 .stat-chip { background:white; border-radius:12px; padding:8px 16px; box-shadow:var(--sombra); display:flex; align-items:center; gap:7px; font-family:'Baloo 2'; font-weight:700; font-size:0.85rem; }
 .stat-chip span { font-size:1.1rem; }
 /* SWITCH LISTA/PAGOS */
-.switch-btn { background:transparent; border:none; border-radius:9px; padding:6px 14px; font-family:'Baloo 2'; font-weight:700; font-size:0.85rem; cursor:pointer; color:#999; transition:all .2s; }
-.switch-btn.active { background:var(--naranja); color:white; box-shadow:0 2px 8px rgba(244,123,32,0.3); }
-/* TABLA PAGOS */
-.pagos-tabla-wrap { overflow-x:auto; border-radius:16px; box-shadow:var(--sombra); background:white; }
-.pagos-tabla { border-collapse:collapse; width:100%; min-width:900px; font-size:0.82rem; }
-.pagos-tabla th { background:var(--naranja-oscuro); color:white; padding:9px 8px; text-align:center; font-family:'Baloo 2'; font-weight:700; white-space:nowrap; }
-.pagos-tabla th.col-nombre { text-align:left; padding-left:14px; min-width:170px; position:sticky; left:0; z-index:2; background:var(--naranja-oscuro); }
-.pagos-tabla td { padding:7px 8px; text-align:center; border-bottom:1px solid #f5ece0; vertical-align:middle; }
-.pagos-tabla td.col-nombre { text-align:left; padding-left:14px; font-weight:700; font-size:0.83rem; position:sticky; left:0; background:white; z-index:1; }
-.pagos-tabla tr:nth-child(even) td { background:#fff8f2; }
-.pagos-tabla tr:nth-child(even) td.col-nombre { background:#fff8f2; }
-.pagos-tabla tr:hover td { background:#fff3e8 !important; }
-.pago-celda { width:52px; height:34px; border-radius:8px; border:2px solid #e0d0c0; background:#fafafa; cursor:pointer; font-size:0.9rem; display:flex; align-items:center; justify-content:center; margin:0 auto; transition:all .15s; user-select:none; flex-direction:column; line-height:1; }
-.pago-celda.pagado { background:#e8f5e9; border-color:#66bb6a; }
-.pago-celda.trueque { background:#fff8e1; border-color:#ffb300; }
-.pago-celda:hover { transform:scale(1.1); box-shadow:0 2px 8px rgba(0,0,0,0.12); }
-.pago-forma { font-size:0.58rem; color:#888; line-height:1; margin-top:1px; }
+.switch-btn { background:transparent; border:none; border-radius:8px; padding:7px 20px; font-family:'Baloo 2'; font-weight:700; font-size:0.95rem; cursor:pointer; color:#aaa; transition:all .2s; }
+.switch-btn.active { background:var(--naranja); color:white; box-shadow:0 3px 10px rgba(244,123,32,0.4); }
+.switch-btn:hover:not(.active) { background:#f0e8e0; color:var(--naranja); }
+/* TABLA PAGOS — colores suaves armónicos */
+.pagos-tabla-wrap { overflow-x:auto; border-radius:14px; box-shadow:var(--sombra); background:white; margin-top:6px; }
+.pagos-tabla { border-collapse:collapse; width:100%; min-width:900px; font-size:0.76rem; }
+.pagos-tabla th { background:#e8845a; color:white; padding:7px 5px; text-align:center; font-family:'Baloo 2'; font-weight:700; white-space:nowrap; font-size:0.74rem; letter-spacing:0.04em; }
+.pagos-tabla th.col-nombre { text-align:left; padding-left:12px; min-width:150px; position:sticky; left:0; z-index:2; background:#e8845a; }
+.pagos-tabla th.col-taller { text-align:left; padding-left:6px; min-width:85px; }
+.pagos-tabla th.col-total { background:#c45a00; min-width:65px; }
+.pagos-tabla td { padding:4px 5px; text-align:center; border-bottom:1px solid #f2ece6; vertical-align:middle; }
+.pagos-tabla td.col-nombre { text-align:left; padding-left:12px; font-weight:700; font-size:0.8rem; position:sticky; left:0; background:#fffcfa; z-index:1; white-space:nowrap; }
+.pagos-tabla td.col-taller { text-align:left; padding-left:6px; font-size:0.74rem; color:#c09070; white-space:nowrap; }
+.pagos-tabla td.col-total { font-family:'Baloo 2'; font-weight:800; font-size:0.78rem; color:#2e7d32; background:#f4faf5; }
+.pagos-tabla tr:nth-child(odd) td { background:#fffcfa; }
+.pagos-tabla tr:nth-child(odd) td.col-nombre { background:#fffcfa; }
+.pagos-tabla tr:nth-child(even) td { background:#fdf5ee; }
+.pagos-tabla tr:nth-child(even) td.col-nombre { background:#fdf5ee; }
+.pagos-tabla tr:nth-child(odd) td.col-total { background:#f4faf5; }
+.pagos-tabla tr:nth-child(even) td.col-total { background:#ecf7ee; }
+.pagos-tabla tr:hover td { background:#ffeedd !important; transition:background .1s; }
+.pagos-tabla tr:hover td.col-total { background:#dff0e3 !important; }
+.pago-celda { width:36px; height:24px; border-radius:6px; border:1.5px solid #e8d8c8; background:#faf6f2; cursor:pointer; font-size:0.76rem; display:flex; align-items:center; justify-content:center; margin:0 auto; transition:all .15s; user-select:none; flex-direction:column; line-height:1; }
+.pago-celda.pagado { background:#e8f5e9; border-color:#81c784; }
+.pago-celda.trueque { background:#fff8e1; border-color:#ffca28; }
+.pago-celda:hover { transform:scale(1.15); box-shadow:0 3px 8px rgba(244,123,32,0.3); border-color:var(--naranja); }
+.pago-celda:active { transform:scale(0.92); box-shadow:none; }
+.pago-forma { font-size:0.5rem; color:#999; line-height:1; margin-top:1px; }
 .alumnos-table-wrap { background:white; border-radius:18px; overflow:hidden; box-shadow:var(--sombra); overflow-x:auto; }
 table { width:100%; border-collapse:collapse; }
 thead { background:linear-gradient(90deg, var(--naranja-oscuro), var(--naranja)); color:white; }
@@ -867,48 +878,42 @@ tr:hover td { background:#fff8f0; }
     <div class="alumnos-header">
       <button class="back-btn" onclick="backToTalleres()" id="backBtn" style="display:none">← Volver</button>
       <span class="alumnos-title" id="alumnosTitle">👥 Todos los Alumnos</span>
-      <div class="btn-group" id="btnGroupLista">
-        <button class="btn-pdf" onclick="imprimirAlumnos()" style="background:#555;color:white;border:none" title="Imprimir lista actual">🖨️ Imprimir</button>
-        <button class="btn-pdf" onclick="exportPDFAlumnos()" id="btnPdfAlumnos">📄 PDF</button>
-        <button class="btn-add" onclick="openAlumnoModal()" id="btnAddAlumno">＋ Agregar Alumno</button>
-        <button class="btn-pdf" onclick="openImportModal()" style="background:var(--verde);color:white;border:none" title="Importar desde Excel">📥 Importar Excel</button>
-        <button class="btn-pdf" onclick="exportarAlumnosExcel()" style="background:#1565c0;color:white;border:none" title="Exportar backup Excel">📤 Exportar Excel</button>
-        <button class="btn-pdf" onclick="limpiarListaAnual()" style="background:#b71c1c;color:white;border:none" title="Vaciar lista de alumnos (fin de año)">🗑️ Limpiar lista</button>
-      </div>
     </div>
     <!-- SWITCH FIJO -->
-    <div style="position:sticky;top:112px;z-index:90;background:#f7f0e8;padding:8px 0 6px;margin:-4px 0 10px;display:flex;align-items:center;gap:8px;border-bottom:2px solid var(--naranja-claro)">
-      <div style="display:flex;align-items:center;gap:4px;background:#f0ece6;border-radius:12px;padding:4px">
-        <button id="switchLista" onclick="setVistaAlumnos('lista')" class="switch-btn active">👥 Lista</button>
-        <button id="switchPagos" onclick="setVistaAlumnos('pagos')" class="switch-btn">💰 Pagos</button>
+    <div id="barraStickyAlumnos" style="position:sticky;top:68px;z-index:90;background:#f7f0e8;padding:8px 0 6px;margin:-4px 0 0;border-bottom:2px solid var(--naranja-claro)">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+        <div style="display:flex;gap:0;background:#e8ddd0;border-radius:10px;padding:3px">
+          <button id="switchLista" onclick="setVistaAlumnos('lista')" class="switch-btn active">👥 Lista</button>
+          <button id="switchPagos" onclick="setVistaAlumnos('pagos')" class="switch-btn">💰 Pagos</button>
+        </div>
+        <button id="btnFiltroBeca" class="filtro-btn" onclick="toggleFiltroBeca()" style="border-color:#6a1b9a;color:#6a1b9a;padding:4px 10px;font-size:0.78rem">🎓 Becados</button>
+        <button id="btnFiltroSeguro" class="filtro-btn" onclick="toggleFiltroSeguro()" style="border-color:#1565c0;color:#1565c0;padding:4px 10px;font-size:0.78rem">🛡️ Seguro</button>
+        <span id="labelBecados" style="font-size:0.78rem;color:#aaa;display:none"></span>
+        <span id="labelSeguro" style="font-size:0.78rem;color:#aaa;display:none"></span>
+        <div class="btn-group" id="btnGroupLista" style="margin-left:auto">
+          <button class="btn-pdf" onclick="imprimirAlumnos()" style="background:#555;color:white;border:none" title="Imprimir">🖨️ Imprimir</button>
+          <button class="btn-pdf" onclick="exportPDFAlumnos()" id="btnPdfAlumnos" title="PDF">📄 PDF</button>
+          <button class="btn-add" onclick="openAlumnoModal()" id="btnAddAlumno">＋ Alumno</button>
+          <button class="btn-pdf" onclick="openImportModal()" style="background:var(--verde);color:white;border:none" title="Importar Excel">📥 Importar</button>
+          <button class="btn-pdf" onclick="exportarAlumnosExcel()" style="background:#1565c0;color:white;border:none" title="Exportar Excel">📤 Exportar</button>
+          <button class="btn-pdf" onclick="limpiarListaAnual()" style="background:#b71c1c;color:white;border:none" title="Limpiar lista">🗑️ Limpiar</button>
+        </div>
       </div>
-      <div class="taller-filtros" id="tallerFiltros" style="flex:1;margin:0"></div>
+      <div class="taller-filtros" id="tallerFiltros" style="margin:0;padding:0;border:none"></div>
     </div>
-    <div class="search-bar" id="searchBarLista">
+
+    <!-- STATS + BUSCADOR (lista) -->
+    <div class="stats-bar" id="statsBar" style="margin-top:10px"></div>
+    <div class="search-bar" id="searchBarLista" style="margin-top:8px">
       <input type="text" id="searchAlumnos" placeholder="🔍 Buscar por nombre, DNI, taller..." oninput="filterAlumnos()">
     </div>
-    <div style="margin-bottom:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <button id="btnFiltroBeca" class="filtro-btn" onclick="toggleFiltroBeca()" style="border-color:#6a1b9a;color:#6a1b9a">
-        🎓 Ver solo becados
-      </button>
-      <span id="labelBecados" style="font-size:0.82rem;color:#aaa;display:none"></span>
-      <button id="btnFiltroSeguro" class="filtro-btn" onclick="toggleFiltroSeguro()" style="border-color:#1565c0;color:#1565c0">
-        🛡️ Para seguro
-      </button>
-      <span id="labelSeguro" style="font-size:0.82rem;color:#aaa;display:none"></span>
-    </div>
-    <div class="stats-bar" id="statsBar"></div>
+
+    <!-- TABLA LISTA -->
     <div class="alumnos-table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Apellido y Nombre</th>
-            <th>DNI</th>
-            <th>Edad</th>
-            <th>Teléfono</th>
-            <th>Taller</th>
-            <th>Cuota</th>
-            <th>Acciones</th>
+            <th>Apellido y Nombre</th><th>DNI</th><th>Edad</th><th>Teléfono</th><th>Taller</th><th>Cuota</th><th>Acciones</th>
           </tr>
         </thead>
         <tbody id="alumnosBody"><tr><td colspan="7" style="text-align:center;padding:30px;color:#bbb">Cargando...</td></tr></tbody>
@@ -917,7 +922,14 @@ tr:hover td { background:#fff8f0; }
 
     <!-- VISTA PAGOS -->
     <div id="vistaPagos" style="display:none">
-      <div class="stats-bar" id="statsBarPagos"></div>
+      <div class="stats-bar" id="statsBarPagos" style="margin-top:10px"></div>
+      <div style="display:flex;align-items:center;gap:8px;margin:8px 0 4px;font-family:'Baloo 2';font-size:0.85rem;color:#888">
+        <span>📈 Recargo por mora:</span>
+        <input type="number" id="inputRecargo" min="0" max="100" value="0" step="1" oninput="renderPagos()"
+          style="width:58px;padding:3px 8px;border:2px solid var(--naranja-claro);border-radius:8px;font-family:'Baloo 2';font-weight:700;font-size:0.9rem;text-align:center;color:var(--naranja-oscuro)">
+        <span>%</span>
+        <span style="font-size:0.76rem;color:#bbb">(se aplica al cobrar en planilla)</span>
+      </div>
       <div class="pagos-tabla-wrap" id="pagosTablaCont">
         <p style="text-align:center;color:#bbb;padding:30px">Cargando pagos...</p>
       </div>
@@ -1480,14 +1492,38 @@ tr:hover td { background:#fff8f0; }
   </div>
 </div>
 
-<!-- MODAL TICKET/RECIBO -->
+<!-- MODAL TICKET/COMPROBANTE -->
 <div class="modal-overlay" id="modalTicket">
-  <div class="modal" style="max-width:500px">
-    <h3>🧾 Ticket de Pagos</h3>
-    <div id="ticketContenido"></div>
-    <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end">
-      <button onclick="imprimirTicket()" style="background:var(--naranja);color:white;border:none;border-radius:12px;padding:9px 18px;font-family:'Baloo 2';font-weight:700;cursor:pointer">🖨️ Imprimir</button>
-      <button onclick="document.getElementById('modalTicket').classList.remove('open')" style="background:#f0f0f0;color:#666;border:none;border-radius:12px;padding:9px 18px;font-family:'Baloo 2';font-weight:700;cursor:pointer">Cerrar</button>
+  <div class="modal" style="max-width:400px;padding:0;overflow:hidden;border-radius:20px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.2)">
+    <!-- X cerrar arriba derecha -->
+    <button onclick="document.getElementById('modalTicket').classList.remove('open')"
+      style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.25);border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;color:white;z-index:10;transition:all .15s;backdrop-filter:blur(4px)"
+      onmouseover="this.style.background='rgba(255,255,255,0.4)'" onmouseout="this.style.background='rgba(255,255,255,0.25)'">✕</button>
+    <!-- Contenido ticket -->
+    <div id="ticketContenido" style="padding:0"></div>
+    <!-- Botones -->
+    <div style="display:flex;gap:8px;padding:12px 14px 14px;background:#f8f3ee">
+      <button onclick="enviarWhatsapp()"
+        style="flex:2;background:linear-gradient(135deg,#25D366,#1da851);color:white;border:none;border-radius:12px;padding:11px 8px;font-family:'Baloo 2';font-weight:700;font-size:0.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .18s;box-shadow:0 4px 12px rgba(37,211,102,0.3)"
+        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(37,211,102,0.4)'"
+        onmouseout="this.style.transform='';this.style.boxShadow='0 4px 12px rgba(37,211,102,0.3)'"
+        onmousedown="this.style.transform='scale(0.96)'" onmouseup="this.style.transform='translateY(-2px)'">
+        📲 WhatsApp
+      </button>
+      <button onclick="copiarImagenTicket()" id="btnCopiarImg"
+        style="flex:2;background:linear-gradient(135deg,#1976d2,#1251a3);color:white;border:none;border-radius:12px;padding:11px 8px;font-family:'Baloo 2';font-weight:700;font-size:0.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .18s;box-shadow:0 4px 12px rgba(25,118,210,0.3)"
+        onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 18px rgba(25,118,210,0.4)'"
+        onmouseout="this.style.transform='';this.style.boxShadow='0 4px 12px rgba(25,118,210,0.3)'"
+        onmousedown="this.style.transform='scale(0.96)'" onmouseup="this.style.transform='translateY(-2px)'">
+        🖼️ Copiar
+      </button>
+      <button onclick="imprimirTicket()"
+        style="flex:1;background:linear-gradient(135deg,#607d8b,#455a64);color:white;border:none;border-radius:12px;padding:11px 8px;font-family:'Baloo 2';font-weight:700;font-size:0.9rem;cursor:pointer;transition:all .18s;box-shadow:0 4px 12px rgba(0,0,0,0.15)"
+        onmouseover="this.style.transform='translateY(-2px)';this.style.opacity='0.9'"
+        onmouseout="this.style.transform='';this.style.opacity='1'"
+        onmousedown="this.style.transform='scale(0.93)'" onmouseup="this.style.transform='translateY(-2px)'">
+        🖨️
+      </button>
     </div>
   </div>
 </div>
@@ -2384,26 +2420,14 @@ async function saveAlumno(){
   // Si la inscripción está pagada, registrarla en la planilla de pagos (merge, no reemplazar)
   if (pagoInsc === 'pagado') {
     const taller = talleres.find(t=>t.id===tallerId);
-    const montoStr = taller?.inscripcion || '0';
-    const monto = parseFloat(montoStr.replace(/[^\d.,]/g,'').replace(',','.')) || 0;
+    const monto = parsePesos(taller?.inscripcion);
     // Leer el documento actual de pagos para no pisar otros meses
     let pagoActual = {};
-    try {
-      const snap = await fbGetDoc('pagos', id);
-      if (snap) pagoActual = snap;
-    } catch(e) {}
-    await fbSet('pagos', id, {
-      ...pagoActual,
-      insc: {
-        estado: 'pagado',
-        fecha: fechaInsc || new Date().toISOString().split('T')[0],
-        forma: formaInsc,
-        monto
-      }
-    });
-    // Actualizar pagosData en memoria también
+    try { const snap = await fbGetDoc('pagos', id); if (snap) pagoActual = snap; } catch(e) {}
+    const inscData = { estado:'pagado', fecha: fechaInsc||new Date().toISOString().split('T')[0], forma:formaInsc, monto };
+    await fbSet('pagos', id, { ...pagoActual, insc: inscData });
     if (!pagosData[id]) pagosData[id] = { id };
-    pagosData[id].insc = { estado:'pagado', fecha: fechaInsc||new Date().toISOString().split('T')[0], forma:formaInsc, monto };
+    pagosData[id].insc = inscData;
   }
   // Sincronizar datos personales en TODOS los registros con el mismo DNI
   if (dni) {
@@ -4027,6 +4051,25 @@ function setVistaAlumnos(vista) {
   document.getElementById('vistaPagos').style.display = vistaPagosActiva ? 'block' : 'none';
   document.getElementById('btnGroupLista').style.display = vistaPagosActiva ? 'none' : '';
   document.getElementById('statsBar').style.display = vistaPagosActiva ? 'none' : '';
+  document.getElementById('searchBarLista').style.display = vistaPagosActiva ? 'none' : '';
+  // Becados y seguro no aplican en pagos — deshabilitar visualmente
+  const btnBeca = document.getElementById('btnFiltroBeca');
+  const btnSeguro = document.getElementById('btnFiltroSeguro');
+  if (vistaPagosActiva) {
+    btnBeca.disabled = true;
+    btnSeguro.disabled = true;
+    btnBeca.style.opacity = '0.35';
+    btnSeguro.style.opacity = '0.35';
+    btnBeca.style.cursor = 'not-allowed';
+    btnSeguro.style.cursor = 'not-allowed';
+  } else {
+    btnBeca.disabled = false;
+    btnSeguro.disabled = false;
+    btnBeca.style.opacity = '';
+    btnSeguro.style.opacity = '';
+    btnBeca.style.cursor = '';
+    btnSeguro.style.cursor = '';
+  }
   if (vistaPagosActiva) renderPagos();
   else renderAlumnos(document.getElementById('searchAlumnos')?.value || '');
 }
@@ -4075,7 +4118,10 @@ function renderPagos() {
         const celdasVacias = MESES_PAGOS.map(() => '<td style="background:var(--naranja-claro)"></td>').join('');
         filas += `<tr>
           <td class="col-nombre" style="background:var(--naranja-claro);color:var(--naranja-oscuro);font-family:'Baloo 2';font-weight:800;font-size:0.82rem">🔧 ${esc(tnombre)}</td>
+          <td style="background:var(--naranja-claro)"></td>
           ${celdasVacias}
+          <td style="background:var(--naranja-claro)"></td>
+          <td style="background:var(--naranja-claro)"></td>
         </tr>`;
       }
     }
@@ -4088,7 +4134,9 @@ function renderPagos() {
       const estado = celda.estado || '';
       const forma = celda.forma || '';
       const esMesActual = mes === MES_ACTUAL_KEY;
-      const monto = celda.monto > 0 ? celda.monto : (mes === 'insc' ? costoInsc : costoMensual);
+      // Monto: usa el guardado en la celda si existe (precio real que pagó), sino el del taller actual
+      const montoBase = mes === 'insc' ? costoInsc : costoMensual;
+      const monto = (celda.monto > 0) ? celda.monto : montoBase;
 
       // Acumular para stats del mes actual
       if (esMesActual) {
@@ -4098,7 +4146,7 @@ function renderPagos() {
         if (estado === 'pagado') mesActualDinero += monto;
       }
 
-      // Acumular sumas por mes (incluyendo inscripción)
+      // Acumular sumas por mes — SIEMPRE incluye insc
       if (estado === 'pagado' && sumasPorMes[mes]) {
         sumasPorMes[mes][forma||'efectivo'] = (sumasPorMes[mes][forma||'efectivo']||0) + monto;
         sumasPorMes[mes].total = (sumasPorMes[mes].total||0) + monto;
@@ -4110,33 +4158,62 @@ function renderPagos() {
       const icono = estado==='pagado' ? '✅' : estado==='trueque' ? '🔄' : '';
       const formaCorta = {'efectivo':'Ef','transferencia':'Tr','mercadopago':'MP'}[forma] || '';
       const highlight = esMesActual ? 'box-shadow:0 0 0 2px var(--naranja);' : '';
-      celdas += `<td><div class="pago-celda ${estado}" onclick="cicloPago('${a.id}','${mes}')" style="${highlight}" title="${mes==='insc'?'Inscripción':mes}${estado?' · '+estado:''}${forma?' · '+forma:''}">${icono}${estado&&formaCorta?`<span class="pago-forma">${formaCorta}</span>`:''}</div></td>`;
+      // Mostrar monto en la celda de inscripción para que sea visible
+      const montoLabel = (mes === 'insc' && estado === 'pagado' && monto > 0)
+        ? `<span class="pago-forma">$${Math.round(monto/1000) > 0 ? Math.round(monto/1000)+'k' : monto}</span>`
+        : (estado && formaCorta ? `<span class="pago-forma">${formaCorta}</span>` : '');
+      celdas += `<td><div class="pago-celda ${estado}" onclick="cicloPago('${a.id}','${mes}')" style="${highlight}" title="${mes==='insc'?'Inscripción':mes}${estado?' · '+estado:''}${forma?' · '+forma:''}${monto>0?' · $'+monto.toLocaleString('es-AR'):''}">${icono}${montoLabel}</div></td>`;
     });
 
-    const montoTotal = totalAlumno > 0 ? `<span style="font-size:0.7rem;color:var(--verde-oscuro);font-weight:700">$${totalAlumno.toLocaleString('es-AR')}</span>` : '';
+    const montoTotal = totalAlumno > 0 ? `$${Math.round(totalAlumno).toLocaleString('es-AR')}` : '$0';
     const nombre = esc((a.apellido||'') + ', ' + (a.nombre||''));
-    filas += `<tr><td class="col-nombre">${nombre}${montoTotal?'<br>'+montoTotal:''} <button onclick="verTicket('${a.id}')" title="Ver ticket" style="background:none;border:none;cursor:pointer;font-size:0.85rem;padding:1px 3px">🧾</button></td>${celdas}</tr>`;
+    const tallerNombre = esc(taller?.nombre || '—');
+    filas += `<tr>
+      <td class="col-nombre">${nombre}</td>
+      <td class="col-taller">${tallerNombre}</td>
+      ${celdas}
+      <td class="col-total">${montoTotal}</td>
+      <td style="text-align:center;padding:2px"><button onclick="verTicket('${a.id}')" title="Ver comprobante" style="background:none;border:1.5px solid #ddd;border-radius:6px;cursor:pointer;font-size:0.8rem;padding:2px 5px;color:#888;transition:all .15s" onmouseover="this.style.borderColor='var(--naranja)';this.style.color='var(--naranja)'" onmouseout="this.style.borderColor='#ddd';this.style.color='#888'">🧾</button></td>
+    </tr>`;
   });
 
-  // Totales globales para el stats bar
-  const totalInscCobradas = sumasPorMes['insc']?.total || 0;
+  // Totales globales — recalcular insc sumando monto real por alumno
+  const totalInscCobradas = list.reduce((sum, a) => {
+    const celda = pagosData[a.id]?.insc || {};
+    if (celda.estado !== 'pagado') return sum;
+    const taller = talleres.find(t => t.id === a.tallerId);
+    const monto = (celda.monto > 0) ? celda.monto : parsePesos(taller?.inscripcion);
+    return sum + monto;
+  }, 0);
+  const cantInscPagadas = list.filter(a => pagosData[a.id]?.insc?.estado === 'pagado').length;
   const totalMensualidades = MESES_PAGOS.filter(m=>m!=='insc').reduce((s,m) => s + (sumasPorMes[m]?.total||0), 0);
   const totalGeneral = totalInscCobradas + totalMensualidades;
 
-  // Fila de totales por mes en la tabla
   let filaTotal = `<tr style="background:#fff3e8;font-weight:800">
-    <td class="col-nombre" style="background:#fff3e8;font-family:'Baloo 2';color:var(--naranja-oscuro)">💰 Total cobrado</td>`;
+    <td class="col-nombre" style="background:#fff3e8;font-family:'Baloo 2';color:var(--naranja-oscuro);font-size:0.78rem">💰 Total cobrado</td>
+    <td style="background:#fff3e8"></td>`;
   MESES_PAGOS.forEach(mes => {
-    const suma = sumasPorMes[mes];
     const esMesActual = mes === MES_ACTUAL_KEY;
-    const hl = esMesActual ? 'background:#ffecc8;' : '';
-    if (suma.total > 0) {
-      filaTotal += `<td style="${hl}font-size:0.72rem;color:var(--verde-oscuro);font-weight:800">$${Math.round(suma.total).toLocaleString('es-AR')}</td>`;
+    const hl = esMesActual ? 'background:#ffecc8;' : (mes === 'insc' ? 'background:#f0ffe8;' : '');
+    const totalMes = mes === 'insc' ? totalInscCobradas : (sumasPorMes[mes]?.total || 0);
+    if (totalMes > 0) {
+      filaTotal += `<td style="${hl}font-size:0.7rem;color:var(--verde-oscuro);font-weight:800;text-align:center">$${Math.round(totalMes).toLocaleString('es-AR')}</td>`;
     } else {
-      filaTotal += `<td style="${hl}color:#ccc">—</td>`;
+      filaTotal += `<td style="${hl}color:#ccc;text-align:center">—</td>`;
     }
   });
-  filaTotal += '</tr>';
+  filaTotal += `<td class="col-total" style="background:#e8f5e9">$${Math.round(totalGeneral).toLocaleString('es-AR')}</td><td style="background:#fff3e8"></td></tr>`;
+
+  let filaCant = `<tr style="background:#f8f8f8">
+    <td class="col-nombre" style="background:#f8f8f8;font-family:'Baloo 2';color:#aaa;font-size:0.72rem">👤 Alumnos que pagaron</td>
+    <td style="background:#f8f8f8"></td>`;
+  MESES_PAGOS.forEach(mes => {
+    const cant = list.filter(a => (pagosData[a.id]?.[mes]?.estado) === 'pagado').length;
+    const esMesActual = mes === MES_ACTUAL_KEY;
+    const hl = esMesActual ? 'background:#fff8ee;' : '';
+    filaCant += `<td style="${hl}font-size:0.7rem;color:#888;text-align:center">${cant > 0 ? cant : '—'}</td>`;
+  });
+  filaCant += `<td style="background:#f8f8f8"></td><td style="background:#f8f8f8"></td></tr>`;
 
   // Stats bar
   const mesActualLabel = MESES_LABELS[MESES_PAGOS.indexOf(MES_ACTUAL_KEY)] || MES_ACTUAL_KEY;
@@ -4153,14 +4230,36 @@ function renderPagos() {
     <div class="stat-chip" style="background:var(--naranja);color:white"><span>🏦</span> Total general: <strong>${$fmt(totalGeneral)}</strong></div>`;
 
   cont.innerHTML = `<table class="pagos-tabla">
-    <thead><tr>
-      <th class="col-nombre">Alumno</th>
-      ${MESES_LABELS.map((l,i) => {
-        const esMesActual = MESES_PAGOS[i] === MES_ACTUAL_KEY;
-        return `<th style="${esMesActual?'background:#c45a00;outline:2px solid var(--naranja);':''}">${l}${esMesActual?' 📅':''}</th>`;
-      }).join('')}
-    </tr></thead>
-    <tbody>${filas}${filaTotal}</tbody>
+    <thead>
+      <tr>
+        <th class="col-nombre">ALUMNO</th>
+        <th class="col-taller">TALLER</th>
+        ${MESES_LABELS.map((l,i) => {
+          const esMesActual = MESES_PAGOS[i] === MES_ACTUAL_KEY;
+          return `<th style="${esMesActual?'background:#b84a00;outline:2px solid var(--naranja);':''}">${l}${esMesActual?' ◉':''}</th>`;
+        }).join('')}
+        <th class="col-total">TOTAL</th>
+        <th style="background:#5a0d06;min-width:32px"></th>
+      </tr>
+      <tr style="background:#fde8d0">
+        <td class="col-nombre" style="background:#fde8d0;color:#c45a00;font-size:0.68rem;font-family:'Baloo 2';font-weight:700">Precio referencia</td>
+        <td style="background:#fde8d0"></td>
+        ${MESES_PAGOS.map((mes,i) => {
+          const esMesActual = mes === MES_ACTUAL_KEY;
+          const bg = esMesActual ? '#f5c49a' : '#fde8d0';
+          // precio de referencia = costo mensual del taller filtrado, o promedio si vista general
+          let precioRef = '';
+          if (currentTallerId) {
+            const t = talleres.find(x=>x.id===currentTallerId);
+            precioRef = mes==='insc' ? parsePesos(t?.inscripcion) : parsePesos(t?.costo);
+          }
+          return `<td style="background:${bg};color:#c45a00;font-size:0.68rem;font-weight:700;text-align:center">${precioRef>0?'$'+Math.round(precioRef).toLocaleString('es-AR'):'—'}</td>`;
+        }).join('')}
+        <td style="background:#fde8d0"></td>
+        <td style="background:#fde8d0"></td>
+      </tr>
+    </thead>
+    <tbody>${filas}${filaTotal}${filaCant}</tbody>
   </table>`;
 }
 
@@ -4216,17 +4315,83 @@ async function guardarCeldaPago(alumnoId, mes, estado, forma, monto=0) {
   renderPagos();
 }
 
+let _ticketAlumnoId = null;
+
 function imprimirTicket() {
   const contenido = document.getElementById('ticketContenido').innerHTML;
-  const win = window.open('','_blank','width=600,height=700');
-  win.document.write(`<html><head><title>Ticket CEI San Jorge</title>
-    <style>body{font-family:sans-serif;padding:20px;font-size:13px}table{width:100%;border-collapse:collapse}th,td{padding:6px 10px;border-bottom:1px solid #eee}</style>
-    </head><body>${contenido}</body></html>`);
+  const win = window.open('','_blank','width=480,height:620');
+  win.document.write(`<html><head><title>Comprobante CEI San Jorge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>*{box-sizing:border-box}body{font-family:'Baloo 2',sans-serif;padding:20px;font-size:13px;background:white}table{width:100%;border-collapse:collapse}th,td{padding:5px 8px;border-bottom:1px solid #eee}@media print{body{padding:10px}}</style>
+    </head><body onload="window.print()">${contenido}</body></html>`);
   win.document.close();
-  win.print();
+}
+
+function enviarWhatsapp() {
+  if (!_ticketAlumnoId) return;
+  const alumno = alumnos.find(a => a.id === _ticketAlumnoId);
+  if (!alumno) return;
+  const taller = talleres.find(t => t.id === alumno.tallerId);
+  const pago = pagosData[_ticketAlumnoId] || {};
+  const costoMensual = parsePesos(taller?.costo);
+  const costoInsc = parsePesos(taller?.inscripcion);
+  const formaLabel = {'efectivo':'Efectivo 💵','transferencia':'Transferencia 🏦','mercadopago':'Mercado Pago 🔵'};
+  let lineas = [];
+  let total = 0;
+  MESES_PAGOS.forEach((mes, i) => {
+    const celda = pago[mes];
+    if (!celda?.estado) return;
+    const monto = (celda.monto > 0) ? celda.monto : (mes === 'insc' ? costoInsc : costoMensual);
+    const label = MESES_LABELS[i];
+    if (celda.estado === 'pagado') {
+      const forma = formaLabel[celda.forma] || celda.forma || '';
+      total += monto;
+      lineas.push(`✅ ${label}${forma?' · '+forma:''}${monto>0?' · $'+Math.round(monto).toLocaleString('es-AR'):''}`);
+    } else if (celda.estado === 'trueque') {
+      lineas.push(`🔄 ${label} · Trueque`);
+    }
+  });
+  const nombre = (alumno.apellido||'') + ', ' + (alumno.nombre||'');
+  const fecha = new Date().toLocaleDateString('es-AR');
+  const texto = `📋 *Comprobante de Pagos*\n*CEI San Jorge*\n\n👤 *${nombre}*\n🔧 ${taller?.nombre||'—'}\n\n${lineas.join('\n')}\n\n💰 *Total abonado: $${Math.round(total).toLocaleString('es-AR')}*\n📅 ${fecha}`;
+  const tel = (alumno.tel||'').replace(/\D/g,'');
+  const telWA = tel.startsWith('549') ? tel : tel.startsWith('54') ? tel : tel.startsWith('0') ? '549'+tel.slice(1) : '549'+tel;
+  const url = `https://wa.me/${telWA}?text=${encodeURIComponent(texto)}`;
+  window.open(url, '_blank');
+}
+
+async function copiarImagenTicket() {
+  const el = document.getElementById('ticketContenido');
+  try {
+    // Cargar html2canvas dinámicamente si no está
+    if (!window.html2canvas) {
+      await new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+        s.onload = res; s.onerror = rej;
+        document.head.appendChild(s);
+      });
+    }
+    const canvas = await html2canvas(el, { scale:2, backgroundColor:'#ffffff', useCORS:true });
+    canvas.toBlob(async blob => {
+      try {
+        await navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
+        const btn = document.querySelector('[onclick="copiarImagenTicket()"]');
+        const orig = btn.textContent;
+        btn.textContent = '✅ ¡Copiada!';
+        btn.style.background = '#2e7d32';
+        setTimeout(() => { btn.textContent = orig; btn.style.background = '#1565c0'; }, 2000);
+      } catch(e) {
+        alert('No se pudo copiar al portapapeles. Intentá desde Chrome.');
+      }
+    }, 'image/png');
+  } catch(e) {
+    alert('Error al generar imagen: ' + e.message);
+  }
 }
 
 function verTicket(alumnoId) {
+  _ticketAlumnoId = alumnoId;
   const alumno = alumnos.find(a => a.id === alumnoId);
   if (!alumno) return;
   const taller = talleres.find(t => t.id === alumno.tallerId);
@@ -4234,50 +4399,61 @@ function verTicket(alumnoId) {
   const costoMensual = parsePesos(taller?.costo);
   const costoInsc = parsePesos(taller?.inscripcion);
   const formaLabel = {'efectivo':'💵 Efectivo','transferencia':'🏦 Transferencia','mercadopago':'🔵 Mercado Pago'};
-
   let filas = '';
   let total = 0;
   MESES_PAGOS.forEach((mes, i) => {
     const celda = pago[mes];
-    if (!celda || !celda.estado) return;
-    // Prioridad: monto guardado en celda → fallback del taller
-    const monto = celda.monto > 0 ? celda.monto : (mes === 'insc' ? costoInsc : costoMensual);
+    if (!celda?.estado) return;
+    const montoBase = mes === 'insc' ? costoInsc : costoMensual;
+    const monto = (celda.monto > 0) ? celda.monto : montoBase;
     const label = MESES_LABELS[i];
     const forma = formaLabel[celda.forma] || celda.forma || '';
-    const estado = celda.estado === 'pagado' ? '✅ Pagado' : '🔄 Trueque';
-    if (celda.estado === 'pagado') total += monto;
-    filas += `<tr>
-      <td style="padding:6px 10px;border-bottom:1px solid #f0e8d8">${label}</td>
-      <td style="padding:6px 10px;border-bottom:1px solid #f0e8d8">${estado}</td>
-      <td style="padding:6px 10px;border-bottom:1px solid #f0e8d8">${forma}</td>
-      <td style="padding:6px 10px;border-bottom:1px solid #f0e8d8;text-align:right;font-weight:700">${monto>0&&celda.estado==='pagado'?'$'+monto.toLocaleString('es-AR'):'—'}</td>
-      <td style="padding:6px 10px;border-bottom:1px solid #f0e8d8;font-size:0.75rem;color:#aaa">${celda.fecha||''}</td>
+    const esPagado = celda.estado === 'pagado';
+    if (esPagado) total += monto;
+    filas += `<tr style="border-bottom:1px solid #f5ede4">
+      <td style="padding:6px 10px;font-weight:700;color:#333">${label}</td>
+      <td style="padding:6px 6px">${esPagado?'<span style="color:#2e7d32;font-size:0.78rem">✅ Pagado</span>':'<span style="color:#f57f17;font-size:0.78rem">🔄 Trueque</span>'}</td>
+      <td style="padding:6px 6px;font-size:0.76rem;color:#888">${forma}</td>
+      <td style="padding:6px 10px;text-align:right;font-weight:800;color:${esPagado?'#2e7d32':'#f57f17'}">${esPagado&&monto>0?'$'+Math.round(monto).toLocaleString('es-AR'):'—'}</td>
     </tr>`;
   });
-
   const nombre = (alumno.apellido||'') + ', ' + (alumno.nombre||'');
+  const fecha = new Date().toLocaleDateString('es-AR');
   document.getElementById('ticketContenido').innerHTML = `
-    <div style="text-align:center;margin-bottom:14px">
-      <div style="font-family:'Baloo 2';font-size:1.1rem;font-weight:800;color:var(--naranja-oscuro)">CEI San Jorge</div>
-      <div style="font-size:0.82rem;color:#888">Comprobante de pagos</div>
+    <div style="text-align:center;padding:22px 20px 20px;background:linear-gradient(160deg,#f47b20,#e8603a)">
+      <div style="display:flex;align-items:center;justify-content:center;gap:14px">
+        <img src="${LOGO_PDF||''}" onerror="this.style.display='none'" style="width:62px;height:62px;object-fit:contain;border-radius:12px;background:white;padding:5px;box-shadow:0 4px 14px rgba(0,0,0,0.18)">
+        <div style="text-align:left">
+          <div style="font-family:'Baloo 2';font-size:1.5rem;font-weight:800;color:white;text-shadow:0 1px 4px rgba(0,0,0,0.2);line-height:1.1">CEI San Jorge</div>
+          <div style="font-size:0.75rem;color:rgba(255,255,255,0.88);letter-spacing:0.08em;margin-top:4px;font-weight:600">COMPROBANTE DE PAGOS</div>
+        </div>
+      </div>
     </div>
-    <div style="background:#fff8f0;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:0.88rem">
-      <strong>${esc(nombre)}</strong><br>
-      <span style="color:#888">Taller: ${esc(taller?.nombre||'—')}</span>
+    <div style="padding:12px 18px 10px;border-bottom:1px solid #f0ebe4">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-weight:800;font-size:1rem;color:#222">${esc(nombre)}</div>
+          <div style="font-size:0.76rem;color:#aaa;margin-top:2px">🔧 ${esc(taller?.nombre||'—')}</div>
+        </div>
+        <div style="font-size:0.72rem;color:#bbb;white-space:nowrap;margin-top:2px">${fecha}</div>
+      </div>
     </div>
-    ${filas ? `<table style="width:100%;font-size:0.82rem;border-collapse:collapse">
-      <thead><tr style="color:var(--naranja-oscuro);font-family:'Baloo 2'">
-        <th style="padding:5px 10px;text-align:left">Mes</th>
-        <th style="padding:5px 10px;text-align:left">Estado</th>
-        <th style="padding:5px 10px;text-align:left">Forma</th>
-        <th style="padding:5px 10px;text-align:right">Monto</th>
-        <th style="padding:5px 10px;text-align:left">Fecha</th>
-      </tr></thead>
-      <tbody>${filas}</tbody>
-    </table>
-    <div style="text-align:right;margin-top:12px;font-family:'Baloo 2';font-size:1rem;color:var(--verde-oscuro);font-weight:800">
-      Total pagado: $${total.toLocaleString('es-AR')}
-    </div>` : '<p style="text-align:center;color:#bbb;padding:20px">Sin pagos registrados aún.</p>'}`;
+    ${filas ? `
+    <div style="padding:6px 0">
+      <table style="width:100%;font-size:0.8rem;border-collapse:collapse">
+        <thead><tr style="background:#faf0e8">
+          <th style="padding:5px 10px;text-align:left;font-family:'Baloo 2';color:var(--naranja-oscuro);font-size:0.7rem;font-weight:700">MES</th>
+          <th style="padding:5px 6px;text-align:left;font-family:'Baloo 2';color:var(--naranja-oscuro);font-size:0.7rem;font-weight:700">ESTADO</th>
+          <th style="padding:5px 6px;text-align:left;font-family:'Baloo 2';color:var(--naranja-oscuro);font-size:0.7rem;font-weight:700">FORMA</th>
+          <th style="padding:5px 10px;text-align:right;font-family:'Baloo 2';color:var(--naranja-oscuro);font-size:0.7rem;font-weight:700">MONTO</th>
+        </tr></thead>
+        <tbody>${filas}</tbody>
+      </table>
+    </div>
+    <div style="margin:4px 18px 16px;padding:10px 14px;background:linear-gradient(135deg,#f0fff4,#e8f5e9);border-radius:12px;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:0.78rem;color:#666">Total abonado</span>
+      <span style="font-family:'Baloo 2';font-size:1.1rem;font-weight:800;color:#2e7d32">$${Math.round(total).toLocaleString('es-AR')}</span>
+    </div>` : '<p style="text-align:center;color:#ccc;padding:20px 0;font-size:0.85rem">Sin pagos registrados aún.</p>'}`;
   document.getElementById('modalTicket').classList.add('open');
 }
 
