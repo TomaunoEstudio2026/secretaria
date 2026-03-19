@@ -90,7 +90,7 @@ header {
 .sync-indicator.offline { background:#f44336; box-shadow:0 0 8px #f44336; }
 
 /* NAV */
-.nav-tabs { display:flex; background:white; border-bottom:3px solid var(--naranja-claro); padding:0 16px; gap:2px; overflow-x:auto; position:sticky; top:68px; z-index:99; box-shadow:0 2px 8px rgba(0,0,0,0.07); }
+.nav-tabs { display:flex; background:white; border-bottom:3px solid var(--naranja-claro); padding:0 16px; gap:2px; overflow-x:auto; position:fixed; top:80px; left:0; right:0; z-index:99; box-shadow:0 2px 8px rgba(0,0,0,0.07); }
 .nav-tab { padding:8px 16px; font-family:'Baloo 2'; font-weight:700; font-size:0.88rem; border:none; background:transparent; cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-3px; white-space:nowrap; color:#999; transition:all .2s; display:flex; align-items:center; gap:6px; }
 .nav-tab.active { color:var(--naranja-oscuro); border-bottom-color:var(--naranja); }
 .nav-tab:hover { color:var(--naranja); }
@@ -806,7 +806,7 @@ tr:hover td { background:#fff8f0; }
   <div class="header-title">
     <h1>Centro Ed. Integral San Jorge</h1>
     <p>Panel de Secretaría — Talleres de Oficio</p>
-    <p style="font-size:0.6rem;color:rgba(255,255,255,0.45);font-weight:600;letter-spacing:1.5px;margin-top:1px;text-transform:uppercase">Forpro26</p>
+    <p style="font-size:0.6rem;color:rgba(255,255,255,0.45);font-weight:600;letter-spacing:1.5px;margin-top:1px;text-transform:uppercase">Forpro26 · v2.5 · Mar 2026</p>
   </div>
   <div class="header-right">
     <button onclick="abrirAyuda()" title="Manual de uso"
@@ -839,6 +839,7 @@ tr:hover td { background:#fff8f0; }
   <button class="nav-tab" onclick="showSection('profes')" id="tab-profes"><span>📖</span> Profes</button>
   <button class="nav-tab" onclick="showSection('asistencia')" id="tab-asistencia"><span>📊</span> Asistencia</button>
   <button class="nav-tab" onclick="showSection('carteleria')" id="tab-carteleria"><span>📺</span> Cartelería</button>
+  <button class="nav-tab" onclick="showSection('archivos')" id="tab-archivos"><span>📁</span> Archivos</button>
 </nav>
 
 <div class="copy-toast" id="copyToast">✅ ¡Copiado!</div>
@@ -881,7 +882,7 @@ tr:hover td { background:#fff8f0; }
       <span class="alumnos-title" id="alumnosTitle">👥 Todos los Alumnos</span>
     </div>
     <!-- SWITCH FIJO -->
-    <div id="barraStickyAlumnos" style="position:sticky;top:68px;z-index:90;background:#f7f0e8;padding:8px 0 6px;margin:-4px 0 0;border-bottom:2px solid var(--naranja-claro)">
+    <div id="barraStickyAlumnos" style="position:sticky;top:120px;z-index:90;background:#f7f0e8;padding:8px 0 6px;margin:-4px 0 0;border-bottom:2px solid var(--naranja-claro)">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">
         <div style="display:flex;gap:0;background:#e8ddd0;border-radius:10px;padding:3px">
           <button id="switchLista" onclick="setVistaAlumnos('lista')" class="switch-btn active">👥 Lista</button>
@@ -1102,7 +1103,126 @@ tr:hover td { background:#fff8f0; }
   </div>
 
 </div><!-- fin .main -->
-<!-- MODAL BIENVENIDA - eventos del día -->
+
+<!-- SECCIÓN ARCHIVOS (fuera del main para ocupar ancho completo si se necesita) -->
+<div class="section" id="section-archivos" style="padding:20px;max-width:1300px;margin:0 auto">
+  <div class="section-header">
+    <h2>📁 Archivos Compartidos</h2>
+    <button onclick="archivosConfigAdmin()" style="background:none;border:1px solid #ddd;border-radius:20px;padding:5px 14px;font-size:0.75rem;color:#aaa;cursor:pointer;font-family:'Baloo 2'">⚙️ Config</button>
+  </div>
+  <p style="color:#999;font-size:0.85rem;margin-bottom:18px">Documentos, planificaciones, circulares y más — actualizados desde Google Drive.</p>
+
+  <!-- Estado de conexión -->
+  <div id="archivosEstado" style="display:none;background:#fff3e0;border-left:4px solid var(--naranja);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:0.85rem;color:#c45a00"></div>
+
+  <!-- Barra de búsqueda y filtros -->
+  <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+    <input id="archivosSearch" type="text" placeholder="🔍 Buscar archivo..." oninput="archivosFiltrar()"
+      style="flex:1;min-width:180px;padding:8px 14px;border:2px solid var(--naranja-claro);border-radius:20px;font-family:'Baloo 2';font-size:0.88rem;outline:none">
+    <select id="archivosTipo" onchange="archivosFiltrar()"
+      style="padding:8px 14px;border:2px solid var(--naranja-claro);border-radius:20px;font-family:'Baloo 2';font-size:0.85rem;outline:none;background:white;color:#555">
+      <option value="">Todos los tipos</option>
+      <option value="pdf">PDF</option>
+      <option value="doc">Word</option>
+      <option value="sheet">Excel</option>
+      <option value="ppt">Presentación</option>
+      <option value="image">Imagen</option>
+      <option value="video">Video</option>
+      <option value="audio">Audio</option>
+      <option value="other">Otros</option>
+    </select>
+    <button onclick="archivosCargar()" style="background:var(--naranja);color:white;border:none;border-radius:20px;padding:8px 18px;font-family:'Baloo 2';font-weight:700;font-size:0.85rem;cursor:pointer">🔄 Actualizar</button>
+    <a id="archivosBtnDrive" href="#" target="_blank" style="display:none;background:#1a73e8;color:white;border:none;border-radius:20px;padding:8px 18px;font-family:'Baloo 2';font-weight:700;font-size:0.85rem;cursor:pointer;text-decoration:none">📂 Abrir Drive</a>
+  </div>
+
+  <!-- Grid de archivos -->
+  <div id="archivosGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px">
+    <div style="grid-column:1/-1;text-align:center;padding:40px;color:#ccc">
+      <div style="font-size:3rem;margin-bottom:10px">📁</div>
+      <div style="font-family:'Baloo 2';font-size:0.9rem">Cargando archivos...</div>
+    </div>
+  </div>
+</div>
+<!-- MODAL VISOR DE ARCHIVOS DRIVE -->
+<div class="modal-overlay" id="modalArchivoVisor" style="z-index:1100;padding:12px" onclick="if(event.target===this)archivoVisorCerrar()">
+  <div style="background:white;border-radius:20px;width:100%;max-width:680px;max-height:95vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.3)">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:2px solid var(--naranja-claro);background:#fff8f2;border-radius:20px 20px 0 0;flex-shrink:0">
+      <div id="archivoVisorIcono" style="font-size:1.4rem;line-height:1"></div>
+      <div style="flex:1;min-width:0">
+        <div id="archivoVisorNombre" style="font-family:'Baloo 2';font-weight:800;font-size:0.95rem;color:var(--naranja-oscuro);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+        <div id="archivoVisorTipo" style="font-size:0.72rem;color:#aaa"></div>
+      </div>
+      <a id="archivoVisorBtnDrive" href="#" target="_blank" rel="noopener"
+        style="background:#1a73e8;color:white;border:none;border-radius:20px;padding:7px 14px;font-family:'Baloo 2';font-weight:700;font-size:0.78rem;cursor:pointer;text-decoration:none;white-space:nowrap;flex-shrink:0"
+        onclick="archivoVisorAbrirDrive(event)">↗ Drive</a>
+      <button onclick="archivoVisorCerrar()" style="background:#f0e8e0;border:none;border-radius:50%;width:32px;height:32px;font-size:1.1rem;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">✕</button>
+    </div>
+    <!-- Contenido -->
+    <div id="archivoVisorContenido" style="flex:1;min-height:0;position:relative;background:#f5f5f5">
+      <!-- Cargando -->
+      <div id="archivoVisorCargando" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#aaa">
+        <div style="font-size:2rem">⏳</div>
+        <div style="font-family:'Baloo 2'">Cargando archivo...</div>
+      </div>
+      <!-- Error -->
+      <div id="archivoVisorError" style="position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center">
+        <div style="font-size:2.5rem">⚠️</div>
+        <div style="font-family:'Baloo 2';font-weight:800;color:#c45a00;font-size:1rem">No se pudo mostrar el archivo</div>
+        <div style="font-size:0.82rem;color:#aaa" id="archivoVisorErrorMsg">Este tipo de archivo no puede previsualizarse aquí.</div>
+        <a id="archivoVisorErrorBtn" href="#" target="_blank" rel="noopener"
+          style="background:#1a73e8;color:white;border:none;border-radius:20px;padding:10px 24px;font-family:'Baloo 2';font-weight:700;font-size:0.9rem;cursor:pointer;text-decoration:none"
+          onclick="archivoVisorAbrirDrive(event)">↗ Abrir en Google Drive</a>
+        <div style="font-size:0.75rem;color:#ccc">Si no tenés sesión iniciada en Google,<br>te va a pedir que inicies sesión primero.</div>
+      </div>
+      <!-- iframe -->
+      <iframe id="archivoVisorFrame" src="" style="width:100%;height:100%;border:none;min-height:75vh;display:none"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation"
+        allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONFIGURACIÓN DRIVE -->
+<div class="modal-overlay" id="modalDriveConfig">
+  <div class="modal" style="max-width:420px;padding:28px 24px;border-radius:24px">
+    <!-- PASO 1: Contraseña -->
+    <div id="driveConfigPaso1">
+      <div style="font-size:2.2rem;text-align:center;margin-bottom:8px">⚙️</div>
+      <div style="font-family:'Baloo 2';font-weight:800;font-size:1.05rem;text-align:center;color:var(--naranja-oscuro);margin-bottom:6px">Configuración de Archivos</div>
+      <div style="font-size:0.82rem;color:#aaa;text-align:center;margin-bottom:18px">Ingresá la contraseña de administrador</div>
+      <input id="driveConfigPass" type="password" placeholder="Contraseña"
+        style="width:100%;box-sizing:border-box;border:2px solid var(--naranja-claro);border-radius:12px;padding:10px 14px;font-family:'Baloo 2';font-size:1rem;font-weight:700;text-align:center;outline:none;margin-bottom:6px"
+        onfocus="this.style.borderColor='var(--naranja)'" onblur="this.style.borderColor='var(--naranja-claro)'"
+        onkeydown="if(event.key==='Enter')driveConfigVerificarPass()">
+      <div id="driveConfigPassError" style="color:#e53935;font-size:0.8rem;font-weight:700;min-height:18px;text-align:center;margin-bottom:12px"></div>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <button onclick="driveConfigVerificarPass()" style="background:var(--naranja-oscuro);color:white;border:none;border-radius:12px;padding:10px 28px;font-family:'Baloo 2';font-weight:700;cursor:pointer">Continuar</button>
+        <button onclick="driveConfigCerrar()" style="background:#f0e8e0;color:#666;border:none;border-radius:12px;padding:10px 20px;font-family:'Baloo 2';font-weight:700;cursor:pointer">Cancelar</button>
+      </div>
+    </div>
+    <!-- PASO 2: Link y API Key -->
+    <div id="driveConfigPaso2" style="display:none">
+      <div style="font-size:2.2rem;text-align:center;margin-bottom:8px">📁</div>
+      <div style="font-family:'Baloo 2';font-weight:800;font-size:1.05rem;text-align:center;color:var(--naranja-oscuro);margin-bottom:18px">Configurar Google Drive</div>
+      <label style="font-size:0.78rem;color:#999;font-weight:700;display:block;margin-bottom:4px">📁 LINK DE CARPETA DRIVE</label>
+      <input id="driveConfigFolder" type="text" placeholder="Pegá el link completo o solo el ID"
+        style="width:100%;box-sizing:border-box;border:2px solid var(--naranja-claro);border-radius:12px;padding:10px 14px;font-family:'Baloo 2';font-size:0.88rem;outline:none;margin-bottom:14px"
+        onfocus="this.style.borderColor='var(--naranja)'" onblur="this.style.borderColor='var(--naranja-claro)'">
+      <label style="font-size:0.78rem;color:#999;font-weight:700;display:block;margin-bottom:4px">🔑 API KEY DE GOOGLE</label>
+      <input id="driveConfigApiKey" type="password" placeholder="AIza..."
+        style="width:100%;box-sizing:border-box;border:2px solid var(--naranja-claro);border-radius:12px;padding:10px 14px;font-family:'Baloo 2';font-size:0.88rem;outline:none;margin-bottom:4px"
+        onfocus="this.style.borderColor='var(--naranja)'" onblur="this.style.borderColor='var(--naranja-claro)'">
+      <div style="font-size:0.72rem;color:#bbb;margin-bottom:16px">La API Key se oculta por seguridad</div>
+      <div id="driveConfigError" style="color:#e53935;font-size:0.8rem;font-weight:700;min-height:18px;text-align:center;margin-bottom:10px"></div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button onclick="driveConfigGuardar()" style="background:var(--naranja-oscuro);color:white;border:none;border-radius:12px;padding:10px 28px;font-family:'Baloo 2';font-weight:700;cursor:pointer">💾 Guardar</button>
+        <button onclick="driveConfigBorrar()" style="background:#fdecea;color:#e53935;border:none;border-radius:12px;padding:10px 16px;font-family:'Baloo 2';font-weight:700;cursor:pointer">🗑️ Borrar config</button>
+        <button onclick="driveConfigCerrar()" style="background:#f0e8e0;color:#666;border:none;border-radius:12px;padding:10px 16px;font-family:'Baloo 2';font-weight:700;cursor:pointer">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="modal-overlay" id="modalBienvenida" style="z-index:10000;background:rgba(0,0,0,0.55)">
   <div class="modal" style="max-width:400px;text-align:center;padding:32px 28px;border-radius:24px;animation:slideInToast .4s cubic-bezier(.2,.8,.3,1) both">
     <div style="font-size:2.8rem;margin-bottom:8px" id="bienIcono">📌</div>
@@ -1757,6 +1877,27 @@ function updateClock(){
 }
 setInterval(updateClock,1000); updateClock();
 
+// Posicionar nav y main correctamente según altura real del header
+function ajustarNavFijo() {
+  const header = document.querySelector('header');
+  const nav = document.querySelector('.nav-tabs');
+  const main = document.querySelector('.main');
+  const barraAlumnos = document.getElementById('barraStickyAlumnos');
+  if (!header || !nav || !main) return;
+  const hH = Math.round(header.getBoundingClientRect().height);
+  const nH = Math.round(nav.getBoundingClientRect().height);
+  nav.style.top = hH + 'px';
+  // El main ya tiene padding:20px, así que restamos para no duplicar espacio
+  main.style.marginTop = Math.max(0, hH + nH - 60) + 'px';
+  if (barraAlumnos) barraAlumnos.style.top = (hH + nH) + 'px';
+}
+// Ejecutar al cargar y al cambiar tamaño
+window.addEventListener('load', ajustarNavFijo);
+window.addEventListener('resize', ajustarNavFijo);
+// También ejecutar pronto por si las fuentes cambian la altura
+setTimeout(ajustarNavFijo, 100);
+setTimeout(ajustarNavFijo, 500);
+
 // ===== FIREBASE INIT =====
 document.addEventListener('firebase-ready', async () => {
   db = window._db; fns = window._fns;
@@ -1884,6 +2025,316 @@ function showSection(name){
   if(name==='calendario') renderCalendar();
   if(name==='alumnos'){ filtroTallerId=null; currentTallerId=null; filtroBeca=false; filtroSeguro=false; document.getElementById('backBtn').style.display='none'; document.getElementById('alumnosTitle').textContent='👥 Todos los Alumnos'; renderFiltrosTaller(); renderAlumnos(); }
   if(name==='asistencia'){ asistInicializar(); }
+  if(name==='archivos'){ archivosCargar(); }
+}
+
+// ===== VISOR DE ARCHIVOS DRIVE =====
+let _archivoVisorUrl = ''; // URL de Drive del archivo actual
+
+function archivoAbrir(fileId, nombre, mimeType, webViewLink) {
+  if (!fileId || !webViewLink) {
+    alert('No se puede abrir este archivo.'); return;
+  }
+  const { svg, label } = archivoIconoSVG(mimeType, nombre);
+  // Setear header del modal
+  document.getElementById('archivoVisorIcono').innerHTML = svg.replace('width="48" height="48"','width="28" height="28"');
+  document.getElementById('archivoVisorNombre').textContent = nombre || 'Archivo';
+  document.getElementById('archivoVisorTipo').textContent = label;
+  _archivoVisorUrl = webViewLink;
+  document.getElementById('archivoVisorBtnDrive').href = webViewLink;
+  document.getElementById('archivoVisorErrorBtn').href = webViewLink;
+
+  // Reset estado
+  document.getElementById('archivoVisorCargando').style.display = 'flex';
+  document.getElementById('archivoVisorError').style.display = 'none';
+  document.getElementById('archivoVisorFrame').style.display = 'none';
+  document.getElementById('archivoVisorFrame').src = '';
+
+  document.getElementById('modalArchivoVisor').classList.add('open');
+
+  // Tipos que NO soportan iframe → abrir directo en Drive
+  const esVideo = mimeType && mimeType.includes('video');
+  const esCarpeta = mimeType && mimeType.includes('folder');
+  const noIframe = esVideo || esCarpeta || (mimeType && (
+    mimeType.includes('zip') || mimeType.includes('rar') ||
+    mimeType.includes('x-tar') || mimeType.includes('octet-stream')
+  ));
+
+  if (esCarpeta || esVideo) {
+    // Carpetas y videos abren directo en Drive sin modal
+    window.open(webViewLink, '_blank', 'noopener');
+    return;
+  }
+
+  if (noIframe) {
+    archivoVisorMostrarError('Este tipo de archivo debe descargarse o abrirse en Drive.');
+    return;
+  }
+
+  // URL de preview de Drive
+  const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+
+  const frame = document.getElementById('archivoVisorFrame');
+  let cargado = false;
+
+  // Timeout: si en 10 segundos no carga, mostrar error
+  const timeout = setTimeout(() => {
+    if (!cargado) archivoVisorMostrarError('El archivo tardó demasiado en cargar. Puede que requiera inicio de sesión en Google.');
+  }, 10000);
+
+  frame.onload = () => {
+    cargado = true;
+    clearTimeout(timeout);
+    // Verificar si el iframe cargó contenido real o una página de error
+    try {
+      // Si el iframe tiene contenido, mostrarlo
+      document.getElementById('archivoVisorCargando').style.display = 'none';
+      document.getElementById('archivoVisorError').style.display = 'none';
+      frame.style.display = 'block';
+    } catch(e) {
+      archivoVisorMostrarError('No se pudo acceder al archivo.');
+    }
+  };
+
+  frame.onerror = () => {
+    cargado = true;
+    clearTimeout(timeout);
+    archivoVisorMostrarError('No se pudo cargar el archivo en el visor.');
+  };
+
+  frame.src = previewUrl;
+}
+
+function archivoVisorMostrarError(msg) {
+  document.getElementById('archivoVisorCargando').style.display = 'none';
+  document.getElementById('archivoVisorFrame').style.display = 'none';
+  document.getElementById('archivoVisorErrorMsg').textContent = msg || 'Este archivo no puede previsualizarse aquí.';
+  document.getElementById('archivoVisorError').style.display = 'flex';
+}
+
+function archivoVisorCerrar() {
+  document.getElementById('modalArchivoVisor').classList.remove('open');
+  // Limpiar iframe para detener videos/audios
+  setTimeout(() => {
+    document.getElementById('archivoVisorFrame').src = '';
+  }, 300);
+}
+
+function archivoVisorAbrirDrive(event) {
+  // Si Drive no está iniciado, abre la página de login de Google — no hay error feo
+  // Solo abrimos el link, el navegador maneja el resto
+  if (!_archivoVisorUrl) { event.preventDefault(); return; }
+  // Dejar que el link se abra normalmente (target=_blank ya está)
+}
+const ARCHIVOS_CLAVE = 'driveConfig';
+let _archivosConfig = {}; // cache en memoria de la config Drive
+
+async function archivoGetConfig() {
+  if (_archivosConfig.apiKey) return _archivosConfig; // ya cargada
+  try {
+    const data = await fbGetDoc('config', 'drive');
+    _archivosConfig = data || {};
+    // folderId por defecto si no hay config guardada
+    if (!_archivosConfig.folderId) _archivosConfig.folderId = '1zcVzeOHe9GlMxUggcS_o-jxfrqA6Jnkw';
+  } catch(e) {
+    _archivosConfig = { folderId: '1zcVzeOHe9GlMxUggcS_o-jxfrqA6Jnkw' };
+  }
+  return _archivosConfig;
+}
+async function archivoSetConfig(cfg) {
+  _archivosConfig = cfg;
+  await fbSet('config', 'drive', cfg);
+}
+
+// SVGs de íconos modernos por tipo de archivo
+function archivoIconoSVG(mimeType, nombre) {
+  const m = mimeType||'';
+  const n = (nombre||'').toLowerCase();
+
+  // PDF
+  if (m.includes('pdf') || n.endsWith('.pdf'))
+    return { svg:`<svg viewBox="0 0 40 40" width="48" height="48"><rect width="40" height="40" rx="8" fill="#f44336"/><text x="20" y="26" font-size="11" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">PDF</text></svg>`, color:'#f44336', label:'PDF' };
+
+  // Word
+  if (m.includes('wordprocessingml') || m.includes('msword') || m.includes('document') && !m.includes('presentation') && !m.includes('spreadsheet') || /\.(docx?|odt)$/i.test(n))
+    return { svg:`<svg viewBox="0 0 40 40" width="48" height="48"><rect width="40" height="40" rx="8" fill="#1565c0"/><text x="20" y="22" font-size="14" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">W</text><text x="20" y="32" font-size="7" fill="#90caf9" text-anchor="middle" font-family="Arial">WORD</text></svg>`, color:'#1565c0', label:'Word' };
+
+  // Excel
+  if (m.includes('spreadsheetml') || m.includes('excel') || m.includes('spreadsheet') || /\.(xlsx?|ods|csv)$/i.test(n))
+    return { svg:`<svg viewBox="0 0 40 40" width="48" height="48"><rect width="40" height="40" rx="8" fill="#1e8e3e"/><text x="20" y="22" font-size="14" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">X</text><text x="20" y="32" font-size="7" fill="#a5d6a7" text-anchor="middle" font-family="Arial">EXCEL</text></svg>`, color:'#1e8e3e', label:'Excel' };
+
+  // PowerPoint
+  if (m.includes('presentation') || m.includes('powerpoint') || /\.(pptx?|ppsx?)$/i.test(n))
+    return { svg:`<svg viewBox="0 0 40 40" width="48" height="48"><rect width="40" height="40" rx="8" fill="#d84315"/><text x="20" y="22" font-size="14" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">P</text><text x="20" y="32" font-size="6" fill="#ffccbc" text-anchor="middle" font-family="Arial">POWER PT</text></svg>`, color:'#d84315', label:'Presentación' };
+
+  // Video
+  if (m.includes('video') || /\.(mp4|mov|avi|mkv|webm)$/i.test(n))
+    return { svg:`<svg viewBox="0 0 40 40" width="48" height="48"><rect width="40" height="40" rx="8" fill="#6a1b9a"/><polygon points="15,12 15,28 30,20" fill="white"/></svg>`, color:'#6a1b9a', label:'Video' };
+
+  // Audio
+  if (m.includes('audio') || /\.(mp3|wav|ogg|m4a|aac)$/i.test(n))
+    return { svg:`<svg viewBox="0 0 40 40" width="48" height="48"><rect width="40" height="40" rx="8" fill="#00838f"/><text x="20" y="26" font-size="20" text-anchor="middle" font-family="Arial">♪</text></svg>`, color:'#00838f', label:'Audio' };
+
+  // Imagen
+  if (m.includes('image') || /\.(jpe?g|png|gif|webp|bmp|svg)$/i.test(n))
+    return { svg:`<svg viewBox="0 0 40 40" width="48" height="48"><rect width="40" height="40" rx="8" fill="#9c27b0"/><text x="20" y="26" font-size="18" text-anchor="middle" font-family="Arial">🖼</text></svg>`, color:'#9c27b0', label:'Imagen' };
+
+  // Carpeta
+  if (m.includes('folder'))
+    return { svg:`<svg viewBox="0 0 40 40" width="48" height="48"><rect x="2" y="10" width="36" height="26" rx="4" fill="#f9a825"/><rect x="2" y="10" width="16" height="6" rx="3" fill="#f57f17"/></svg>`, color:'#f9a825', label:'Carpeta' };
+
+  // Texto / otros
+  return { svg:`<svg viewBox="0 0 40 40" width="48" height="48"><rect width="40" height="40" rx="8" fill="#78909c"/><text x="20" y="26" font-size="9" fill="white" text-anchor="middle" font-family="Arial">ARCHIVO</text></svg>`, color:'#78909c', label:'Archivo' };
+}
+
+function archivoTipoFiltro(mimeType, nombre) {
+  const { label } = archivoIconoSVG(mimeType, nombre);
+  if (label === 'PDF') return 'pdf';
+  if (label === 'Word') return 'doc';
+  if (label === 'Excel') return 'sheet';
+  if (label === 'Imagen') return 'image';
+  if (label === 'Video') return 'video';
+  if (label === 'Audio') return 'audio';
+  if (label === 'Presentación') return 'ppt';
+  return 'other';
+}
+
+let _archivosData = []; // cache de archivos cargados
+
+async function archivosCargar() {
+  const cfg = await archivoGetConfig();
+  const grid = document.getElementById('archivosGrid');
+  const estado = document.getElementById('archivosEstado');
+  const btnDrive = document.getElementById('archivosBtnDrive');
+
+  if (!cfg.apiKey) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa">
+      <div style="font-size:3rem;margin-bottom:10px">🔑</div>
+      <div style="font-family:'Baloo 2';font-weight:700;font-size:0.95rem;color:#c45a00;margin-bottom:6px">Falta la API Key de Google</div>
+      <div style="font-size:0.82rem;color:#aaa">Usá el botón <strong>⚙️ Config</strong> (arriba a la derecha) para completar la configuración.</div>
+    </div>`;
+    return;
+  }
+
+  // Mostrar link a Drive
+  btnDrive.href = `https://drive.google.com/drive/folders/${cfg.folderId}`;
+  btnDrive.style.display = 'inline-block';
+
+  grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:#aaa"><div style="font-size:2rem">⏳</div><div style="font-family:'Baloo 2'">Cargando archivos...</div></div>`;
+  estado.style.display = 'none';
+
+  try {
+    const url = `https://www.googleapis.com/drive/v3/files?q='${cfg.folderId}'+in+parents+and+trashed=false&fields=files(id,name,mimeType,modifiedTime,webViewLink,thumbnailLink,size)&orderBy=name&key=${cfg.apiKey}`;
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error('Error ' + resp.status);
+    const data = await resp.json();
+    _archivosData = data.files || [];
+    archivosFiltrar();
+    if (_archivosData.length === 0) {
+      estado.style.display = 'block';
+      estado.textContent = '📭 La carpeta está vacía. Subí archivos desde Drive y apretá Actualizar.';
+    }
+  } catch(e) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:#e53935">
+      <div style="font-size:2rem">⚠️</div>
+      <div style="font-family:'Baloo 2';margin-top:8px">No se pudo conectar con Drive.<br><small style="color:#aaa">${e.message}</small></div>
+    </div>`;
+  }
+}
+
+function archivosFiltrar() {
+  const q = (document.getElementById('archivosSearch')?.value||'').toLowerCase();
+  const tipo = document.getElementById('archivosTipo')?.value||'';
+  const grid = document.getElementById('archivosGrid');
+  if (!_archivosData.length) return;
+
+  const filtrados = _archivosData.filter(f => {
+    const matchQ = !q || f.name.toLowerCase().includes(q);
+    const matchT = !tipo || archivoTipoFiltro(f.mimeType, f.name) === tipo;
+    return matchQ && matchT;
+  });
+
+  if (!filtrados.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:#ccc;font-family:'Baloo 2'">Sin resultados</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtrados.map(f => {
+    const { svg, color, label } = archivoIconoSVG(f.mimeType, f.name);
+    const fecha = f.modifiedTime ? new Date(f.modifiedTime).toLocaleDateString('es-AR') : '';
+    const nombre = f.name.length > 28 ? f.name.slice(0,26)+'…' : f.name;
+    const esImagen = (f.mimeType||'').includes('image') || /\.(jpe?g|png|gif|webp)$/i.test(f.name);
+    const esVideo = (f.mimeType||'').includes('video');
+    const tieneMiniatura = (esImagen || esVideo) && f.thumbnailLink;
+    const vistaPrevia = tieneMiniatura
+      ? `<div style="width:64px;height:64px;border-radius:10px;overflow:hidden;background:#f0f0f0;flex-shrink:0">
+           <img src="${f.thumbnailLink}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentNode.innerHTML='${svg.replace(/'/g,'\\'+'\'')}'">
+         </div>`
+      : `<div style="line-height:1">${svg}</div>`;
+    return `<div onclick="archivoAbrir('${f.id}','${esc(f.name).replace(/'/g,'&#39;')}','${f.mimeType||''}','${f.webViewLink||''}')" title="${esc(f.name)}"
+      style="background:white;border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,0.08);padding:16px 12px;text-align:center;text-decoration:none;color:#333;transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer"
+      onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 6px 20px rgba(0,0,0,0.15)'"
+      onmouseout="this.style.transform='';this.style.boxShadow='0 2px 10px rgba(0,0,0,0.08)'">
+      ${vistaPrevia}
+      <div style="font-size:0.68rem;background:${color}22;color:${color};border-radius:10px;padding:1px 8px;font-weight:700">${label}</div>
+      <div style="font-size:0.78rem;font-weight:700;font-family:'Baloo 2';color:#444;line-height:1.3;word-break:break-word;text-align:center">${esc(nombre)}</div>
+      ${fecha ? `<div style="font-size:0.65rem;color:#bbb">${fecha}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function archivosConfigAdmin() {
+  document.getElementById('driveConfigPass').value = '';
+  document.getElementById('driveConfigPassError').textContent = '';
+  document.getElementById('driveConfigPaso1').style.display = 'block';
+  document.getElementById('driveConfigPaso2').style.display = 'none';
+  document.getElementById('modalDriveConfig').classList.add('open');
+  setTimeout(() => document.getElementById('driveConfigPass').focus(), 100);
+}
+
+function driveConfigVerificarPass() {
+  const pw = document.getElementById('driveConfigPass').value;
+  if (pw !== '323334') {
+    document.getElementById('driveConfigPassError').textContent = 'Contraseña incorrecta';
+    document.getElementById('driveConfigPass').value = '';
+    return;
+  }
+  document.getElementById('driveConfigPaso1').style.display = 'none';
+  document.getElementById('driveConfigPaso2').style.display = 'block';
+  document.getElementById('driveConfigError').textContent = '';
+  // Cargar config actual
+  archivoGetConfig().then(cfg => {
+    document.getElementById('driveConfigFolder').value = cfg.folderId || '';
+    document.getElementById('driveConfigApiKey').value = cfg.apiKey || '';
+  });
+  setTimeout(() => document.getElementById('driveConfigFolder').focus(), 100);
+}
+
+async function driveConfigGuardar() {
+  const folderRaw = document.getElementById('driveConfigFolder').value.trim();
+  const apiKey = document.getElementById('driveConfigApiKey').value.trim();
+  if (!folderRaw) { document.getElementById('driveConfigError').textContent = 'Ingresá el link de la carpeta Drive'; return; }
+  if (!apiKey) { document.getElementById('driveConfigError').textContent = 'Ingresá la API Key'; return; }
+  // Extraer ID del link
+  let folderId = folderRaw;
+  const matchId = folderId.match(/folders\/([a-zA-Z0-9_-]{10,})/);
+  if (matchId) folderId = matchId[1];
+  folderId = folderId.split('?')[0].trim();
+  await archivoSetConfig({ folderId, apiKey });
+  driveConfigCerrar();
+  archivosCargar();
+}
+
+async function driveConfigBorrar() {
+  if (!confirm('⚠️ ¿Borrar toda la configuración de Drive?')) return;
+  await archivoSetConfig({});
+  _archivosConfig = {};
+  driveConfigCerrar();
+  archivosCargar();
+}
+
+function driveConfigCerrar() {
+  document.getElementById('modalDriveConfig').classList.remove('open');
 }
 
 // ===== NOTAS RENDER =====
@@ -1948,7 +2399,6 @@ function renderTalleres(filter=''){
     const q=filter.toLowerCase();
     return t.nombre?.toLowerCase().includes(q)||t.horario?.toLowerCase().includes(q)||t.costo?.toLowerCase().includes(q)||t.docente?.toLowerCase().includes(q);
   });
-  // Actualizar contador en título
   const totalAlumnos = alumnos.length;
   const countEl = document.getElementById('talleresCounts');
   if (countEl) countEl.textContent = `· ${talleres.length} talleres · ${totalAlumnos} alumnos`;
@@ -4274,7 +4724,7 @@ function renderPagos() {
     <td style="background:#f0fff4"></td>
   </tr>`;
 
-  // Fila precio referencia (solo taller seleccionado, también al pie)
+  // Fila precio referencia (solo taller seleccionado, solo en meses con pagos o hasta mes actual)
   const filaPrecioRef = currentTallerId ? `<tr style="background:#fff3e0">
     <td class="col-nombre" style="background:#fff3e0;font-family:'Baloo 2';color:#c45a00;font-size:0.72rem;font-weight:700">📋 Precio referencia</td>
     <td style="background:#fff3e0"></td>
@@ -4283,7 +4733,10 @@ function renderPagos() {
       const bg = esMesActual ? '#ffe0b2' : '#fff3e0';
       const t = talleres.find(x=>x.id===currentTallerId);
       const precioRef = mes==='insc' ? parsePesos(t?.inscripcion) : parsePesos(t?.costo);
-      return `<td style="background:${bg};color:#c45a00;font-size:0.68rem;font-weight:700;text-align:center">${precioRef>0?'$'+Math.round(precioRef).toLocaleString('es-AR'):'—'}</td>`;
+      // Mostrar solo si: es insc, es mes actual, o ya hay al menos un pago en ese mes
+      const tienePagos = list.some(a => (pagosData[a.id]?.[mes]?.estado) === 'pagado' || (pagosData[a.id]?.[mes]?.estado) === 'trueque');
+      const mostrar = mes === 'insc' || esMesActual || tienePagos;
+      return `<td style="background:${bg};color:#c45a00;font-size:0.68rem;font-weight:700;text-align:center">${mostrar && precioRef>0 ? '$'+Math.round(precioRef).toLocaleString('es-AR') : '—'}</td>`;
     }).join('')}
     <td style="background:#fff3e0"></td>
     <td style="background:#fff3e0"></td>
@@ -5058,6 +5511,12 @@ function asistInicializar() {
 
 function asistCambiarMes() {
   asistMesActual = document.getElementById('asistMesGlobal').value;
+  // Limpiar la fecha específica para que use el mes global
+  asistFechaActual = '';
+  // Si hay un taller abierto, re-renderizar la planilla con el nuevo mes
+  if (asistTallerActual) {
+    asistVerPlanilla();
+  }
 }
 
 function asistRenderTalleres() {
@@ -5066,10 +5525,14 @@ function asistRenderTalleres() {
     grid.innerHTML = '<div class="empty-state"><div>🔧</div><p>No hay talleres cargados todavía.</p></div>';
     return;
   }
+  const hoy = new Date().getDay(); // 0=Dom ... 6=Sáb
   grid.innerHTML = talleres.map(t => {
     const alumnosTaller = alumnos.filter(a => a.tallerId === t.id);
-    return `<div class="asist-taller-card" onclick="asistAbrirTaller('${t.id}')">
-      <h3>🔧 ${esc(t.nombre)}</h3>
+    const esHoy = (t.diasClase||[]).map(Number).includes(hoy);
+    const estiloHoy = esHoy ? 'border-left:5px solid #4caf50;box-shadow:0 4px 18px rgba(76,175,80,0.25);' : '';
+    const badgeHoy = esHoy ? `<span style="display:inline-block;background:#4caf50;color:white;border-radius:20px;padding:2px 10px;font-size:0.72rem;font-weight:800;margin-left:6px;letter-spacing:0.5px">● HOY</span>` : '';
+    return `<div class="asist-taller-card" onclick="asistAbrirTaller('${t.id}')" style="${estiloHoy}">
+      <h3>🔧 ${esc(t.nombre)}${badgeHoy}</h3>
       <p>👨‍🏫 ${esc(t.docente || 'Sin docente')}</p>
       <p>👥 ${alumnosTaller.length} alumno${alumnosTaller.length !== 1 ? 's' : ''} inscripto${alumnosTaller.length !== 1 ? 's' : ''}</p>
       <span class="asist-dias">📅 ${esc(t.horario || 'Días no definidos')}</span>
