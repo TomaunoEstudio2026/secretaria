@@ -1854,6 +1854,7 @@ function loginCheck() {
   try { autenticado = sessionStorage.getItem('auth') === '1'; } catch(e) {}
   if (!autenticado) {
     document.getElementById('loginScreen').style.display = 'flex';
+    setTimeout(() => document.getElementById('loginInput').focus(), 100);
   }
 })();
 
@@ -2035,6 +2036,15 @@ function archivoAbrir(fileId, nombre, mimeType, webViewLink) {
   if (!fileId || !webViewLink) {
     alert('No se puede abrir este archivo.'); return;
   }
+
+  // Carpetas y videos abren directo en Drive — sin abrir ningún modal
+  const esVideo = mimeType && mimeType.includes('video');
+  const esCarpeta = mimeType && mimeType.includes('folder');
+  if (esCarpeta || esVideo) {
+    window.open(webViewLink, '_blank', 'noopener');
+    return;
+  }
+
   const { svg, label } = archivoIconoSVG(mimeType, nombre);
   // Setear header del modal
   document.getElementById('archivoVisorIcono').innerHTML = svg.replace('width="48" height="48"','width="28" height="28"');
@@ -2052,19 +2062,11 @@ function archivoAbrir(fileId, nombre, mimeType, webViewLink) {
 
   document.getElementById('modalArchivoVisor').classList.add('open');
 
-  // Tipos que NO soportan iframe → abrir directo en Drive
-  const esVideo = mimeType && mimeType.includes('video');
-  const esCarpeta = mimeType && mimeType.includes('folder');
-  const noIframe = esVideo || esCarpeta || (mimeType && (
+  // Otros tipos sin soporte iframe
+  const noIframe = mimeType && (
     mimeType.includes('zip') || mimeType.includes('rar') ||
     mimeType.includes('x-tar') || mimeType.includes('octet-stream')
-  ));
-
-  if (esCarpeta || esVideo) {
-    // Carpetas y videos abren directo en Drive sin modal
-    window.open(webViewLink, '_blank', 'noopener');
-    return;
-  }
+  );
 
   if (noIframe) {
     archivoVisorMostrarError('Este tipo de archivo debe descargarse o abrirse en Drive.');
