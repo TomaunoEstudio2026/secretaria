@@ -6477,7 +6477,7 @@ function asistCambiarMesGrilla() {
 // ===== IMPORTAR ALUMNOS DESDE EXCEL =====
 let _importRows = [];
 const IMPORT_MAP = {
-  'apellido':['apellido','lastname','last name','last_name'],
+  'apellido':['apellido','lastname','last name','last_name','apellido y nombre','apellido y nombre completo','apellido_nombre','nombre y apellido','nombre completo','full name','fullname'],
   'nombre':  ['nombre','name','firstname','first name','first_name'],
   'dni':     ['dni','documento','doc','cedula','id'],
   'tel':     ['telefono','teléfono','tel','celular','phone','movil','móvil','whatsapp'],
@@ -6538,8 +6538,8 @@ function importLeerArchivo(input) {
 
       // Warnings
       const warns = [];
-      if (!colMap.apellido && !colMap.nombre) warns.push('⚠️ No se encontró columna de nombre ni apellido.');
-      if (!colMap.dni) warns.push('⚠️ No se encontró columna DNI.');
+      if (colMap.apellido === undefined && colMap.nombre === undefined) warns.push('⚠️ No se encontró columna de nombre ni apellido.');
+      if (colMap.dni === undefined) warns.push('⚠️ No se encontró columna DNI.');
       document.getElementById('importWarnings').innerHTML = warns.join('<br>');
 
       document.getElementById('importResumen').innerHTML =
