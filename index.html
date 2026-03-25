@@ -6060,7 +6060,7 @@ function asistExportarExcel() {
     });
     const total = presentes+ausentes;
     const pct = total>0 ? Math.round((presentes/total)*100)+'%' : '';
-    const obs = total>0 && ausentes===0 ? '\u2B50 Asistencia perfecta' : (pct && parseInt(pct)<80 ? '\u26A0 Menos del 80%' : '');
+    const obs = total>0 && ausentes===0 ? '⭐ Asistencia perfecta' : (pct && parseInt(pct)<80 ? '⚠ Menos del 80%' : '');
     return [idx+1, al.apellido||'', al.nombre||'', ...celdas, presentes, ausentes, pct, obs];
   });
 
@@ -6075,7 +6075,7 @@ function asistExportarExcel() {
   const totA = filas.reduce((s,r)=>s+(parseInt(r[r.length-3])||0),0);
   totRow.push(totP, totA, ((totP+totA)>0 ? Math.round((totP/(totP+totA))*100)+'%' : '--'), '');
 
-  // Meta-encabezado institucional
+  // Construir xlsx con SheetJS
   const meta = [
     ['Centro Educativo Integral San Jorge'],
     ['Planilla de Asistencia — ' + asistTallerActual.nombre + ' — ' + asistNombreMes(mes)],
@@ -6085,18 +6085,21 @@ function asistExportarExcel() {
   ];
 
   const todasFilas = [...meta, encabezado, ...filas, totRow];
-  const csv = todasFilas
-    .map(row => row.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(','))
-    .join('\r\n');
+  const ws = XLSX.utils.aoa_to_sheet(todasFilas);
 
-  const bom = '\uFEFF';
-  const blob = new Blob([bom+csv], {type:'text/csv;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'Asistencia_' + asistTallerActual.nombre.replace(/\s+/g,'_') + '_' + mes + '.csv';
-  a.click();
-  URL.revokeObjectURL(url);
+  // Ancho de columnas
+  const wscols = [
+    {wch:4},  // N°
+    {wch:22}, // Apellido
+    {wch:18}, // Nombre
+    ...colFechas.map(()=>({wch:8})), // fechas
+    {wch:10},{wch:10},{wch:13},{wch:22} // totales y obs
+  ];
+  ws['!cols'] = wscols;
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Asistencia');
+  XLSX.writeFile(wb, 'Asistencia_' + asistTallerActual.nombre.replace(/\s+/g,'_') + '_' + mes + '.xlsx');
 }
 
 function imprimirPlanillaAsistencia() {
