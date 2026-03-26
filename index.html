@@ -367,6 +367,10 @@ tr:hover td { background:#fff8f0; }
   .notes-grid { grid-template-columns:1fr; }
   .form-row { grid-template-columns:1fr; }
   .taller-grid { grid-template-columns:1fr 1fr; }
+  /* Botones de acción en alumnos: ocultar en mobile, se muestran con botón "más" */
+  .btn-group-acciones { display:none !important; }
+  .btn-group-acciones.visible { display:flex !important; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .btn-mas-acciones { display:flex !important; }
 }
 
 /* ===== ASISTENCIA ===== */
@@ -577,7 +581,15 @@ tr:hover td { background:#fff8f0; }
 
 /* Encabezado de columnas */
 .grilla-tactil thead th { background:var(--naranja-oscuro); color:white; padding:6px 4px; text-align:center; white-space:nowrap; border:1px solid rgba(255,255,255,0.2); font-family:'Baloo 2'; }
+.grilla-th-fecha.dia-feriado { background:#c62828 !important; }
+.grilla-th-fecha.dia-licencia { background:#f57f17 !important; }
+.grilla-th-fecha.dia-paro { background:#6a1b9a !important; }
 .grilla-th-nombre { text-align:left !important; min-width:130px; max-width:180px; padding-left:10px !important; font-size:0.8rem; position:sticky; left:0; z-index:2; background:var(--naranja-oscuro) !important; }
+.grilla-th-fecha .dia-especial-ico { font-size:0.7rem; display:block; margin-top:1px; }
+.grilla-celda.bloqueada { background:#f5f5f5 !important; color:#bbb !important; pointer-events:none; font-size:0.75rem; }
+.menu-dia-especial { position:fixed; background:white; border-radius:14px; box-shadow:0 8px 32px rgba(0,0,0,0.2); padding:8px; z-index:2000; min-width:190px; }
+.menu-dia-especial button { display:block; width:100%; text-align:left; padding:9px 14px; border:none; background:none; border-radius:10px; font-family:'Baloo 2'; font-weight:700; font-size:0.88rem; cursor:pointer; }
+.menu-dia-especial button:hover { background:#f5f5f5; }
 .grilla-th-fecha { min-width:42px; max-width:52px; padding:4px 2px !important; }
 .grilla-th-pct { min-width:46px; background:var(--naranja) !important; }
 .grilla-dia-num { font-size:0.9rem; font-weight:900; line-height:1; }
@@ -892,7 +904,9 @@ tr:hover td { background:#fff8f0; }
         <button id="btnFiltroSeguro" class="filtro-btn" onclick="toggleFiltroSeguro()" style="border-color:#1565c0;color:#1565c0;padding:4px 10px;font-size:0.78rem">🛡️ Seguro</button>
         <span id="labelBecados" style="font-size:0.78rem;color:#aaa;display:none"></span>
         <span id="labelSeguro" style="font-size:0.78rem;color:#aaa;display:none"></span>
-        <div class="btn-group" id="btnGroupLista" style="margin-left:auto">
+        <!-- Botón ⋯ solo visible en mobile -->
+        <button class="btn-mas-acciones" onclick="toggleAccionesAlumnos()" style="display:none;margin-left:auto;background:#e8ddd0;border:none;border-radius:10px;padding:6px 12px;font-family:'Baloo 2';font-weight:800;font-size:1rem;cursor:pointer;color:var(--naranja-oscuro)">⋯</button>
+        <div class="btn-group btn-group-acciones" id="btnGroupLista" style="margin-left:auto">
           <button class="btn-pdf" onclick="imprimirAlumnos()" style="background:#555;color:white;border:none" title="Imprimir">🖨️ Imprimir</button>
           <button class="btn-pdf" onclick="exportPDFAlumnos()" id="btnPdfAlumnos" title="PDF">📄 PDF</button>
           <button class="btn-add" onclick="openAlumnoModal()" id="btnAddAlumno">＋ Alumno</button>
@@ -900,7 +914,7 @@ tr:hover td { background:#fff8f0; }
           <button class="btn-pdf" onclick="exportarAlumnosExcel()" style="background:#1565c0;color:white;border:none" title="Exportar Excel">📤 Exportar</button>
           <button class="btn-pdf" onclick="limpiarListaAnual()" style="background:#b71c1c;color:white;border:none" title="Limpiar lista">🗑️ Limpiar</button>
         </div>
-        <div class="btn-group" id="btnGroupPagos" style="margin-left:auto;display:none">
+        <div class="btn-group btn-group-acciones" id="btnGroupPagos" style="margin-left:auto;display:none">
           <button class="btn-pdf" onclick="imprimirPlanillaPagos()" style="background:#555;color:white;border:none" title="Imprimir planilla">🖨️ Imprimir</button>
           <button class="btn-pdf" onclick="exportPDFPagos()" style="background:var(--naranja-oscuro);color:white;border:none" title="PDF planilla">📄 PDF</button>
           <button class="btn-pdf" onclick="exportarPagosExcel()" style="background:#1565c0;color:white;border:none" title="Exportar Excel">📊 Excel</button>
@@ -2623,6 +2637,13 @@ function verAlumnosTaller(tid,tnombre){
   renderFiltrosTaller();
   renderAlumnos();
 }
+function toggleAccionesAlumnos() {
+  const grupos = document.querySelectorAll('.btn-group-acciones');
+  const abierto = [...grupos].some(g => g.classList.contains('visible'));
+  grupos.forEach(g => g.classList.toggle('visible', !abierto));
+  document.querySelector('.btn-mas-acciones').textContent = abierto ? '⋯' : '✕';
+}
+
 function backToTalleres(){showSection('talleres');}
 
 function toggleFiltroSeguro() {
@@ -5557,6 +5578,7 @@ async function asistAbrirTaller(tallerId) {
 
     // Cargar registros desde Firebase (con manejo de error)
     try { await asistCargarRegistros(); } catch(e) { console.warn('asistCargarRegistros:', e); }
+    try { await cargarDiasEspeciales(); } catch(e) { _diasEspeciales = {}; }
 
     // Actualizar UI
     const tn = document.getElementById('asistTallerNombre');
@@ -6294,9 +6316,14 @@ function asistRenderGrilla() {
   const thFechas = fechas.map(f => {
     const parts = f.split('-');
     const d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
-    return `<th class="grilla-th-fecha" data-fecha="${f}">
+    const esp = _diasEspeciales[f];
+    const espCfg = esp ? DIAS_ESPECIALES_CONFIG[esp] : null;
+    const espCls = espCfg ? espCfg.cls : '';
+    const espIco = espCfg ? `<span class="dia-especial-ico">${espCfg.ico}</span>` : '';
+    return `<th class="grilla-th-fecha ${espCls}" data-fecha="${f}" onclick="abrirMenuDiaEspecial('${f}',event)" style="cursor:pointer" title="Toque para marcar feriado/licencia/paro">
       <div class="grilla-dia-num">${parts[2]}</div>
       <div class="grilla-dia-sem">${DIAS_SEMANA[d.getDay()].slice(0,3).toUpperCase()}</div>
+      ${espIco}
     </th>`;
   }).join('');
 
@@ -6304,6 +6331,12 @@ function asistRenderGrilla() {
   const rows = asistAlumnos.map((al, idx) => {
     let presentes=0, ausentes=0;
     const celdas = fechas.map(f => {
+      const esp = _diasEspeciales[f];
+      if (esp) {
+        // Día especial: celda bloqueada con etiqueta
+        const espCfg = DIAS_ESPECIALES_CONFIG[esp];
+        return `<td class="grilla-celda bloqueada" title="${espCfg.label}">${espCfg.ico}</td>`;
+      }
       const e = (asistRegistro[f]||{})[al.id] || '';
       if (e==='P') presentes++;
       else if (e==='A') ausentes++;
@@ -6323,15 +6356,19 @@ function asistRenderGrilla() {
     return `<tr class="grilla-fila ${alerta?'fila-alerta':''} ${perfecto?'fila-perfecto':''}" id="gf-${al.id}">
       <td class="grilla-td-nombre">
         <span class="grilla-num">${idx+1}</span>
-        <span class="grilla-nombre-txt">${esc(al.apellido||'')}${al.nombre?', '+esc(al.nombre):''}${icono}</span>
+        <span class="grilla-nombre-txt">${esc(al.apellido||'')}${al.nombre?', '+esc(al.nombre):''}${al.becado?' <span title="Becado/a" style="font-size:0.85rem">🎓</span>':''}${icono}</span>
       </td>
       ${celdas}
       <td class="grilla-td-pct"><span class="pct-badge ${pctCls}" id="gpct-${al.id}">${pctTxt}</span></td>
     </tr>`;
   }).join('');
 
-  // Fila de totales
+  // Fila de totales (excluye días especiales)
   const totCols = fechas.map(f => {
+    if (_diasEspeciales[f]) {
+      const espCfg = DIAS_ESPECIALES_CONFIG[_diasEspeciales[f]];
+      return `<td class="grilla-td-tot bloqueada" style="font-size:0.7rem;color:#aaa">${espCfg.ico}</td>`;
+    }
     let p=0, a=0;
     asistAlumnos.forEach(al => {
       const e = (asistRegistro[f]||{})[al.id];
@@ -6384,7 +6421,7 @@ function grillaCiclar(alumnoId, fecha) {
     celda.textContent = siguiente;
   }
   // Actualizar % del alumno
-  asistActualizarPctGrilla(alumnoId);
+  asistActualizarPctGrillaConEspeciales(alumnoId);
   // Actualizar total de la columna
   asistActualizarTotColumna(fecha);
   asistActualizarResumen();
@@ -6412,11 +6449,89 @@ async function asistGuardarFecha(fecha, alumnoId, estado) {
   } catch(e) { console.warn('Auto-guardar falló:', e); }
 }
 
-function asistActualizarPctGrilla(alumnoId) {
+// ===== DÍAS ESPECIALES (feriado, licencia, paro) =====
+let _diasEspeciales = {}; // { 'YYYY-MM-DD': 'feriado'|'licencia'|'paro' }
+let _menuDiaEspecial = null;
+
+const DIAS_ESPECIALES_CONFIG = {
+  'feriado':  { label: '🔴 Feriado',          color: '#c62828', cls: 'dia-feriado',  ico: '🔴' },
+  'licencia': { label: '🟡 Licencia docente',  color: '#f57f17', cls: 'dia-licencia', ico: '🟡' },
+  'paro':     { label: '🟣 Paro docente',      color: '#6a1b9a', cls: 'dia-paro',     ico: '🟣' },
+};
+
+async function cargarDiasEspeciales() {
+  if (!asistTallerActual) return;
+  try {
+    const f = fns || window._fns, d = db || window._db;
+    const mes = asistMesActual;
+    const docId = 'diasEsp_' + asistTallerActual.id + '_' + mes;
+    const snap = await f.getDoc(f.doc(d, 'config', docId));
+    _diasEspeciales = snap.exists() ? (snap.data().dias || {}) : {};
+  } catch(e) { _diasEspeciales = {}; }
+}
+
+async function guardarDiasEspeciales() {
+  try {
+    const f = fns || window._fns, d = db || window._db;
+    const mes = asistMesActual;
+    const docId = 'diasEsp_' + asistTallerActual.id + '_' + mes;
+    await f.setDoc(f.doc(d, 'config', docId), { dias: _diasEspeciales, tallerId: asistTallerActual.id, mes });
+  } catch(e) { console.warn('Error guardando días especiales:', e); }
+}
+
+function abrirMenuDiaEspecial(fecha, event) {
+  cerrarMenuDiaEspecial();
+  const tipo = _diasEspeciales[fecha];
+  const menu = document.createElement('div');
+  menu.className = 'menu-dia-especial';
+  menu.id = 'menuDiaEspecial';
+  const opciones = Object.entries(DIAS_ESPECIALES_CONFIG).map(([key, cfg]) =>
+    `<button onclick="marcarDiaEspecial('${fecha}','${key}')" style="color:${cfg.color}">${cfg.label}</button>`
+  ).join('');
+  const partes = fecha.split('-');
+  const dia = partes[2];
+  const d = new Date(parseInt(partes[0]), parseInt(partes[1])-1, parseInt(partes[2]));
+  const diaSem = DIAS_SEMANA[d.getDay()];
+  menu.innerHTML = `
+    <div style="padding:6px 14px 8px;font-family:'Baloo 2';font-size:0.78rem;color:#aaa;border-bottom:1px solid #f0e8e0;margin-bottom:4px">${diaSem} ${dia} — ${tipo ? 'marcado como '+tipo : 'sin marca'}</div>
+    ${opciones}
+    ${tipo ? `<button onclick="marcarDiaEspecial('${fecha}',null)" style="color:#888">↩️ Quitar marca</button>` : ''}
+  `;
+  // Posicionar cerca del click
+  const rect = event.target.closest('th').getBoundingClientRect();
+  document.body.appendChild(menu);
+  let left = rect.left;
+  let top = rect.bottom + 4;
+  if (left + 200 > window.innerWidth) left = window.innerWidth - 206;
+  if (top + 180 > window.innerHeight) top = rect.top - menu.offsetHeight - 4;
+  menu.style.left = left + 'px';
+  menu.style.top = top + 'px';
+  _menuDiaEspecial = fecha;
+  setTimeout(() => document.addEventListener('click', cerrarMenuDiaEspecial, {once:true}), 10);
+}
+
+function cerrarMenuDiaEspecial() {
+  const m = document.getElementById('menuDiaEspecial');
+  if (m) m.remove();
+  _menuDiaEspecial = null;
+}
+
+async function marcarDiaEspecial(fecha, tipo) {
+  cerrarMenuDiaEspecial();
+  if (tipo) {
+    _diasEspeciales[fecha] = tipo;
+  } else {
+    delete _diasEspeciales[fecha];
+  }
+  await guardarDiasEspeciales();
+  asistRenderGrilla();
+}
+
+function asistActualizarPctGrillaConEspeciales(alumnoId) {
   const mes = asistMesActual;
   let p=0, a=0;
   Object.keys(asistRegistro).forEach(f => {
-    if (f.startsWith(mes)) {
+    if (f.startsWith(mes) && !_diasEspeciales[f]) {
       const e = asistRegistro[f][alumnoId];
       if (e==='P') p++; else if (e==='A') a++;
     }
@@ -6425,24 +6540,14 @@ function asistActualizarPctGrilla(alumnoId) {
   const pct = total > 0 ? Math.round((p/total)*100) : null;
   const alerta = pct !== null && pct < 80;
   const perfecto = total > 0 && a === 0;
-  const pctEl = document.getElementById('gpct-'+alumnoId);
-  if (pctEl) {
-    pctEl.className = 'pct-badge ' + (perfecto ? 'pct-perfecto' : alerta ? 'pct-malo' : 'pct-ok');
-    pctEl.textContent = pct !== null ? pct+'%' : '--';
-  }
+  const pctTxt = pct !== null ? pct+'%' : '--';
+  const pctCls = perfecto ? 'pct-perfecto' : alerta ? 'pct-malo' : 'pct-ok';
+  const el = document.getElementById('gpct-'+alumnoId);
+  if (el) { el.className = 'pct-badge '+pctCls; el.textContent = pctTxt; }
   const fila = document.getElementById('gf-'+alumnoId);
   if (fila) {
-    fila.classList.toggle('fila-alerta', !!alerta);
-    fila.classList.toggle('fila-perfecto', !!perfecto);
-    // Actualizar icono en nombre
-    const nombreEl = fila.querySelector('.grilla-nombre-txt');
-    if (nombreEl) {
-      const al = asistAlumnos.find(x=>x.id===alumnoId);
-      if (al) {
-        const icono = perfecto ? ' ⭐' : alerta ? ' ⚠️' : '';
-        nombreEl.textContent = (al.apellido||'') + (al.nombre?', '+al.nombre:'') + icono;
-      }
-    }
+    fila.classList.toggle('fila-alerta', alerta);
+    fila.classList.toggle('fila-perfecto', perfecto);
   }
 }
 
@@ -6473,7 +6578,10 @@ function asistCambiarMesGrilla() {
     asistMesActual = val;
     asistFechaActual = val + '-01';
     document.getElementById('asistMesLabel').textContent = '📅 ' + asistNombreMes(val);
-    asistCargarRegistros().then(() => asistRenderGrilla());
+    asistCargarRegistros().then(async () => {
+      await cargarDiasEspeciales().catch(()=>{ _diasEspeciales={}; });
+      asistRenderGrilla();
+    });
   }
 }
 
@@ -7019,16 +7127,25 @@ async function importConfirmar() {
   // El taller se resuelve por nombre desde cada fila del Excel
   const pago = document.getElementById('importPago').value;
   const becado = document.getElementById('importBecado').checked;
-  let ok = 0, err = 0;
+  let ok = 0, err = 0, err_taller = 0;
   for (const r of _importRows) {
     try {
       const id = Date.now().toString() + Math.random().toString(36).slice(2,6);
-      // Resolver taller por nombre (busca coincidencia exacta o parcial)
+      // Resolver taller por nombre — limpia espacios invisibles y normaliza
+      const limpiar = s => String(s||'').trim().replace(/\s+/g,' ').normalize('NFC').toLowerCase();
       const rTallerNombre = r.taller||'';
-      let rTaller = talleres.find(t => t.nombre.toLowerCase() === rTallerNombre.toLowerCase());
-      if (!rTaller) rTaller = talleres.find(t => t.nombre.toLowerCase().includes(rTallerNombre.toLowerCase()) || rTallerNombre.toLowerCase().includes(t.nombre.toLowerCase()));
+      const rTallerLimpio = limpiar(rTallerNombre);
+      let rTaller = talleres.find(t => limpiar(t.nombre) === rTallerLimpio);
+      if (!rTaller && rTallerLimpio) {
+        // Búsqueda parcial: solo si la coincidencia es sustancial (>60% del nombre)
+        rTaller = talleres.find(t => {
+          const tl = limpiar(t.nombre);
+          return tl.includes(rTallerLimpio) || rTallerLimpio.includes(tl);
+        });
+      }
       const rTallerId = rTaller?.id || '';
       const rTallerFinal = rTaller?.nombre || rTallerNombre;
+      if (!rTallerId && rTallerNombre) err_taller++;
       await fbSet('alumnos', id, {
         apellido: r.apellido||r.nombre||'', nombre: r.nombre&&r.apellido ? r.nombre : '',
         dni: r.dni||'', tel: r.tel||'', email: r.email||'',
@@ -7042,7 +7159,7 @@ async function importConfirmar() {
   closeImportModal();
   await loadAlumnos();
   renderAlumnos();
-  showConfirm(`✅ Importación completada: ${ok} alumnos agregados${err?' — '+err+' errores':''}.`, ()=>{}, '✅');
+  showConfirm(`✅ Importación completada: ${ok} alumnos agregados${err?' — '+err+' errores':''}${err_taller?' — ⚠️ '+err_taller+' sin taller reconocido (verificá el nombre exacto del taller)':''}`, ()=>{}, '✅');
   document.getElementById('confirmOkBtn').textContent = 'Perfecto';
 }
 
