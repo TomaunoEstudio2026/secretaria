@@ -2703,9 +2703,13 @@ function toggleFiltroBeca() {
   renderAlumnos(document.getElementById('searchAlumnos')?.value||'');
 }
 
+let _filtrosTallerExpandido = false;
+
 function renderFiltrosTaller() {
   const wrap = document.getElementById('tallerFiltros');
   if (!wrap) return;
+  const esMobile = window.innerWidth <= 600;
+
   const btns = [
     `<button class="filtro-btn ${filtroTallerId===null?'activo':''}" onclick="setFiltroTaller(null)">👥 Todos</button>`
   ];
@@ -2713,12 +2717,49 @@ function renderFiltrosTaller() {
     const cant = alumnos.filter(a => a.tallerId === t.id).length;
     btns.push(`<button class="filtro-btn ${filtroTallerId===t.id?'activo':''}" onclick="setFiltroTaller('${t.id}')">${esc(t.nombre)} <span style="opacity:.7;font-size:.78rem">(${cant})</span></button>`);
   });
-  wrap.innerHTML = btns.join('');
+
+  if (!esMobile) {
+    // Desktop: mostrar todos siempre
+    wrap.innerHTML = btns.join('');
+    return;
+  }
+
+  // Mobile: si hay un taller activo, mostrar solo ese + botón "cambiar"
+  if (filtroTallerId !== null) {
+    const t = talleres.find(x => x.id === filtroTallerId);
+    const cant = alumnos.filter(a => a.tallerId === filtroTallerId).length;
+    wrap.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <button class="filtro-btn activo" style="pointer-events:none">
+          🔧 ${esc(t?.nombre||'')} <span style="opacity:.7;font-size:.78rem">(${cant})</span>
+        </button>
+        <button class="filtro-btn" onclick="setFiltroTaller(null)" style="padding:4px 10px;font-size:0.78rem">✕ Ver todos</button>
+      </div>`;
+    return;
+  }
+
+  // Mobile con "Todos": mostrar botón expandir/colapsar
+  if (!_filtrosTallerExpandido) {
+    wrap.innerHTML = `
+      <button class="filtro-btn" onclick="_filtrosTallerExpandido=true;renderFiltrosTaller()" style="font-size:0.82rem">
+        🔍 Filtrar por taller ▼
+      </button>`;
+  } else {
+    wrap.innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:6px;background:white;border-radius:14px;padding:10px;box-shadow:0 4px 16px rgba(0,0,0,0.1);margin-top:4px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-family:'Baloo 2';font-weight:800;font-size:0.85rem;color:var(--naranja-oscuro)">Seleccioná un taller</span>
+          <button onclick="_filtrosTallerExpandido=false;renderFiltrosTaller()" style="background:none;border:none;font-size:1.1rem;cursor:pointer;color:#aaa">✕</button>
+        </div>
+        ${btns.map(b => b.replace('class="filtro-btn', 'class="filtro-btn" style="width:100%;text-align:left;border-radius:10px')).join('')}
+      </div>`;
+  }
 }
 
 function setFiltroTaller(tid) {
   filtroTallerId = tid;
   currentTallerId = tid;
+  _filtrosTallerExpandido = false; // colapsar siempre al seleccionar
   const titulo = document.getElementById('alumnosTitle');
   if (titulo) {
     if (tid) {
@@ -5751,11 +5792,12 @@ function asistVolverALista() {
 async function asistVerPlanilla() {
   if (!asistTallerActual) return;
   await asistCargarRegistros();
+  try { await cargarDiasEspeciales(); } catch(e) { _diasEspeciales = {}; }
   document.getElementById('asist-view-lista').style.display = 'none';
   document.getElementById('asist-view-planilla').style.display = 'block';
   const mes = asistFechaActual ? asistFechaActual.slice(0,7) : asistMesActual;
   document.getElementById('asistPlanillaTitulo').textContent =
-    '\u{1F4CB} ' + asistTallerActual.nombre + ' \u2014 ' + asistNombreMes(mes);
+    '📋 ' + asistTallerActual.nombre + ' — ' + asistNombreMes(mes);
   asistGenerarPlanilla(mes);
 }
 
@@ -5804,6 +5846,7 @@ function asistGenerarPlanilla(mes) {
   const statsAlumnos = asistAlumnos.map((al, idx) => {
     let presentes = 0, ausentes = 0;
     const celdas = fechas.map((f, fi) => {
+      if (_diasEspeciales[f]) return 'ESP:' + _diasEspeciales[f]; // día especial — no contar
       const e = (asistRegistro[f]||{})[al.id];
       if (e === 'P') { presentes++; totPresentes[fi]++; }
       else if (e === 'A') { ausentes++; totAusentes[fi]++; }
@@ -5840,7 +5883,11 @@ function asistGenerarPlanilla(mes) {
   const thFechas = fechas.length
     ? fechas.map((f, fi) => {
         const parts = f.split('-');
-        return `<th class="col-stats" title="${f}">${parts[2]}</th>`;
+        const esp = _diasEspeciales[f];
+        const espCfg = esp ? DIAS_ESPECIALES_CONFIG[esp] : null;
+        const bg = espCfg ? `style="background:${espCfg.color};color:white"` : '';
+        const ico = espCfg ? `<br><span style="font-size:0.65rem">${espCfg.ico}</span>` : '';
+        return `<th class="col-stats" title="${espCfg ? espCfg.label : f}" ${bg}>${parts[2]}${ico}</th>`;
       }).join('')
     : '<th class="col-stats" style="color:#aaa;font-style:italic;min-width:80px">Sin clases registradas</th>';
 
@@ -5849,7 +5896,10 @@ function asistGenerarPlanilla(mes) {
     ? fechas.map(f => {
         const parts = f.split('-');
         const d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
-        return `<th>${DIAS_SEMANA[d.getDay()].slice(0,3).toUpperCase()}</th>`;
+        const esp = _diasEspeciales[f];
+        const espCfg = esp ? DIAS_ESPECIALES_CONFIG[esp] : null;
+        const bg = espCfg ? `style="background:${espCfg.color};color:white;font-size:0.65rem"` : '';
+        return `<th ${bg}>${DIAS_SEMANA[d.getDay()].slice(0,3).toUpperCase()}</th>`;
       }).join('')
     : '<th></th>';
 
@@ -5863,11 +5913,15 @@ function asistGenerarPlanilla(mes) {
         ? '<span class="icono-alerta" title="Menos del 80%">\u26A0\uFE0F</span>'
         : '';
 
-    const celdaTDs = celdas.map(e =>
-      e === 'P' ? `<td><span class="celda-p">P</span></td>`
-      : e === 'A' ? `<td><span class="celda-a">A</span></td>`
-      : `<td><span class="celda-vacia">&mdash;</span></td>`
-    ).join('');
+    const celdaTDs = celdas.map(e => {
+      if (e && e.startsWith('ESP:')) {
+        const espCfg = DIAS_ESPECIALES_CONFIG[e.slice(4)];
+        return `<td style="background:${espCfg.color}22"><span style="font-size:0.8rem">${espCfg.ico}</span></td>`;
+      }
+      return e === 'P' ? `<td><span class="celda-p">P</span></td>`
+        : e === 'A' ? `<td><span class="celda-a">A</span></td>`
+        : `<td><span class="celda-vacia">&mdash;</span></td>`;
+    }).join('');
 
     const pctBadge = pct !== null
       ? `<span class="pct-badge ${perfecto ? 'pct-perfecto' : alerta ? 'pct-malo' : 'pct-ok'}">${pct}%</span>`
@@ -5886,9 +5940,13 @@ function asistGenerarPlanilla(mes) {
   }).join('');
 
   // --- FILA DE TOTALES ---
-  const totCeldas = fechas.map((_, fi) =>
-    `<td><span class="tot-p">${totPresentes[fi]}</span><br><span class="tot-a">${totAusentes[fi]}</span></td>`
-  ).join('');
+  const totCeldas = fechas.map((f, fi) => {
+    if (_diasEspeciales[f]) {
+      const espCfg = DIAS_ESPECIALES_CONFIG[_diasEspeciales[f]];
+      return `<td style="background:${espCfg.color}22;font-size:0.75rem">${espCfg.ico}</td>`;
+    }
+    return `<td><span class="tot-p">${totPresentes[fi]}</span><br><span class="tot-a">${totAusentes[fi]}</span></td>`;
+  }).join('');
 
   const totGenP = statsAlumnos.reduce((s,x)=>s+x.presentes,0);
   const totGenA = statsAlumnos.reduce((s,x)=>s+x.ausentes,0);
@@ -5982,7 +6040,9 @@ async function asistExportarPDF() {
   const headLabels = fechas.map(f => {
     const parts = f.split('-');
     const d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
-    return DIAS_SEMANA[d.getDay()].slice(0,3) + '\n' + parts[2];
+    const esp = _diasEspeciales[f];
+    const espLabel = esp === 'feriado' ? 'F' : esp === 'licencia' ? 'L' : esp === 'paro' ? 'P' : '';
+    return DIAS_SEMANA[d.getDay()].slice(0,3) + '\n' + parts[2] + (espLabel ? '\n'+espLabel : '');
   });
 
   const head = [['#', 'Apellido y Nombre', ...headLabels, 'Pres.', 'Aus.', '%']];
@@ -5990,6 +6050,7 @@ async function asistExportarPDF() {
   const body = asistAlumnos.map((al, idx) => {
     let presentes=0, ausentes=0;
     const celdas = fechas.map(f => {
+      if (_diasEspeciales[f]) return _diasEspeciales[f] === 'feriado' ? 'F' : _diasEspeciales[f] === 'licencia' ? 'L' : 'P';
       const e = (asistRegistro[f]||{})[al.id];
       if(e==='P'){presentes++;return 'P';}
       if(e==='A'){ausentes++;return 'A';}
@@ -6002,16 +6063,23 @@ async function asistExportarPDF() {
     return [String(idx+1), nombre, ...celdas, presentes, ausentes, pct];
   });
 
-  // Fila totales
+  // Fila totales — excluir días especiales
   const footRow = ['', 'TOTALES'];
-  fechas.forEach((_, fi) => {
+  fechas.forEach((f, fi) => {
+    if (_diasEspeciales[f]) {
+      const lbl = _diasEspeciales[f] === 'feriado' ? 'F' : _diasEspeciales[f] === 'licencia' ? 'L' : 'P';
+      footRow.push(lbl); return;
+    }
     let p=0, a=0;
-    asistAlumnos.forEach(al => { const e=(asistRegistro[fechas[fi]]||{})[al.id]; if(e==='P')p++;else if(e==='A')a++; });
+    asistAlumnos.forEach(al => { const e=(asistRegistro[f]||{})[al.id]; if(e==='P')p++;else if(e==='A')a++; });
     footRow.push(p+'P\n'+a+'A');
   });
-  const totP = asistAlumnos.reduce((s,al)=>{ let p=0; fechas.forEach(f=>{if((asistRegistro[f]||{})[al.id]==='P')p++;}); return s+p; }, 0);
-  const totA = asistAlumnos.reduce((s,al)=>{ let a=0; fechas.forEach(f=>{if((asistRegistro[f]||{})[al.id]==='A')a++;}); return s+a; }, 0);
+  const totP = asistAlumnos.reduce((s,al)=>{ let p=0; fechas.forEach(f=>{ if(!_diasEspeciales[f] && (asistRegistro[f]||{})[al.id]==='P')p++; }); return s+p; }, 0);
+  const totA = asistAlumnos.reduce((s,al)=>{ let a=0; fechas.forEach(f=>{ if(!_diasEspeciales[f] && (asistRegistro[f]||{})[al.id]==='A')a++; }); return s+a; }, 0);
   footRow.push(totP, totA, ((totP+totA)>0 ? Math.round((totP/(totP+totA))*100)+'%' : '--'));
+
+  // Colores para días especiales en encabezado
+  const ESP_COLORS = { feriado:[198,40,40], licencia:[245,127,23], paro:[106,27,154] };
 
   doc.autoTable({
     head,
@@ -6027,15 +6095,41 @@ async function asistExportarPDF() {
     alternateRowStyles: { fillColor:[253,248,244] },
     footStyles: { fillColor:[196,90,0], textColor:255, fontStyle:'bold' },
     didParseCell: function(data) {
-      if (data.section==='body') {
-        if (data.cell.raw==='P') {
+      // Colorear encabezados de días especiales
+      if (data.section === 'head' && data.row.index === 0) {
+        const colFechaIdx = data.column.index - 2; // offset por # y Nombre
+        if (colFechaIdx >= 0 && colFechaIdx < fechas.length) {
+          const esp = _diasEspeciales[fechas[colFechaIdx]];
+          if (esp && ESP_COLORS[esp]) {
+            data.cell.styles.fillColor = ESP_COLORS[esp];
+          }
+        }
+      }
+      if (data.section === 'body') {
+        const raw = data.cell.raw;
+        if (raw === 'P') {
           data.cell.styles.fillColor=[200,230,201];
           data.cell.styles.textColor=[27,94,32];
           data.cell.styles.fontStyle='bold';
-        } else if (data.cell.raw==='A') {
+        } else if (raw === 'A') {
           data.cell.styles.fillColor=[255,205,210];
           data.cell.styles.textColor=[183,28,28];
           data.cell.styles.fontStyle='bold';
+        } else if (raw === 'F') {
+          data.cell.styles.fillColor=[255,205,205];
+          data.cell.styles.textColor=[198,40,40];
+          data.cell.styles.fontStyle='bold';
+        } else if (raw === 'L') {
+          data.cell.styles.fillColor=[255,243,205];
+          data.cell.styles.textColor=[180,100,0];
+          data.cell.styles.fontStyle='bold';
+        } else if (raw === 'P' && data.column.index > 1 && data.column.index <= fechas.length+1) {
+          // Paro docente en celdas (letra P coincide con Presente — usar índice de columna)
+          const colFechaIdx = data.column.index - 2;
+          if (colFechaIdx >= 0 && _diasEspeciales[fechas[colFechaIdx]] === 'paro') {
+            data.cell.styles.fillColor=[237,221,255];
+            data.cell.styles.textColor=[106,27,154];
+          }
         }
         // Columna % — resaltar si < 80
         const lastColIdx = fechas.length + 4;
@@ -6053,7 +6147,7 @@ async function asistExportarPDF() {
   const finalY = doc.lastAutoTable.finalY + 5;
   doc.setFontSize(7.5);
   doc.setTextColor(100,100,100);
-  doc.text('P = Presente   A = Ausente   * = Asistencia perfecta   ! = Menos del 80%', 10, finalY);
+  doc.text('P = Presente   A = Ausente   F = Feriado   L = Licencia docente   P* = Paro docente   * = Asistencia perfecta', 10, finalY);
   doc.text('CEI San Jorge - Generado el ' + new Date().toLocaleDateString('es-AR'), pageW-10, finalY, {align:'right'});
 
   doc.save('Asistencia_' + asistTallerActual.nombre.replace(/\s+/g,'_') + '_' + mes + '.pdf');
@@ -6064,17 +6158,21 @@ function asistExportarExcel() {
   const mes = asistFechaActual ? asistFechaActual.slice(0,7) : asistMesActual;
   const fechas = asistObtenerFechasConClase(mes);
 
-  // Encabezados descriptivos
+  // Encabezados descriptivos — días especiales con etiqueta
   const colFechas = fechas.map(f => {
     const parts = f.split('-');
     const d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
-    return DIAS_SEMANA[d.getDay()].slice(0,3) + ' ' + parts[2];
+    const esp = _diasEspeciales[f];
+    const espCfg = esp ? DIAS_ESPECIALES_CONFIG[esp] : null;
+    return (espCfg ? espCfg.ico + ' ' : '') + DIAS_SEMANA[d.getDay()].slice(0,3) + ' ' + parts[2];
   });
 
   const encabezado = ['N°','Apellido','Nombre', ...colFechas, 'Presentes','Ausentes','% Asistencia','Obs.'];
   const filas = asistAlumnos.map((al, idx) => {
     let presentes=0, ausentes=0;
     const celdas = fechas.map(f => {
+      const esp = _diasEspeciales[f];
+      if (esp) return DIAS_ESPECIALES_CONFIG[esp].ico; // día especial — no contar
       const e = (asistRegistro[f]||{})[al.id];
       if(e==='P'){presentes++;return 'P';}
       if(e==='A'){ausentes++;return 'A';}
@@ -6086,11 +6184,12 @@ function asistExportarExcel() {
     return [idx+1, al.apellido||'', al.nombre||'', ...celdas, presentes, ausentes, pct, obs];
   });
 
-  // Fila de totales
+  // Fila de totales — días especiales no suman
   const totRow = ['','TOTALES',''];
-  fechas.forEach((_,fi) => {
+  fechas.forEach((f,fi) => {
+    if (_diasEspeciales[f]) { totRow.push(DIAS_ESPECIALES_CONFIG[_diasEspeciales[f]].ico); return; }
     let p=0,a=0;
-    asistAlumnos.forEach(al=>{const e=(asistRegistro[fechas[fi]]||{})[al.id];if(e==='P')p++;else if(e==='A')a++;});
+    asistAlumnos.forEach(al=>{const e=(asistRegistro[f]||{})[al.id];if(e==='P')p++;else if(e==='A')a++;});
     totRow.push(p+'P / '+a+'A');
   });
   const totP = filas.reduce((s,r)=>s+(parseInt(r[r.length-4])||0),0);
