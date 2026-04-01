@@ -167,7 +167,7 @@ header {
   padding:0 18px;
 }
 .taller-card.abierto .taller-card-body {
-  max-height:600px;
+  max-height:1400px;
   padding:0 18px 18px;
 }
 .taller-card h3 { font-family:'Baloo 2'; font-size:1rem; font-weight:800; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
@@ -177,7 +177,7 @@ header {
 .copy-field { background:#fff8f0; border:1.5px dashed var(--naranja-claro); border-radius:12px; padding:11px 14px; font-size:0.85rem; line-height:1.6; position:relative; white-space:pre-wrap; padding-right:90px; }
 .copy-field-btn { position:absolute; top:8px; right:8px; background:var(--naranja); color:white; border:none; border-radius:8px; padding:5px 11px; font-family:'Baloo 2'; font-weight:700; font-size:0.76rem; cursor:pointer; transition:background .2s; }
 .copy-field-btn:hover { background:var(--naranja-oscuro); }
-.taller-actions { display:flex; gap:8px; margin-top:10px; }
+.taller-actions { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
 .taller-btn { padding:7px 14px; border-radius:10px; border:none; font-family:'Baloo 2'; font-weight:700; font-size:0.8rem; cursor:pointer; display:flex; align-items:center; gap:5px; transition:background .2s; }
 .taller-btn.alumnos { background:#e8f5e9; color:var(--verde-oscuro); }
 .taller-btn.alumnos:hover { background:var(--verde); color:white; }
@@ -894,6 +894,11 @@ tr:hover td { background:#fff8f0; }
   .header-right { gap:6px; }
 }
 
+
+@media(max-width:600px){
+  .taller-btn { padding:7px 10px; font-size:0.76rem; }
+  .taller-actions { gap:6px; }
+}
 </style>
 </head>
 <body>
@@ -2032,7 +2037,7 @@ function ajustarNavFijo() {
   nav.style.top = hH + 'px';
   // marginTop exacto = suma de header + nav fijos
   // El main tiene padding:20px que ya genera espacio interno, no necesitamos restarlo
-  main.style.marginTop = (hH + nH + 8) + 'px';
+  main.style.marginTop = (hH + nH) + 'px';
   if (barraAlumnos) barraAlumnos.style.top = (hH + nH) + 'px';
 }
 // Ejecutar al cargar y al cambiar tamaño
