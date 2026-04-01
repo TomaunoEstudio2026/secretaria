@@ -96,7 +96,7 @@ header {
 .nav-tab:hover { color:var(--naranja); }
 
 /* MAIN */
-.main { padding:20px; max-width:1300px; margin:0 auto; }
+.main { padding:0 20px 20px 20px; max-width:1300px; margin:0 auto; }
 .section { display:none; }
 .section.active { display:block; }
 
@@ -363,7 +363,7 @@ tr:hover td { background:#fff8f0; }
 
 @media(max-width:600px){
   header { padding:10px 14px; }
-  .main { padding:14px; }
+  .main { padding:0 14px 14px 14px; }
   .notes-grid { grid-template-columns:1fr; }
   .form-row { grid-template-columns:1fr; }
   .taller-grid { grid-template-columns:1fr 1fr; }
@@ -870,27 +870,28 @@ tr:hover td { background:#fff8f0; }
 /* ===== HEADER MOBILE ===== */
 @media(max-width:600px){
   header { padding:8px 12px; gap:10px; }
-  .logo-circle { width:38px; height:38px; flex-shrink:0; }
+  /* Ocultar reloj + autor completo en mobile */
+  .header-time-desktop { display:none !important; }
+  /* Logo más grande ahora que desaparece el reloj */
+  .logo-circle { width:46px; height:46px; flex-shrink:0; }
   .logo-circle img { width:100%; height:100%; }
+  /* Título ocupa todo el espacio disponible */
+  .header-title { flex:1; min-width:0; }
   .header-title h1 {
-    font-size:0.82rem !important;
-    line-height:1.15;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    max-width:160px;
+    font-size:0.9rem !important;
+    line-height:1.2;
+    white-space:normal;
+    word-break:break-word;
   }
-  /* Ocultar subtítulo, versión y autor en mobile */
+  /* Ocultar subtítulo y versión en mobile */
   .header-title p { display:none !important; }
-  /* Reloj más compacto */
-  .header-time { padding:5px 10px; }
-  .header-time .clock { font-size:1rem; }
-  .header-time .date-str { display:none; }
   /* Botón ayuda: solo icono en mobile */
   .btn-ayuda-texto { display:none; }
   .btn-ayuda-icono { display:inline !important; }
   /* Sync dot más chico */
   .sync-indicator { width:8px; height:8px; }
+  /* header-right más compacto */
+  .header-right { gap:6px; }
 }
 
 </style>
@@ -937,7 +938,7 @@ tr:hover td { background:#fff8f0; }
         font-family:'Baloo 2';font-weight:700;white-space:nowrap">
       <span class="btn-ayuda-icono" style="display:none">❓</span><span class="btn-ayuda-texto">❓ Ayuda</span>
     </button>
-    <div class="header-time">
+    <div class="header-time header-time-desktop">
       <div class="clock" id="clock">--:--</div>
       <div class="date-str" id="dateStr">--</div>
       <div style="font-size:0.62rem;color:rgba(255,255,255,0.45);margin-top:3px;text-align:right;letter-spacing:0.01em">
@@ -2029,9 +2030,9 @@ function ajustarNavFijo() {
   const hH = Math.round(header.getBoundingClientRect().height);
   const nH = Math.round(nav.getBoundingClientRect().height);
   nav.style.top = hH + 'px';
-  // Ajuste preciso: marginTop = altura total fija - padding propio del main (20px)
-  const mainPadding = 20;
-  main.style.marginTop = Math.max(0, hH + nH - mainPadding) + 'px';
+  // marginTop exacto = suma de header + nav fijos
+  // El main tiene padding:20px que ya genera espacio interno, no necesitamos restarlo
+  main.style.marginTop = (hH + nH + 8) + 'px';
   if (barraAlumnos) barraAlumnos.style.top = (hH + nH) + 'px';
 }
 // Ejecutar al cargar y al cambiar tamaño
