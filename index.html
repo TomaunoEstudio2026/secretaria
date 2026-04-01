@@ -866,6 +866,33 @@ tr:hover td { background:#fff8f0; }
   #tallerFiltros .filtro-btn-desktop { display:none; }
 }
 
+
+/* ===== HEADER MOBILE ===== */
+@media(max-width:600px){
+  header { padding:8px 12px; gap:10px; }
+  .logo-circle { width:38px; height:38px; flex-shrink:0; }
+  .logo-circle img { width:100%; height:100%; }
+  .header-title h1 {
+    font-size:0.82rem !important;
+    line-height:1.15;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:160px;
+  }
+  /* Ocultar subtítulo, versión y autor en mobile */
+  .header-title p { display:none !important; }
+  /* Reloj más compacto */
+  .header-time { padding:5px 10px; }
+  .header-time .clock { font-size:1rem; }
+  .header-time .date-str { display:none; }
+  /* Botón ayuda: solo icono en mobile */
+  .btn-ayuda-texto { display:none; }
+  .btn-ayuda-icono { display:inline !important; }
+  /* Sync dot más chico */
+  .sync-indicator { width:8px; height:8px; }
+}
+
 </style>
 </head>
 <body>
@@ -908,7 +935,7 @@ tr:hover td { background:#fff8f0; }
       style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:20px;
         color:rgba(255,255,255,0.75);font-size:0.75rem;padding:4px 12px;cursor:pointer;
         font-family:'Baloo 2';font-weight:700;white-space:nowrap">
-      ❓ Ayuda
+      <span class="btn-ayuda-icono" style="display:none">❓</span><span class="btn-ayuda-texto">❓ Ayuda</span>
     </button>
     <div class="header-time">
       <div class="clock" id="clock">--:--</div>
@@ -2002,8 +2029,9 @@ function ajustarNavFijo() {
   const hH = Math.round(header.getBoundingClientRect().height);
   const nH = Math.round(nav.getBoundingClientRect().height);
   nav.style.top = hH + 'px';
-  // El main ya tiene padding:20px, así que restamos para no duplicar espacio
-  main.style.marginTop = Math.max(0, hH + nH - 60) + 'px';
+  // Ajuste preciso: marginTop = altura total fija - padding propio del main (20px)
+  const mainPadding = 20;
+  main.style.marginTop = Math.max(0, hH + nH - mainPadding) + 'px';
   if (barraAlumnos) barraAlumnos.style.top = (hH + nH) + 'px';
 }
 // Ejecutar al cargar y al cambiar tamaño
