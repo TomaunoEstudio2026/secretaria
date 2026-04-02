@@ -40,8 +40,11 @@ document.addEventListener('keydown', e => {
   }
 });
 // Cerrar clickeando fuera del modal
-document.getElementById('modalAyuda').addEventListener('click', function(e) {
-  if (e.target === this) cerrarAyuda();
+document.addEventListener('DOMContentLoaded', function() {
+  const m = document.getElementById('modalAyuda');
+  if (m) m.addEventListener('click', function(e) {
+    if (e.target === this) cerrarAyuda();
+  });
 });
 
 </script>
@@ -96,7 +99,7 @@ header {
 .nav-tab:hover { color:var(--naranja); }
 
 /* MAIN */
-.main { padding:0 20px 20px 20px; max-width:1300px; margin:0 auto; }
+.main { padding:0 20px 20px 20px; max-width:1300px; margin:157px auto 0; }
 .section { display:none; }
 .section.active { display:block; }
 
@@ -363,7 +366,7 @@ tr:hover td { background:#fff8f0; }
 
 @media(max-width:600px){
   header { padding:10px 14px; }
-  .main { padding:0 14px 14px 14px; }
+  .main { padding:0 14px 14px 14px; margin-top:115px; }
   .notes-grid { grid-template-columns:1fr; }
   .form-row { grid-template-columns:1fr; }
   .taller-grid { grid-template-columns:1fr 1fr; }
@@ -2027,25 +2030,29 @@ setInterval(updateClock,1000); updateClock();
 
 // Posicionar nav y main correctamente según altura real del header
 function ajustarNavFijo() {
-  const header = document.querySelector('header');
-  const nav = document.querySelector('.nav-tabs');
-  const main = document.querySelector('.main');
-  const barraAlumnos = document.getElementById('barraStickyAlumnos');
-  if (!header || !nav || !main) return;
-  const hH = Math.round(header.getBoundingClientRect().height);
-  const nH = Math.round(nav.getBoundingClientRect().height);
-  nav.style.top = hH + 'px';
-  // marginTop exacto = suma de header + nav fijos
-  // El main tiene padding:20px que ya genera espacio interno, no necesitamos restarlo
-  main.style.marginTop = (hH + nH) + 'px';
-  if (barraAlumnos) barraAlumnos.style.top = (hH + nH) + 'px';
+  try {
+    const header = document.querySelector('header');
+    const nav = document.querySelector('.nav-tabs');
+    const main = document.querySelector('.main');
+    const barraAlumnos = document.getElementById('barraStickyAlumnos');
+    if (!header || !nav || !main) return;
+    const hH = Math.round(header.getBoundingClientRect().height);
+    const nH = Math.round(nav.getBoundingClientRect().height);
+    if (!hH || !nH) return;
+    nav.style.top = hH + 'px';
+    main.style.marginTop = (hH + nH) + 'px';
+    if (barraAlumnos) barraAlumnos.style.top = (hH + nH) + 'px';
+  } catch(e) {}
 }
 // Ejecutar al cargar y al cambiar tamaño
+// Ejecutar inmediatamente y en múltiples momentos para cubrir carga de fuentes
+ajustarNavFijo();
+document.addEventListener('DOMContentLoaded', ajustarNavFijo);
 window.addEventListener('load', ajustarNavFijo);
 window.addEventListener('resize', ajustarNavFijo);
-// También ejecutar pronto por si las fuentes cambian la altura
-setTimeout(ajustarNavFijo, 100);
-setTimeout(ajustarNavFijo, 500);
+setTimeout(ajustarNavFijo, 50);
+setTimeout(ajustarNavFijo, 200);
+setTimeout(ajustarNavFijo, 600);
 
 // ===== FIREBASE INIT =====
 document.addEventListener('firebase-ready', async () => {
@@ -3027,7 +3034,7 @@ function renderAlumnos(filter=''){
       <td><strong>${esc(a.apellido)}, ${esc(a.nombre)}</strong>${a.becado?' <span title="Becado" style="color:#6a1b9a;font-size:0.85rem">🎓</span>':''}</td>
       <td>${esc(a.dni||'—')}</td>
       <td>${edad}</td>
-      <td>${esc(a.tel||'—')}${a.tel ? `<a href="https://wa.me/549${a.tel.replace(/\D/g,'').replace(/^0/,'').replace(/^54/,'')}" target="_blank" title="Enviar WhatsApp" class="wa-btn no-print" style="margin-left:6px;text-decoration:none;font-size:1rem;vertical-align:middle">💬</a>` : ''}${a.instagram?'<br><span style="color:#888;font-size:0.78rem">📷 '+esc(a.instagram)+'</span>':''}</td>
+      <td>${esc(a.tel||'—')}${a.tel ? `<a href="https://wa.me/549${a.tel.replace(/\D/g,'').replace(/^0/,'').replace(/^54/,'')}?text=${encodeURIComponent('Hola ' + (a.nombre||'') + ', te escribimos del CEI San Jorge. ')}" target="_blank" title="Enviar WhatsApp" class="wa-btn no-print" style="margin-left:6px;text-decoration:none;font-size:1rem;vertical-align:middle">💬</a>` : ''}${a.instagram?'<br><span style="color:#888;font-size:0.78rem">📷 '+esc(a.instagram)+'</span>':''}</td>
       <td>${esc(tname)}</td>
       <td><span class="badge ${a.pago||'pendiente'}">${{pagado:'✅ Pagado',pendiente:'⏳ Pendiente',vencido:'❌ Vencido'}[a.pago]||a.pago}</span></td>
       <td><div class="action-btns">
@@ -7584,7 +7591,8 @@ document.addEventListener('keydown', e => {
   }
 });
 // Cerrar clickeando fuera del modal
-document.getElementById('modalAyuda').addEventListener('click', function(e) {
+const _mAyuda = document.getElementById('modalAyuda');
+if (_mAyuda) _mAyuda.addEventListener('click', function(e) {
   if (e.target === this) cerrarAyuda();
 });
 
